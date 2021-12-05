@@ -17,3 +17,13 @@ def get():
 def get_with_id(_id):
     # code ...
     return jsonify(_id)
+
+
+@REQUEST_API.route('/request', methods=['POST'])
+def get_request():
+    if not request.get_json():
+        abort(400)
+
+    data = request.get_json(force=True)
+
+    return jsonify(data)
