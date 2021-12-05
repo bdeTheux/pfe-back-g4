@@ -1,8 +1,8 @@
 import argparse
-import os
 from flask_cors import CORS
 from flask import Flask, jsonify, make_response
 from routes import request_api
+import dotenv
 
 APP = Flask(__name__)
 
@@ -33,6 +33,12 @@ def handle_500_error(_error):
     return make_response(jsonify({'error': 'Server error'}), 500)
 
 
+envFile = dotenv.dotenv_values(".env")
+port = envFile.get("port")
+print(envFile.get("port"))
+print(__name__)
+
+# a tester et comprendre?
 if __name__ == '__main__':
     PARSER = argparse.ArgumentParser(
         description="Seans-Python-Flask-REST-Boilerplate")
@@ -41,11 +47,10 @@ if __name__ == '__main__':
                         help="Use flask debug/dev mode with file change reloading")
     ARGS = PARSER.parse_args()
 
-    PORT = int(os.environ.get('PORT', 3000))
-
     if ARGS.debug:
         print("Running in debug mode")
         CORS = CORS(APP)
-        APP.run(host='0.0.0.0', port=PORT, debug=True)
+        APP.run(host='0.0.0.0', port=port, debug=True)
     else:
-        APP.run(host='0.0.0.0', port=PORT, debug=False)
+        print("test")
+        APP.run(host='0.0.0.0', port=port, debug=False)
