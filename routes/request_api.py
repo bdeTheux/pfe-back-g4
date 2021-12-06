@@ -1,6 +1,11 @@
 from flask import jsonify, abort, request, Blueprint
 
+from app.main import database
+from db.couchDB_connection import DatabaseService
+
 REQUEST_API = Blueprint('request_api', __name__)
+
+databaseService = DatabaseService(database)
 
 
 def get_blueprint():
@@ -11,6 +16,11 @@ def get_blueprint():
 @REQUEST_API.route('/', methods=['GET'])
 def get():
     return jsonify({'hello': 'world'})
+
+
+@REQUEST_API.route('/couch/<string:_doc>', methods=['GET'])
+def get_couch(_doc):
+    return jsonify(DatabaseService.get_document(_doc))
 
 
 @REQUEST_API.route('/<string:_id>', methods=['GET'])
