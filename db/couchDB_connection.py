@@ -2,7 +2,7 @@ import couchdb
 import dotenv
 
 
-class Database:
+class DatabaseService:
 
     def __init__(self):
         envfile = dotenv.dotenv_values(".env")
@@ -11,14 +11,8 @@ class Database:
         password = envfile.get("DBPassword")
         host = envfile.get("DBHost")
 
-        self.DATABASE = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
-
-
-class DatabaseService:
-
-    def __init__(self, database):
-        self.database = database
-        print(database)
+        server = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
+        self.database = server["pfe-df-g4"]
 
     def get_document(self, _document):
         print(self.database, _document)
