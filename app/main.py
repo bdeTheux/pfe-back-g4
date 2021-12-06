@@ -1,8 +1,11 @@
 from flask import Flask, jsonify, make_response
 
+from db.couchDB_connection import Database
 from routes import request_api
 
 app = Flask(__name__)
+
+database = Database().DATABASE
 
 app.register_blueprint(request_api.get_blueprint())
 
