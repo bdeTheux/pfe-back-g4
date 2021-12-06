@@ -1,8 +1,6 @@
-import argparse
-from flask_cors import CORS
 from flask import Flask, jsonify, make_response
+
 from routes import request_api
-import dotenv
 
 app = Flask(__name__)
 
@@ -31,8 +29,3 @@ def handle_404_error(_error):
 def handle_500_error(_error):
     """Return a http 500 error to client"""
     return make_response(jsonify({'error': 'Server error'}), 500)
-
-
-envFile = dotenv.dotenv_values(".env")
-
-port = envFile.get("port")
