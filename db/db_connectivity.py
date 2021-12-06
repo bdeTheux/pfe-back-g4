@@ -1,7 +1,8 @@
 import couchdb
+from app.main import envFile
 
-USERNAME = "admin"
-PASSWORD = "SNKBN"
+USERNAME = envFile.get("DBUsername")
+PASSWORD = envFile.get("DBPassword")
 # connecting with couchdb server
 couch = couchdb.Server('http://%s:%s@localhost:5984' % (USERNAME, PASSWORD))
 
