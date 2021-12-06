@@ -7,6 +7,7 @@ PyJWT==2.3.0    #JWT
 python-dotenv==0.19.2
 flask_cors==3.0.10
 gunicorn==20.1.0
+couchdb==1.2
 flake8==4.0.1
 pytest==6.2.5
 

@@ -34,6 +34,5 @@ def handle_500_error(_error):
 
 
 envFile = dotenv.dotenv_values(".env")
+
 port = envFile.get("port")
-
-
