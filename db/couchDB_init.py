@@ -1,14 +1,26 @@
 import couchdb
 import dotenv
 
-envFile = dotenv.dotenv_values("../.env")
+envfile = dotenv.dotenv_values("../.env")
 
-USERNAME = envFile.get("DBDevUsername")
-PASSWORD = envFile.get("DBDevPassword")
-HOST = envFile.get("DBDevHost")
+response = input("""Type \"dev\" to edit the development DB
+Type \"prod\" to edit the development DB
+Type anything else to stop the script
+""")
+
+if response == "dev":
+    username = envfile.get("DBDevUsername")
+    password = envfile.get("DBDevPassword")
+    host = envfile.get("DBDevHost")
+elif response == "prod":
+    username = envfile.get("DBProdUsername")
+    password = envfile.get("DBProdPassword")
+    host = envfile.get("DBProdHost")
+else:
+    exit(0)
 
 # connecting with couchdb server
-couch = couchdb.Server('http://%s:%s@%s:5984' % (USERNAME, PASSWORD, HOST))
+couch = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
 
 # creating database
 try:
