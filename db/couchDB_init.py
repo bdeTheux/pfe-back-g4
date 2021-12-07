@@ -1,10 +1,14 @@
 import couchdb
-from app.main import envFile
+import dotenv
+
+envFile = dotenv.dotenv_values("../.env")
 
 USERNAME = envFile.get("DBUsername")
 PASSWORD = envFile.get("DBPassword")
+HOST = envFile.get("DBHost")
+
 # connecting with couchdb server
-couch = couchdb.Server('http://%s:%s@localhost:5984' % (USERNAME, PASSWORD))
+couch = couchdb.Server('http://%s:%s@%s:5984' % (USERNAME, PASSWORD, HOST))
 
 # creating database
 db = couch.create("pfe-df-g4")
