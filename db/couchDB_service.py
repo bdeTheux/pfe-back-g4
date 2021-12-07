@@ -4,7 +4,11 @@ import couchdb
 import dotenv
 
 envfile = dotenv.dotenv_values(".env")
-if os.environ["FLASK_ENV"] == "development":
+try:
+    environment = os.environ["FLASK_ENV"]
+except Exception:
+    environment = "prod"
+if environment == "development":
     username = envfile.get("DBDevUsername")
     password = envfile.get("DBDevPassword")
     host = envfile.get("DBDevHost")
