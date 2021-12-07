@@ -13,9 +13,9 @@ if environment == "development":
     password = envfile.get("DBDevPassword")
     host = envfile.get("DBDevHost")
 else:
-    username = envfile.get("DBProdUsername")
-    password = envfile.get("DBProdPassword")
-    host = envfile.get("DBProdHost")
+    username = os.environ["DBProdUsername"]
+    password = os.environ["DBProdPassword"]
+    host = os.environ["DBProdHost"]
 
 server = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
 
