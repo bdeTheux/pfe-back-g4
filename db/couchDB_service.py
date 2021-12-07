@@ -18,7 +18,12 @@ else:
     host = envfile.get("DBProdHost")
 
 server = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
-database = server["pfe-df-g4"]
+try:
+    database = server["pfe-df-g4"]
+except:
+    server.create("pfe-df-g4")
+    database = server["pfe-df-g4"]
+
 documents = database.get("_all_docs")
 
 
