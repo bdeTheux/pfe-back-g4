@@ -11,14 +11,18 @@ HOST = envFile.get("DBHost")
 couch = couchdb.Server('http://%s:%s@%s:5984' % (USERNAME, PASSWORD, HOST))
 
 # creating database
-db = couch.create("pfe-df-g4")
+try:
+    db = couch.create("pfe-df-g4")
+except:
+    couch.delete("pfe-df-g4")
+    db = couch.create("pfe-df-g4")
 print("database \'pfe-df-g4\' created")
 
 # creating document
-docAnnounces = {'name': 'announces'}
-docUsers = {'name': 'users'}
-docCategories = {'name': 'categories'}
-docAddresses = {'name': 'addresses'}
+docAnnounces = {'name': 'posts', 'content': {}}
+docUsers = {'name': 'users', 'content': {}}
+docCategories = {'name': 'categories', 'content': {}}
+docAddresses = {'name': 'addresses', 'content': {}}
 listDocs = [docAnnounces, docUsers, docCategories, docAddresses]
 for doc in listDocs:
     db.save(doc)
