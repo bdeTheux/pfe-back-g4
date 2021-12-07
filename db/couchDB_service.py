@@ -133,7 +133,10 @@ def get_user_by_public_id(_public_id):
 
 
 def get_user_by_email(_email):
-    return None
+    mango = {
+        'selector': {'type': 'User', 'email': _email}
+    }
+    return list(database.find(mango))[0]
 
 
 def get_users():

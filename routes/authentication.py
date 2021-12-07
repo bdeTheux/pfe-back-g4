@@ -5,22 +5,24 @@ from functools import wraps
 
 import dotenv
 import jwt
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, Blueprint
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import db.couchDB_service as db
-from app.main import app
 from models.User import User
 
-envFile = dotenv.dotenv_values("/.env")  # might cause problem so add ../
-print(envFile)
-
+envFile = dotenv.dotenv_values(".env")  # might cause problem so add ../
 # JWT info
 JWT_NAME = envFile.get("JWTName")
 SECRET_KEY = envFile.get("JWTSecret")
+print(SECRET_KEY)
+print(JWT_NAME)
+authentication_route = Blueprint('authentication_route', __name__)
 
 
-# Database ORMs
+def get_blueprint():
+    """Return the blueprint for the main app module"""
+    return authentication_route
 
 
 # decorator for verifying the JWT
@@ -37,7 +39,7 @@ def token_required(f):
 
         try:
             # decoding the payload to fetch the stored details
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, SECRET_KEY)
             current_user = db.get_user_by_public_id(data['public_id'])
         except:
             return jsonify({
@@ -50,7 +52,7 @@ def token_required(f):
 
 
 # route for logging user in
-@app.route('/login', methods=['POST'])
+@authentication_route.route('/login/', methods=['POST'])
 def login():
     # creates dictionary of form data
     auth = request.form
@@ -73,14 +75,14 @@ def login():
             {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
         )
 
-    if check_password_hash(user.password, auth.get('password')):
+    if check_password_hash(user['password'], auth.get('password')):
         # generates the JWT Token
         token = jwt.encode({
-            'public_id': user.public_id,
+            'public_id': str(user['_id']),
             'exp': datetime.utcnow() + timedelta(minutes=30)
-        }, app.config['SECRET_KEY'])
+        }, SECRET_KEY)
 
-        return make_response(jsonify({'token': token.decode('UTF-8')}), 201)
+        return make_response(jsonify({'token': token}), 201)  # throw/throw http error au lieu de make_response
     # returns 403 if password is wrong
     return make_response(
         'Could not verify',
@@ -90,7 +92,7 @@ def login():
 
 
 # signup route
-@app.route('/signup', methods=['POST'])
+@authentication_route.route('/signup', methods=['POST'])
 def signup():
     # creates a dictionary of the form data
     data = request.form
