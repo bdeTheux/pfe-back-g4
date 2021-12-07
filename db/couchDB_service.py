@@ -12,6 +12,17 @@ database = server["pfe-df-g4"]
 documents = database.get("_all_docs")
 
 
+# # database['kevinnnn'] = dict(type='User', name='Kevin Jullien', campus='woluwe')
+#
+# mango = {
+#     'selector': {'type': 'User'},
+#     'fields': ['name', 'campus']
+# }
+#
+# for row in database.find(mango):
+#     print(row['name'], row['campus'])
+
+
 def get_document(_document):
     print(database, _document)
     return database.get
@@ -103,6 +114,7 @@ def get_post_by_category(category):
 
 # Users
 def create_user():
+    # user = User(last_name='laraki', first_)
     return None
 
 
@@ -110,7 +122,16 @@ def get_user_by_id(_id):
     return None
 
 
+def get_user_by_public_id(_public_id):
+    return None
+
+
+def get_user_by_email(_email):
+    return None
+
+
 def get_users():
+    print(database.get("_users"))
     return None
 
 

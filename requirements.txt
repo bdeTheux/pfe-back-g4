@@ -9,6 +9,7 @@ gunicorn==20.1.0
 couchdb==1.2
 flake8==4.0.1
 pytest==6.2.5
+python-mango==0.1.7
 
 #alembic==0.9.6
 #click==6.7
@@ -42,3 +43,4 @@ pytest==6.2.5
 #requests==2.21.0
 #argparse==1.4.0
 #flask-swagger-ui==3.20.9
+Werkzeug~=2.0.2
