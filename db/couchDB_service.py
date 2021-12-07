@@ -1,4 +1,5 @@
 import os
+import uuid
 
 import couchdb
 import dotenv
@@ -119,9 +120,11 @@ def get_post_by_category(category):
 
 
 # Users
-def create_user():
-    # user = User(last_name='laraki', first_)
-    return None
+def create_user(user):
+    database[uuid.uuid4().hex] = dict(type='User', last_name=user.last_name,
+                                      first_name=user.first_name, email=user.email,
+                                      password=user.password, campus=user.campus, is_banned=False,
+                                      is_admin=False)
 
 
 def get_user_by_id(_id):
@@ -136,7 +139,9 @@ def get_user_by_email(_email):
     mango = {
         'selector': {'type': 'User', 'email': _email}
     }
-    return list(database.find(mango))[0]
+    if len(list(database.find(mango))):
+        return list(database.find(mango))[0]
+    return list(database.find(mango))[0] if len(list(database.find(mango))) > 0 else None
 
 
 def get_users():

@@ -1,5 +1,4 @@
 # flask imports
-import uuid  # for public id
 from datetime import datetime, timedelta
 from functools import wraps
 
@@ -96,20 +95,20 @@ def login():
 def signup():
     # creates a dictionary of the form data
     data = request.form
-
+    print(data)
     # gets info
     email = data.get('email')
     password = data.get('password')
 
     # checking for existing user
     user = db.get_user_by_email(email)
+    print(user)
     if not user:
         # database ORM object
         first_name = data.get('first_name')
         last_name = data.get('last_name')
         campus = data.get('campus')
-        user = User(public_id=str(uuid.uuid4()),
-                    first_name=first_name,
+        user = User(first_name=first_name,
                     last_name=last_name,
                     campus=campus,
                     email=email,
@@ -117,7 +116,6 @@ def signup():
                     )
         # insert user
         db.create_user(user)
-        # db.session.commit() -> ????
         return make_response('Successfully registered.', 201)
     else:
         # returns 202 if user already exists
