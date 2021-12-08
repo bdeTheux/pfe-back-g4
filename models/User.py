@@ -1,14 +1,20 @@
-from couchdb.mapping import IntegerField, Document, TextField, BooleanField
+from couchdb.mapping import Document, TextField, BooleanField
 
 
 class User(Document):  # if error, try import couchdb.document maybe
-    doc_type = 'users'
-
-    id = IntegerField()
-    public_id = TextField()  # -> must be len = 50 and unique, not sure parameters exist in couchdb -> also, see if it's automatically generated
+    id = TextField(name="_id")
     last_name = TextField()
     first_name = TextField()
     email = TextField()
     password = TextField()
     campus = TextField()  # for now, TODO -> find enum in couchdb.mapping doc
     is_banned = BooleanField(default=False)
+    is_admin = BooleanField(default=False)
+
+    def to_public(self):
+        return {"id": self.id, "last_name": self.last_name, "first_name": self.first_name, "email": self.email,
+                "campus": self.campus}
+
+    def to_admin(self):
+        return {"id": self.id, "last_name": self.last_name, "first_name": self.first_name, "email": self.email,
+                "campus": self.campus, "is_banned": self.is_banned, "is_admin": self.is_admin}

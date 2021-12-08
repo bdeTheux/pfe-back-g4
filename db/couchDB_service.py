@@ -4,6 +4,8 @@ import uuid
 import couchdb
 import dotenv
 
+from models.User import User
+
 envfile = dotenv.dotenv_values(".env")
 try:
     environment = os.environ["FLASK_ENV"]
@@ -134,7 +136,7 @@ def create_user(user):
 
 
 def get_user_by_id(_id):
-    return None
+    return User.load(database, _id).to_public()
 
 
 def get_user_by_public_id(_public_id):
@@ -151,8 +153,10 @@ def get_user_by_email(_email):
 
 
 def get_users():
-    print(database.get("_users"))
-    return None
+    mango = {
+        'selector': {'type': 'User'}
+    }
+    return list(database.find(mango))
 
 
 def delete_user(_id):

@@ -18,7 +18,7 @@ def get_all():
 @users_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
     # code ...
-    return jsonify(db.get_user_by_id(_id))
+    return db.get_user_by_id(_id)
 
 
 @users_route.route('/<string:_id>/ban', methods=['POST'])
