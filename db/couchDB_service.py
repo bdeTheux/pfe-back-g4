@@ -3,6 +3,9 @@ import uuid
 
 import couchdb
 import dotenv
+import flask
+
+from models.User import User
 
 envfile = dotenv.dotenv_values(".env")
 try:
@@ -134,7 +137,11 @@ def create_user(user):
 
 
 def get_user_by_id(_id):
-    return None
+    user = User.load(database, _id)
+    if user:
+        return user.to_public()
+    else:
+        flask.abort(404)
 
 
 def get_user_by_public_id(_public_id):
@@ -151,8 +158,10 @@ def get_user_by_email(_email):
 
 
 def get_users():
-    print(database.get("_users"))
-    return None
+    mango = {
+        'selector': {'type': 'User'}
+    }
+    return list(database.find(mango))
 
 
 def delete_user(_id):

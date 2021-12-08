@@ -18,7 +18,7 @@ def get_all():
 @users_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
     # code ...
-    return jsonify(db.get_user_by_id(_id))
+    return db.get_user_by_id(_id)
 
 
 @users_route.route('/<string:_id>/ban', methods=['POST'])
@@ -36,7 +36,7 @@ def create_one():
     if not request.get_json():
         abort(400)
 
-    data = request.get_json(force=True)
+    # data = request.get_json(force=True)
 
     return jsonify(db.create_user())
 
@@ -52,6 +52,6 @@ def edit_one(_id):
     if not request.get_json():
         abort(400)
 
-    data = request.get_json(force=True)
+    # data = request.get_json(force=True)
 
     return jsonify(db.edit_user())

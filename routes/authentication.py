@@ -40,7 +40,8 @@ def token_required(f):
             # decoding the payload to fetch the stored details
             data = jwt.decode(token, SECRET_KEY)
             current_user = db.get_user_by_public_id(data['public_id'])
-        except:
+        except Exception as e:
+            print(e)
             return jsonify({
                 'message': 'Token is invalid !!'
             }), 401
