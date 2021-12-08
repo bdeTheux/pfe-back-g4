@@ -136,12 +136,10 @@ def create_user(user):
                                       is_admin=False)
 
 
-# DONE
 def get_user_by_id(_id):
     return User.load(database, _id)
 
 
-# DONE
 def get_user_by_email(_email):
     mango = {
         'selector': {'type': 'User', 'email': _email}
@@ -151,7 +149,6 @@ def get_user_by_email(_email):
     return list(database.find(mango))[0] if len(list(database.find(mango))) > 0 else None
 
 
-# DONE
 def get_users():
     mango = {
         'selector': {'type': 'User'},
@@ -160,13 +157,21 @@ def get_users():
     return list(database.find(mango))
 
 
-# Delete tous ses posts
+# Delete tous ses posts ?
 def delete_user(_id):
     user = get_user_by_id(_id)
     return database.delete(user)
 
 
 def edit_user(new_user, _id):
+    """This function edits a user already in the database,
+    Parameters
+        _new_user: a User object containing everything but the is_admin or is_banned fields
+        -_id: the id of the user who its fields need to be modified
+    Returns
+        The user (with its public fields) with the updated fields
+    """
+
     new_user['_id'] = _id
     previous_user = get_user_by_id(_id)
     for field in new_user:

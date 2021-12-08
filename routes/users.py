@@ -14,7 +14,6 @@ def get_blueprint():
     return users_route
 
 
-# done
 @users_route.route('/', methods=['GET'])
 @token_required
 def get_all(current_user):
@@ -22,7 +21,6 @@ def get_all(current_user):
         else flask.abort(401)
 
 
-# Done
 @users_route.route('/<string:_id>', methods=['GET'])
 @token_required
 def get_with_id(current_user, _id):
@@ -34,7 +32,6 @@ def get_with_id(current_user, _id):
         return flask.abort(404)
 
 
-# done
 @users_route.route('/<string:_id>/ban', methods=['POST'])
 @token_required
 def ban(current_user, _id):
@@ -44,7 +41,6 @@ def ban(current_user, _id):
     return jsonify(db.ban_user(_id))
 
 
-# done
 @users_route.route('/<string:_id>', methods=['DELETE'])
 @token_required
 def delete_one(current_user, _id):
@@ -52,7 +48,6 @@ def delete_one(current_user, _id):
         else flask.abort(401)
 
 
-# done
 @users_route.route('/<string:_id>', methods=['PUT'])
 @token_required
 def edit_one(current_user, _id):
