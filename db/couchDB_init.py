@@ -29,6 +29,7 @@ couch = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
 try:
     db = couch.create("pfe-df-g4")
 except Exception as e:
+    print(e)
     couch.delete("pfe-df-g4")
     db = couch.create("pfe-df-g4")
 print("database \'pfe-df-g4\' created")

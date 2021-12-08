@@ -36,7 +36,7 @@ def create_one():
     if not request.get_json():
         abort(400)
 
-    data = request.get_json(force=True)
+    # data = request.get_json(force=True)
 
     return jsonify(db.create_user())
 
@@ -52,6 +52,6 @@ def edit_one(_id):
     if not request.get_json():
         abort(400)
 
-    data = request.get_json(force=True)
+    # data = request.get_json(force=True)
 
     return jsonify(db.edit_user())
