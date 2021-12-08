@@ -79,9 +79,9 @@ def admin_token_required(f):
 @authentication_route.route('/login/', methods=['POST'])
 def login():
     # creates dictionary of form data
-    auth = request.form
+    auth = request.json
     print(auth)
-    if not auth or not auth.get('email') or not auth.get('password'):
+    if not auth or not auth['email'] or not auth['password']:
         # returns 401 if any email or / and password is missing
         return abort(401, 'Could not verify1')  # make_response(
         # 'Could not verify',
@@ -89,7 +89,7 @@ def login():
         # {'WWW-Authenticate': 'Basic realm ="Login required !!"'}
         # )
 
-    user = db.get_user_by_email(auth.get('email'))
+    user = db.get_user_by_email(auth['email'])
 
     if not user:
         # returns 401 if user does not exist
@@ -99,7 +99,7 @@ def login():
         # {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
         # )
 
-    if check_password_hash(user['password'], auth.get('password')):
+    if check_password_hash(user['password'], auth['password']):
         # generates the JWT Token
         token = jwt.encode({
             'public_id': str(user['_id']),
@@ -121,20 +121,20 @@ def login():
 @authentication_route.route('/signup', methods=['POST'])
 def signup():
     # creates a dictionary of the form data
-    data = request.form
+    data = request.json
     print(data)
     # gets info
-    email = data.get('email')
-    password = data.get('password')
+    email = data['email']
+    password = data['password']
 
     # checking for existing user
     user = db.get_user_by_email(email)
     print(user)
     if not user:
         # database ORM object
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        campus = data.get('campus')
+        first_name = data['first_name']
+        last_name = data['last_name']
+        campus = data['campus']
         user = User(first_name=first_name,
                     last_name=last_name,
                     campus=campus,

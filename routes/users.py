@@ -54,7 +54,7 @@ def edit_one(current_user, _id):
     if current_user['_id'] != _id:
         abort(401)
 
-    data = request.form
+    data = request.json
     email = data.get('email')
     first_name = data.get('first_name')
     last_name = data.get('last_name')

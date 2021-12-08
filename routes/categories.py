@@ -25,11 +25,11 @@ def get_one(_id):
 
 @categories_route.route('/', methods=['POST'])
 @admin_token_required
-def create_one(current_user):
-    if not request.get_json():
+def create_one(_current_user):
+    if not request.json:
         abort(400, "The payload is empty")
 
-    data = request.get_json(force=True)
+    data = request.json
 
     if 'name' not in data:  # No data
         abort(400, "The payload need a field 'name'")
@@ -43,7 +43,7 @@ def create_one(current_user):
 
 @categories_route.route('/<string:_id>', methods=['DELETE'])
 @admin_token_required
-def delete_one(current_user, _id):
+def delete_one(_current_user, _id):
     try:
         res = db.delete_category(_id)
     except FileNotFoundError:
@@ -54,10 +54,10 @@ def delete_one(current_user, _id):
 @categories_route.route('/<string:_id>', methods=['PUT'])
 @admin_token_required
 def edit_one(_current_user, _id):
-    if not request.get_json():
+    if not request.json:
         abort(400, "The payload is empty")
 
-    data = request.get_json(force=True)
+    data = request.json
     if 'name' not in data:
         abort(400, "The payload need a field 'name'")
     if 'parent' not in data:
