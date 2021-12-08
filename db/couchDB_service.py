@@ -1,4 +1,5 @@
 import os
+import uuid
 
 import couchdb
 import dotenv
@@ -22,6 +23,17 @@ server = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
 database = server["pfe-df-g4"]
 
 documents = database.get("_all_docs")
+
+
+# # database['kevinnnn'] = dict(type='User', name='Kevin Jullien', campus='woluwe')
+#
+# mango = {
+#     'selector': {'type': 'User'},
+#     'fields': ['name', 'campus']
+# }
+#
+# for row in database.find(mango):
+#     print(row['name'], row['campus'])
 
 
 def get_document(_document):
@@ -114,15 +126,32 @@ def get_post_by_category(category):
 
 
 # Users
-def create_user():
-    return None
+def create_user(user):
+    database[uuid.uuid4().hex] = dict(type='User', last_name=user.last_name,
+                                      first_name=user.first_name, email=user.email,
+                                      password=user.password, campus=user.campus, is_banned=False,
+                                      is_admin=False)
 
 
 def get_user_by_id(_id):
     return None
 
 
+def get_user_by_public_id(_public_id):
+    return None
+
+
+def get_user_by_email(_email):
+    mango = {
+        'selector': {'type': 'User', 'email': _email}
+    }
+    if len(list(database.find(mango))):
+        return list(database.find(mango))[0]
+    return list(database.find(mango))[0] if len(list(database.find(mango))) > 0 else None
+
+
 def get_users():
+    print(database.get("_users"))
     return None
 
 
