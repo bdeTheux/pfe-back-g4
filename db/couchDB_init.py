@@ -35,9 +35,12 @@ print("database \'pfe-df-g4\' created")
 
 # creating document
 password = generate_password_hash("azerty")
+db[uuid.uuid4().hex] = dict(type='User', last_name='admin',
+                            first_name='admin', email='admin@vinci.be',
+                            password=password, campus='Woluwe', is_banned=False, is_admin=True)
 db[uuid.uuid4().hex] = dict(type='User', last_name='Jullien',
                             first_name='Kevin', email='kevin.jullien@student.vinci.be',
-                            password=password, campus='Woluwe', is_banned=False, is_admin=True)
+                            password=password, campus='Woluwe', is_banned=False, is_admin=False)
 db[uuid.uuid4().hex] = dict(type='User', last_name='Laraki',
                             first_name='Narjis', email='narjis.laraki@student.vinci.be',
                             password=password, campus='Louvain-la-Neuve', is_banned=False,
