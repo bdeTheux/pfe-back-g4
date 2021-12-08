@@ -1,3 +1,4 @@
+import flask
 from flask import jsonify, abort, request, Blueprint
 
 import db.couchDB_service as db
@@ -17,8 +18,8 @@ def get_all():
 
 @users_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
-    # code ...
-    return db.get_user_by_id(_id)
+    user = db.get_user_by_id(_id)
+    return jsonify(user.to_public()) if user else flask.abort(404)
 
 
 @users_route.route('/<string:_id>/ban', methods=['POST'])

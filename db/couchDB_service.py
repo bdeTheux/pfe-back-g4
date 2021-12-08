@@ -3,7 +3,6 @@ import uuid
 
 import couchdb
 import dotenv
-import flask
 
 from models.User import User
 
@@ -137,11 +136,7 @@ def create_user(user):
 
 
 def get_user_by_id(_id):
-    user = User.load(database, _id)
-    if user:
-        return user.to_public()
-    else:
-        flask.abort(404)
+    return User.load(database, _id)
 
 
 def get_user_by_public_id(_public_id):
