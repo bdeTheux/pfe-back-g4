@@ -79,19 +79,105 @@ def get_category_by_id(_id):
 
 
 def create_category(_data):
-    if
-        return None
+    """Create a new category only if the same name does not exist already.
+    Parameters
+        _data: a dict containing at lease the key 'name', and optionally 'parent' and 'sub_categories'
+            - the 'parent' has to exist already in the DB, or it will be set to None.
+            - the 'sub_categories' has to be a list of strings. If the categories in the list does not exist,
+              they are created as sub_categories of the new one. If they exist, they are ignored.
+    Returns
+        The name (and id) of the added category
+    """
+    if 'parent' in _data and Category.load(database, _data['parent']):
+        parent = _data['parent']
+    else:
+        parent = None
+
+    sub_categories = []
+    if 'sub_categories' in _data:
+        for cat in _data['sub_categories']:
+            existing_cat = Category.load(database, cat)
+            if not existing_cat:
+                database[cat] = dict(type='Category', name=cat, parent=_data['name'],
+                                     sub_categories=[])
+                sub_categories.append(cat)
+
+    database[_data['name']] = dict(type='Category', name=_data['name'], parent=parent, sub_categories=sub_categories)
+
+    return _data['name']
 
 
 def delete_category(_id):
-    return None
+    category = Category.load(database, _id)
+
+    if not category:
+        raise FileNotFoundError
+
+    if category.parent:
+        parent = Category.load(database, category.parent)
+        parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
+        parent.store(database)
+    for cat in category.sub_categories:  # TODO recursive func
+        try:
+            database.delete(Category.load(database, cat))
+        except TypeError:  # It should not happen but it does not matter either
+            pass
+    return database.delete(category)
 
 
-def edit_category():
-    return None
+def edit_category(_id, _data):
+    """Edit a category by its given id.
+    Parameters
+        _data: a dict containing 3 key 'name', 'parent', and 'sub_categories'
+            - the 'parent' has to either exist in the DB or to be null.
+              if it is not null and does not exist, it is aborted
+            - the 'sub_categories' has to be a list of strings.
+              If it does not have the same items as the original in the DB, the operation is aborted.
+              If it has additional items with parents, it is aborted.
+              If it has additional unknown items, they are created.
+    Returns
+        The name (and id) of the added category
+    """
+    print(_data)
+    category = Category.load(database, _id)
+    if not category:
+        raise AttributeError
+    # If sub_categories are missing, aborting
+    missing_subs = set(category.sub_categories).difference(_data['sub_categories'])
+    if len(missing_subs) != 0:
+        raise AttributeError
+
+    # If new sub_categories already have a parent, aborting
+    new_subs = set(_data['sub_categories']).difference(category.sub_categories)
+    for cat in new_subs:
+        c = Category.load(database, cat)
+        if c and c.parent:
+            raise AttributeError
+
+    if category.parent != _data['parent']:
+        if _data['parent']:
+            parent = Category.load(database, category.parent)
+            if not parent:
+                raise AttributeError
+            parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
+            parent.store(database)
+
+        category.parent = _data['parent']
+
+    for cat in new_subs:
+        c = Category.load(database, cat)
+        if c:
+            c.parent = category.name
+            c.store(database)
+        else:
+            create_category({"name": c})
+            
+    return _data['name']
 
 
 # Posts
+
+
 def get_posts():
     return None
 
@@ -127,8 +213,9 @@ def get_post_by_campus(campus):
 def get_post_by_category(category):
     return None
 
+    # Users
 
-# Users
+
 def create_user(user):
     database[uuid.uuid4().hex] = dict(type='User', last_name=user.last_name,
                                       first_name=user.first_name, email=user.email,

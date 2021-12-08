@@ -2,7 +2,7 @@ from couchdb.mapping import Document, TextField, ListField
 
 
 class Category(Document):
-    id = TextField(name="_id")
+    _id = TextField()
     name = TextField()
     parent = TextField()
     sub_categories = ListField(TextField())
