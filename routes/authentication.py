@@ -83,7 +83,7 @@ def login():
     print(auth)
     if not auth or not auth['email'] or not auth['password']:
         # returns 401 if any email or / and password is missing
-        return abort(401, 'Could not verify1')  # make_response(
+        return abort(401, 'Wrong credentials')  # make_response(
         # 'Could not verify',
         # 401,
         # {'WWW-Authenticate': 'Basic realm ="Login required !!"'}
@@ -93,7 +93,7 @@ def login():
 
     if not user:
         # returns 401 if user does not exist
-        return abort(401, 'Could not verify2')  # make_response(
+        return abort(401, 'Wrong credentials')  # make_response(
         # 'Could not verify',
         # 401,
         # {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
@@ -110,7 +110,7 @@ def login():
         resp.headers[JWT_NAME] = token
         return resp  # throw/throw http error au lieu de make_response
     # returns 403 if password is wrong
-    return abort(403, 'Could not verify3')  # make_response(
+    return abort(401, 'Wrong credentials')  # make_response(
     # 'Could not verify',
     # 403,
     # {'WWW-Authenticate': 'Basic realm ="Wrong Password !!"'}
