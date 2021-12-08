@@ -11,11 +11,13 @@ def get_blueprint():
     return users_route
 
 
+# Not quite done, must send to_public()
 @users_route.route('/', methods=['GET'])
 def get_all():
     return jsonify(db.get_users())
 
 
+# Done -> check token
 @users_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
     user = db.get_user_by_id(_id)
@@ -32,19 +34,19 @@ def ban(_id):
     return jsonify(db.ban_user(data))
 
 
+# Done -> mais à checker
 @users_route.route('/', methods=['POST'])
 def create_one():
     if not request.get_json():
         abort(400)
 
-    # data = request.get_json(force=True)
-
-    return jsonify(db.create_user())
+    data = request.get_json(force=True)
+    print(data)
+    return jsonify(db.create_user(data))
 
 
 @users_route.route('/<string:_id>', methods=['DELETE'])
 def delete_one(_id):
-    # code ...
     return jsonify(db.delete_user(_id))
 
 

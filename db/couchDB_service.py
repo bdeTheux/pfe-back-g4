@@ -128,6 +128,7 @@ def get_post_by_category(category):
 
 
 # Users
+
 def create_user(user):
     database[uuid.uuid4().hex] = dict(type='User', last_name=user.last_name,
                                       first_name=user.first_name, email=user.email,
@@ -135,14 +136,12 @@ def create_user(user):
                                       is_admin=False)
 
 
+# DONE
 def get_user_by_id(_id):
     return User.load(database, _id)
 
 
-def get_user_by_public_id(_public_id):
-    return None
-
-
+# DONE
 def get_user_by_email(_email):
     mango = {
         'selector': {'type': 'User', 'email': _email}
@@ -152,6 +151,7 @@ def get_user_by_email(_email):
     return list(database.find(mango))[0] if len(list(database.find(mango))) > 0 else None
 
 
+# DONE
 def get_users():
     mango = {
         'selector': {'type': 'User'}
@@ -160,6 +160,8 @@ def get_users():
 
 
 def delete_user(_id):
+    user = get_user_by_id(_id)
+    database.delete(user)
     return None
 
 
