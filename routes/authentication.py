@@ -36,10 +36,11 @@ def token_required(f):
 
         try:
             # decoding the payload to fetch the stored details
-            data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            data = jwt.decode(token, SECRET_KEY, algorithms=[
+                "HS256"])  # TODO -> signature has expired quand on lance la même requête 2h later ?
             current_user = db.get_user_by_id(data['public_id'])
         except Exception as e:
-            # print(e)
+            print(e)
             return jsonify({
                 'message': 'Token is invalid !!'
             }), 401
@@ -77,7 +78,7 @@ def login():
         # generates the JWT Token
         token = jwt.encode({
             'public_id': str(user['_id']),
-            'exp': datetime.utcnow() + timedelta(minutes=30),
+            'exp': datetime.utcnow() + timedelta(minutes=120),
             'algorithm': "HS256"
         }, SECRET_KEY)
         resp = make_response(jsonify({'token': token}))  # throw/throw http error au lieu de make_response
