@@ -4,7 +4,7 @@ from functools import wraps
 
 import dotenv
 import jwt
-from flask import request, jsonify, make_response, Blueprint
+from flask import request, jsonify, make_response, Blueprint, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import db.couchDB_service as db
@@ -32,7 +32,7 @@ def token_required(f):
             token = request.headers[JWT_NAME]
         # return 401 if token is not passed
         if not token:
-            return jsonify({'message': 'Token is missing !!'}), 401
+            return abort(401, 'Token is missing !!')
 
         try:
             # decoding the payload to fetch the stored details
@@ -41,9 +41,34 @@ def token_required(f):
             current_user = db.get_user_by_id(data['public_id'])
         except Exception as e:
             print(e)
-            return jsonify({
-                'message': 'Token is invalid !!'
-            }), 401
+            return abort(401, 'Token is invalid !!')
+        # returns the current logged in users contex to the routes
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+
+
+def admin_token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        # jwt is passed in the request header
+        if JWT_NAME in request.headers:
+            token = request.headers[JWT_NAME]
+        # return 401 if token is not passed
+        if not token:
+            return abort(401, 'Token is missing !!')
+
+        try:
+            # decoding the payload to fetch the stored details
+            data = jwt.decode(token, SECRET_KEY, algorithms=[
+                "HS256"])  # TODO -> signature has expired quand on lance la même requête 2h later ?
+            current_user = db.get_user_by_id(data['public_id'])
+        except Exception as e:
+            print(e)
+            return abort(401, 'Token is invalid !!')
+        if not current_user.is_admin:
+            return abort(401, 'Admin only!!')
         # returns the current logged in users contex to the routes
         return f(current_user, *args, **kwargs)
 
@@ -55,24 +80,24 @@ def token_required(f):
 def login():
     # creates dictionary of form data
     auth = request.form
-
+    print(auth)
     if not auth or not auth.get('email') or not auth.get('password'):
         # returns 401 if any email or / and password is missing
-        return make_response(
-            'Could not verify',
-            401,
-            {'WWW-Authenticate': 'Basic realm ="Login required !!"'}
-        )
+        return abort(401, 'Could not verify1')  # make_response(
+        # 'Could not verify',
+        # 401,
+        # {'WWW-Authenticate': 'Basic realm ="Login required !!"'}
+        # )
 
     user = db.get_user_by_email(auth.get('email'))
 
     if not user:
         # returns 401 if user does not exist
-        return make_response(
-            'Could not verify',
-            401,
-            {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
-        )
+        return abort(401, 'Could not verify2')  # make_response(
+        # 'Could not verify',
+        # 401,
+        # {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
+        # )
 
     if check_password_hash(user['password'], auth.get('password')):
         # generates the JWT Token
@@ -85,11 +110,11 @@ def login():
         resp.headers[JWT_NAME] = token
         return resp  # throw/throw http error au lieu de make_response
     # returns 403 if password is wrong
-    return make_response(
-        'Could not verify',
-        403,
-        {'WWW-Authenticate': 'Basic realm ="Wrong Password !!"'}
-    )
+    return abort(403, 'Could not verify3')  # make_response(
+    # 'Could not verify',
+    # 403,
+    # {'WWW-Authenticate': 'Basic realm ="Wrong Password !!"'}
+    # )
 
 
 # signup route

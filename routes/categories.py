@@ -2,6 +2,7 @@ import flask
 from flask import jsonify, abort, request, Blueprint
 
 import db.couchDB_service as db
+from routes.authentication import admin_token_required
 
 categories_route = Blueprint('categories-route', __name__)
 
@@ -23,7 +24,8 @@ def get_one(_id):
 
 
 @categories_route.route('/', methods=['POST'])
-def create_one():
+@admin_token_required
+def create_one(current_user):
     if not request.get_json():
         abort(400, "The payload is empty")
 
@@ -40,7 +42,8 @@ def create_one():
 
 
 @categories_route.route('/<string:_id>', methods=['DELETE'])
-def delete_one(_id):
+@admin_token_required
+def delete_one(current_user, _id):
     try:
         res = db.delete_category(_id)
     except FileNotFoundError:
@@ -49,7 +52,8 @@ def delete_one(_id):
 
 
 @categories_route.route('/<string:_id>', methods=['PUT'])
-def edit_one(_id):
+@admin_token_required
+def edit_one(_current_user, _id):
     if not request.get_json():
         abort(400, "The payload is empty")
 
