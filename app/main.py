@@ -1,10 +1,12 @@
 import dotenv
 from flask import Flask
+from flask_cors import CORS
 
 from errorHandler import error_handler
 from routes import users, posts, addresses, categories, authentication
 
 app = Flask(__name__)
+CORS(app)
 envFile = dotenv.dotenv_values(".env")
 
 # Routes

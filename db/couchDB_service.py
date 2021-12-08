@@ -5,17 +5,23 @@ import couchdb
 import dotenv
 
 envfile = dotenv.dotenv_values(".env")
-if os.environ["FLASK_ENV"] == "development":
+try:
+    environment = os.environ["FLASK_ENV"]
+except Exception:
+    environment = "prod"
+if environment == "development":
     username = envfile.get("DBDevUsername")
     password = envfile.get("DBDevPassword")
     host = envfile.get("DBDevHost")
 else:
-    username = envfile.get("DBProdUsername")
-    password = envfile.get("DBProdPassword")
-    host = envfile.get("DBProdHost")
+    username = os.environ["DBProdUsername"]
+    password = os.environ["DBProdPassword"]
+    host = os.environ["DBProdHost"]
 
 server = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
+
 database = server["pfe-df-g4"]
+
 documents = database.get("_all_docs")
 
 
