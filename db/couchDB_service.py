@@ -4,6 +4,7 @@ import uuid
 import couchdb
 import dotenv
 
+from models.Category import Category
 from models.User import User
 
 envfile = dotenv.dotenv_values(".env")
@@ -66,20 +67,20 @@ def edit_address():
 
 # Categories
 def get_categories():
-    return {
-        "categorie1": "truc",
-        "categorie2": "machin"
+    mango = {
+        'selector': {'type': 'Category'},
+        'fields': ['name', 'parent', 'sub_categories']
     }
+    return list(database.find(mango))
 
 
 def get_category_by_id(_id):
-    return {
-        "categorie1": "truc"
-    }
+    return Category.load(database, _id)
 
 
-def create_category():
-    return None
+def create_category(_data):
+    if
+        return None
 
 
 def delete_category(_id):
