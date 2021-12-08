@@ -1,42 +1,10 @@
-import os
 import uuid
 
-import couchdb
-import dotenv
-
+from db import database
 from models.Category import Category
 from models.User import User
 
-envfile = dotenv.dotenv_values(".env")
-try:
-    environment = os.environ["FLASK_ENV"]
-except Exception:
-    environment = "prod"
-if environment == "development":
-    username = envfile.get("DBDevUsername")
-    password = envfile.get("DBDevPassword")
-    host = envfile.get("DBDevHost")
-else:
-    username = os.environ["DBProdUsername"]
-    password = os.environ["DBProdPassword"]
-    host = os.environ["DBProdHost"]
-
-server = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
-
-database = server["pfe-df-g4"]
-
-documents = database.get("_all_docs")
-
-
-# # database['kevinnnn'] = dict(type='User', name='Kevin Jullien', campus='woluwe')
-#
-# mango = {
-#     'selector': {'type': 'User'},
-#     'fields': ['name', 'campus']
-# }
-#
-# for row in database.find(mango):
-#     print(row['name'], row['campus'])
+database = database.get_database()
 
 
 def get_document(_document):
@@ -88,7 +56,8 @@ def create_category(_data):
     Returns
         The name (and id) of the added category
     """
-    if 'parent' in _data and Category.load(database, _data['parent']):
+    parent_category = None
+    if 'parent' in _data and (parent_category := Category.load(database, _data['parent'])):
         parent = _data['parent']
     else:
         parent = None
@@ -104,10 +73,15 @@ def create_category(_data):
 
     database[_data['name']] = dict(type='Category', name=_data['name'], parent=parent, sub_categories=sub_categories)
 
+    if parent_category:
+        parent_category.sub_categories.append(_data['name'])
+        parent_category.store(database)
+
     return _data['name']
 
 
 def delete_category(_id):
+    """Delete a category and its sub-categories."""
     category = Category.load(database, _id)
 
     if not category:
@@ -117,16 +91,22 @@ def delete_category(_id):
         parent = Category.load(database, category.parent)
         parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
         parent.store(database)
-    for cat in category.sub_categories:  # TODO recursive func
-        try:
-            database.delete(Category.load(database, cat))
-        except TypeError:  # It should not happen but it does not matter either
-            pass
-    return database.delete(category)
+
+    return delete_category_and_sub_categories(category)
+
+
+def delete_category_and_sub_categories(node: Category):
+    if not node:
+        return
+    for child in node.sub_categories:
+        cat = Category.load(database, child)
+        delete_category_and_sub_categories(cat)
+    database.delete(node)
+    return True
 
 
 def edit_category(_id, _data):
-    """Edit a category by its given id.
+    """Edit a category by its given id and the given data.
     Parameters
         _data: a dict containing 3 key 'name', 'parent', and 'sub_categories'
             - the 'parent' has to either exist in the DB or to be null.
@@ -171,7 +151,7 @@ def edit_category(_id, _data):
             c.store(database)
         else:
             create_category({"name": c})
-            
+
     return _data['name']
 
 
