@@ -14,8 +14,6 @@ envFile = dotenv.dotenv_values(".env")  # might cause problem so add ../
 # JWT info
 JWT_NAME = envFile.get("JWTName")
 SECRET_KEY = envFile.get("JWTSecret")
-print(SECRET_KEY)
-print(JWT_NAME)
 authentication_route = Blueprint('authentication_route', __name__)
 
 
@@ -30,16 +28,17 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = None
         # jwt is passed in the request header
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
+        if JWT_NAME in request.headers:
+            token = request.headers[JWT_NAME]
         # return 401 if token is not passed
         if not token:
             return jsonify({'message': 'Token is missing !!'}), 401
 
         try:
             # decoding the payload to fetch the stored details
-            data = jwt.decode(token, SECRET_KEY)
-            current_user = db.get_user_by_public_id(data['public_id'])
+            data = jwt.decode(token, SECRET_KEY, algorithms=[
+                "HS256"])  # TODO -> signature has expired quand on lance la même requête 2h later ?
+            current_user = db.get_user_by_id(data['public_id'])
         except Exception as e:
             print(e)
             return jsonify({
@@ -79,10 +78,12 @@ def login():
         # generates the JWT Token
         token = jwt.encode({
             'public_id': str(user['_id']),
-            'exp': datetime.utcnow() + timedelta(minutes=30)
+            'exp': datetime.utcnow() + timedelta(minutes=120),
+            'algorithm': "HS256"
         }, SECRET_KEY)
-
-        return make_response(jsonify({'token': token}), 201)  # throw/throw http error au lieu de make_response
+        resp = make_response(jsonify({'token': token}))  # throw/throw http error au lieu de make_response
+        resp.headers[JWT_NAME] = token
+        return resp  # throw/throw http error au lieu de make_response
     # returns 403 if password is wrong
     return make_response(
         'Could not verify',
