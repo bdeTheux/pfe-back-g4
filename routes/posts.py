@@ -28,8 +28,14 @@ def get_all():
 
 @posts_route.route('/pending', methods=['GET'])
 @admin_token_required
-def get_all_pending(_current_user):
+def get_pending(_current_user):
     return jsonify(service.get_pending_posts())
+
+
+@posts_route.route('/myPosts', methods=['GET'])
+@token_required
+def get_all_my_posts(_current_user):
+    return jsonify(service.get_all_my_posts(_current_user['_id']))
 
 
 @posts_route.route('/<string:_id>', methods=['GET'])
@@ -49,16 +55,16 @@ def add_one(_current_user):
     title = data['title']
     description = data['description']
     price = 0
-    if post_nature == 'Selling':
+    if post_nature == 'À vendre':
         price = data['price']
-    address_id = data['address_id']  # Array
+    places = data['places']  # Array
     seller_id = _current_user['_id']
     category_id = data['category_id']
     post = Post(post_nature=post_nature,
                 title=title,
                 description=description,
                 price=price,
-                address_id=address_id,
+                places=places,
                 seller_id=seller_id,
                 category_id=category_id,
                 )
@@ -85,19 +91,21 @@ def edit_one(_current_user, _id):
 
     data = request.json
     post = service.get_post_by_id(_id)
-    if post['seller_id'] != _current_user['id']:
+    if post['seller_id'] != _current_user['_id']:
         abort(401, "You can only change your own post")
 
     post_nature = data['post_nature']
     title = data['title']
     description = data['description']
-    price = data['price']
-    address_id = data['address_id']
+    price = 0
+    if post_nature != 'Giving':
+        price = data['price']
+    places = data['places']
     post = Post(post_nature=post_nature,
                 title=title,
                 description=description,
                 price=price,
-                address_id=address_id,
+                places=places,
                 )
 
     return jsonify(service.edit_post(post, _id))

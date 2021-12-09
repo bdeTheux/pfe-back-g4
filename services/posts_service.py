@@ -13,30 +13,31 @@ def get_document(_document):
 
 def get_posts():
     mango = {
-        'selector': {'type': 'Post'},
+        'selector': {'type': 'Post', 'state': 'Approved'},
     }
     return list(database.find(mango))
 
 
 def get_posts_by_campus(campus):
     mango = {
-        'selector': {'type': 'Post'}
+        'selector': {'type': 'Post', 'state': 'Approved'}
     }
-    list_posts = [row for row in list(database.find(mango)) if campus in row['address_id']]
+    list_posts = [row for row in list(database.find(mango)) if campus in row['places']]
     return list_posts
 
 
 def get_posts_by_category(category):
     mango = {
         'selector': {'type': 'Post',
-                     'category_id': category},
+                     'category_id': category,
+                     'state': 'Approved'}
     }
     return list(database.find(mango))
 
 
 def get_pending_posts():
     mango = {
-        'selector': {'type': 'Post', 'state': 'Pending'},
+        'selector': {'type': 'Post', 'state': 'En attente d\'approbation'},
     }
     return list(database.find(mango))
 
@@ -47,8 +48,9 @@ def get_post_by_id(_id):
 
 def create_post(post):
     id_post = uuid.uuid4().hex
-    database[id_post] = dict(type='Post', post_nature=post.post_nature, state="Pending", title=post.title,
-                             description=post.description, address_id=post.address_id,
+    database[id_post] = dict(type='Post', post_nature=post.post_nature, state='En attente d\'approbation',
+                             title=post.title,
+                             description=post.description, places=post.places,
                              seller_id=post.seller_id, category_id=post.category_id)
     return id_post
 
@@ -76,7 +78,7 @@ def get_posts_by_campus_and_category(campus, category):
         'selector': {'type': 'Post',
                      'category_id': category}
     }
-    list_posts = [row for row in list(database.find(mango)) if campus in row['address_id']]
+    list_posts = [row for row in list(database.find(mango)) if campus in row['places']]
     return list_posts
 
 
@@ -85,3 +87,16 @@ def change_state(_id, state):
     post['state'] = state
     post.store(database)
     return post.get_data()
+
+
+def get_all_my_posts(_id):
+    mango = {
+        'selector': {'type': 'Post',
+                     'seller_id': _id}
+    }
+    my_posts = list(database.find(mango))
+    my_sorted_posts = {'Approuvé': [x for x in my_posts if x['state'] == 'Approuvé'],
+                       'En attente d\'approbation': [x for x in my_posts if x['state'] == 'En attente d\'approbation'],
+                       'Clôturé': [x for x in my_posts if x['state'] == 'Clôturé']}
+
+    return my_sorted_posts
