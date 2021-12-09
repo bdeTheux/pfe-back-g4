@@ -1,4 +1,5 @@
 # flask imports
+import os
 from datetime import datetime, timedelta
 from functools import wraps
 
@@ -10,10 +11,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import services.users_service as service
 from models.User import User
 
-envFile = dotenv.dotenv_values(".env")  # might cause problem so add ../
+envfile = dotenv.dotenv_values(".env")  # might cause problem so add ../
 # JWT info
-JWT_NAME = envFile.get("JWTName")
-SECRET_KEY = envFile.get("JWTSecret")
+try:
+    environment = os.environ["FLASK_ENV"]
+except Exception:
+    environment = "prod"
+if environment == "development":
+    JWT_NAME = envfile.get("JWTName")
+    SECRET_KEY = envfile.get("JWTSecret")
+else:
+    JWT_NAME = os.environ["JWTName"]
+    SECRET_KEY = os.environ["JWTSecret"]
+
 authentication_route = Blueprint('authentication_route', __name__)
 
 
