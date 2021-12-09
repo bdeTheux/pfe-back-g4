@@ -1,7 +1,7 @@
 from couchdb.mapping import Document, TextField, BooleanField
 
 
-class User(Document):  # if error, try import couchdb.document maybe
+class User(Document):
     id = TextField(name="_id")
     last_name = TextField()
     first_name = TextField()
