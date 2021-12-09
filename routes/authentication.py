@@ -110,7 +110,7 @@ def login():
             'exp': datetime.utcnow() + timedelta(minutes=120),
             'algorithm': "HS256"
         }, SECRET_KEY)
-        resp = make_response(jsonify({'token': token}))  # throw/throw http error au lieu de make_response
+        resp = make_response(jsonify({'token': token}))
         resp.headers[JWT_NAME] = token
         return resp
     # returns 403 if password is wrong
