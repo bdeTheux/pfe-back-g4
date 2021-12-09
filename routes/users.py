@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash
 
 import services.users_service as service
 from models.User import User
-from routes.authentication import token_required
+from routes.authentication import token_required, admin_token_required
 
 users_route = Blueprint('users-route', __name__)
 
@@ -15,10 +15,9 @@ def get_blueprint():
 
 
 @users_route.route('/', methods=['GET'])
-@token_required
-def get_all(current_user):
-    return jsonify(service.get_users()) if current_user['is_admin'] \
-        else flask.abort(401)
+@admin_token_required
+def get_all(_current_user):
+    return jsonify(service.get_users())
 
 
 @users_route.route('/<string:_id>', methods=['GET'])
@@ -33,19 +32,15 @@ def get_with_id(current_user, _id):
 
 
 @users_route.route('/<string:_id>/ban', methods=['POST'])
-@token_required
-def ban(current_user, _id):
-    if not current_user['is_admin']:
-        flask.abort(401)
-
+@admin_token_required
+def ban(_current_user, _id):
     return jsonify(service.ban_user(_id))
 
 
 @users_route.route('/<string:_id>', methods=['DELETE'])
-@token_required
-def delete_one(current_user, _id):
-    return jsonify(service.delete_user(_id)) if current_user['is_admin'] \
-        else flask.abort(401)
+@admin_token_required
+def delete_one(_current_user, _id):
+    return jsonify(service.delete_user(_id))
 
 
 @users_route.route('/<string:_id>', methods=['PUT'])

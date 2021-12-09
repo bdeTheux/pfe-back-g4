@@ -37,16 +37,19 @@ print("database \'pfe-df-g4\' created")
 # creating documents
 ## USERS
 password = generate_password_hash("azerty")
-db[uuid.uuid4().hex] = dict(type='User', last_name='admin',
-                            first_name='admin', email='admin@vinci.be',
-                            password=password, campus='Ixelles', is_banned=False, is_admin=True)
-db[uuid.uuid4().hex] = dict(type='User', last_name='Jullien',
-                            first_name='Kevin', email='kevin.jullien@student.vinci.be',
-                            password=password, campus='Woluwe', is_banned=False, is_admin=False)
-db[uuid.uuid4().hex] = dict(type='User', last_name='Laraki',
-                            first_name='Narjis', email='narjis.laraki@student.vinci.be',
-                            password=password, campus='Louvain-la-Neuve', is_banned=False,
-                            is_admin=False)
+id1 = uuid.uuid4().hex
+id2 = uuid.uuid4().hex
+id3 = uuid.uuid4().hex
+db[id1] = dict(type='User', last_name='admin',
+               first_name='admin', email='admin@vinci.be',
+               password=password, campus='Ixelles', is_banned=False, is_admin=True)
+db[id2] = dict(type='User', last_name='Jullien',
+               first_name='Kevin', email='kevin.jullien@student.vinci.be',
+               password=password, campus='Woluwe', is_banned=False, is_admin=False)
+db[id3] = dict(type='User', last_name='Laraki',
+               first_name='Narjis', email='narjis.laraki@student.vinci.be',
+               password=password, campus='Louvain-la-Neuve', is_banned=False,
+               is_admin=False)
 
 ## CATEGORIES
 db['Maison et Jardin'] = dict(type='Category', name='Maison et Jardin', parent=None,
@@ -78,12 +81,7 @@ db['Vêtements et chaussures hommes'] = dict(type='Category', name='Vêtements e
                                             parent='Vêtements et accessoires', sub_categories=[])
 db['Bijoux et accessoires'] = dict(type='Category', name='Bijoux et accessoires',
                                    parent='Vêtements et accessoires', sub_categories=[])
-
-# docPosts = {'name': 'posts', 'content': {}}
-# docAddresses = {'name': 'addresses', 'content': {}}
-# listDocs = [docPosts, docUsers, docCategories, docAddresses]
-# for doc in listDocs:
-#     db.save(doc)
-#     print("document \'" + doc['name'] + "\' created")
-#     # fetching from the database
-#     print("name is : " + doc['name'])
+db[uuid.uuid4().hex] = dict(type='Post', post_nature='Selling', state='Pending', title='Converses blanches',
+                            description='En très bon état, pointure 38', address_id='Woluwe',
+                            seller_id=id3, price=1200,
+                            category_id='Vêtements et chaussures femmes')  # seller_id might not work after init of db -> mettre plutôt l'email ?
