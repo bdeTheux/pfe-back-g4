@@ -8,4 +8,4 @@ class Category(Document):
     sub_categories = ListField(TextField())
 
     def get_data(self):
-        return {"name": self.name, "parent": self.parent, "sub_categories": self.sub_categories}
+        return {"_id": self._id, "name": self.name, "parent": self.parent, "sub_categories": self.sub_categories}

@@ -1,6 +1,7 @@
 from flask import jsonify, abort, request, Blueprint
 
 import services.addresses_service as service
+from routes.authentication import admin_token_required
 
 addresses_route = Blueprint('addresses-route', __name__)
 
@@ -17,31 +18,55 @@ def get_all():
 
 @addresses_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
-    # code ...
-    return jsonify(service.get_address_by_id(_id))
+    try:
+        res = service.get_address_by_id(_id)
+    except AttributeError as e:
+        abort(400, e)
+    return jsonify(res)
 
 
 @addresses_route.route('/', methods=['POST'])
-def post_request():
-    if not request.get_json():
-        abort(400)
+@admin_token_required
+def create_one(_current_user):
+    if not request.json:
+        abort(400, "The payload is empty")
 
-    data = request.get_json(force=True)
+    data = request.json
+    if 'campus' not in data:
+        abort(400, "The payload need a field 'campus'")
+    if 'lat' not in data:
+        abort(400, "The payload need a field 'lat'")
+    if 'long' not in data:
+        abort(400, "The payload need a field 'long'")
 
-    return jsonify(service.create_address())
+    return jsonify(service.create_address(data))
 
 
 @addresses_route.route('/<string:_id>', methods=['DELETE'])
-def delete(_id):
-    # code ...
-    return jsonify(service.delete_address(_id))
+@admin_token_required
+def delete_one(_current_user, _id):
+    try:
+        res = service.delete_address(_id)
+    except AttributeError as e:
+        abort(400, e)
+    return jsonify(res)
 
 
 @addresses_route.route('/<string:_id>', methods=['PUT'])
-def edit_one(_id):
-    if not request.get_json():
-        abort(400)
+@admin_token_required
+def edit_one(_current_user, _id):
+    if not request.json:
+        abort(400, "The payload is empty")
 
-    data = request.get_json(force=True)
-
-    return jsonify(service.edit_address())
+    data = request.json
+    if 'campus' not in data:
+        abort(400, "The payload need a field 'campus'")
+    if 'lat' not in data:
+        abort(400, "The payload need a field 'lat'")
+    if 'long' not in data:
+        abort(400, "The payload need a field 'long'")
+    try:
+        res = service.edit_address(_id, data)
+    except AttributeError as e:
+        abort(400, e)
+    return jsonify(res)

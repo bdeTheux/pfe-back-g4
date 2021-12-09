@@ -1,8 +1,8 @@
 from couchdb.mapping import Document, TextField, BooleanField
 
 
-class User(Document):
-    id = TextField(name="_id")
+class User(Document):  # if error, try import couchdb.document maybe
+    _id = TextField()
     last_name = TextField()
     first_name = TextField()
     email = TextField()
@@ -12,9 +12,9 @@ class User(Document):
     is_admin = BooleanField(default=False)
 
     def to_public(self):
-        return {"id": self.id, "last_name": self.last_name, "first_name": self.first_name, "email": self.email,
+        return {"_id": self.id, "last_name": self.last_name, "first_name": self.first_name, "email": self.email,
                 "campus": self.campus}
 
     def to_admin(self):
-        return {"id": self.id, "last_name": self.last_name, "first_name": self.first_name, "email": self.email,
+        return {"_id": self.id, "last_name": self.last_name, "first_name": self.first_name, "email": self.email,
                 "campus": self.campus, "is_banned": self.is_banned, "is_admin": self.is_admin}
