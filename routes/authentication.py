@@ -5,7 +5,7 @@ from functools import wraps
 
 import dotenv
 import jwt
-from flask import request, make_response, Blueprint, abort
+from flask import request, make_response, Blueprint, abort, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import services.users_service as service
@@ -36,7 +36,10 @@ def get_blueprint():
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.cookies.get(JWT_NAME)
+        token = None
+        # jwt is passed in the request header
+        if JWT_NAME in request.headers:
+            token = request.headers[JWT_NAME]
         # return 401 if token is not passed
         if not token:
             return abort(401, 'Token is missing !!')
@@ -60,7 +63,10 @@ def admin_token_required(f):
 
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.cookies.get(JWT_NAME)
+        token = None
+        # jwt is passed in the request header
+        if JWT_NAME in request.headers:
+            token = request.headers[JWT_NAME]
         # return 401 if token is not passed
         if not token:
             return abort(401, 'Token is missing !!')
@@ -104,10 +110,8 @@ def login():
             'exp': datetime.utcnow() + timedelta(minutes=120),
             'algorithm': "HS256"
         }, SECRET_KEY)
-        resp = make_response()
-        max_age = 60 * 60 * 24  # 1 day
-
-        resp.set_cookie(JWT_NAME, token, httponly=True, max_age=max_age)
+        resp = make_response(jsonify({'token': token}))  # throw/throw http error au lieu de make_response
+        resp.headers[JWT_NAME] = token
         return resp
     # returns 403 if password is wrong
     return abort(401, 'Wrong credentials')
