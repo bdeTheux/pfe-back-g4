@@ -5,13 +5,13 @@ from functools import wraps
 
 import dotenv
 import jwt
-from flask import request, jsonify, make_response, Blueprint, abort
+from flask import request, make_response, Blueprint, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import services.users_service as service
 from models.User import User
 
-envfile = dotenv.dotenv_values(".env")  # might cause problem so add ../
+envfile = dotenv.dotenv_values(".env")
 # JWT info
 try:
     environment = os.environ["FLASK_ENV"]
@@ -36,10 +36,7 @@ def get_blueprint():
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
-        # jwt is passed in the request header
-        if JWT_NAME in request.headers:
-            token = request.headers[JWT_NAME]
+        token = request.cookies.get(JWT_NAME)
         # return 401 if token is not passed
         if not token:
             return abort(401, 'Token is missing !!')
@@ -59,12 +56,11 @@ def token_required(f):
 
 
 def admin_token_required(f):
+    """Okay that's duplicated code... for now!... we hope so"""
+
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
-        # jwt is passed in the request header
-        if JWT_NAME in request.headers:
-            token = request.headers[JWT_NAME]
+        token = request.cookies.get(JWT_NAME)
         # return 401 if token is not passed
         if not token:
             return abort(401, 'Token is missing !!')
@@ -90,24 +86,16 @@ def admin_token_required(f):
 def login():
     # creates dictionary of form data
     auth = request.json
-    print(auth)
+
     if not auth or not auth['email'] or not auth['password']:
         # returns 401 if any email or / and password is missing
-        return abort(401, 'Wrong credentials')  # make_response(
-        # 'Could not verify',
-        # 401,
-        # {'WWW-Authenticate': 'Basic realm ="Login required !!"'}
-        # )
+        return abort(401, 'Wrong credentials')
 
     user = service.get_user_by_email(auth['email'])
 
     if not user:
         # returns 401 if user does not exist
-        return abort(401, 'Wrong credentials')  # make_response(
-        # 'Could not verify',
-        # 401,
-        # {'WWW-Authenticate': 'Basic realm ="User does not exist !!"'}
-        # )
+        return abort(401, 'Wrong credentials')
 
     if check_password_hash(user['password'], auth['password']):
         # generates the JWT Token
@@ -116,15 +104,13 @@ def login():
             'exp': datetime.utcnow() + timedelta(minutes=120),
             'algorithm': "HS256"
         }, SECRET_KEY)
-        resp = make_response(jsonify({'token': token}))  # throw/throw http error au lieu de make_response
-        resp.headers[JWT_NAME] = token
-        return resp  # throw/throw http error au lieu de make_response
+        resp = make_response()
+        max_age = 60 * 60 * 24  # 1 day
+
+        resp.set_cookie(JWT_NAME, token, httponly=True, max_age=max_age)
+        return resp
     # returns 403 if password is wrong
-    return abort(401, 'Wrong credentials')  # make_response(
-    # 'Could not verify',
-    # 403,
-    # {'WWW-Authenticate': 'Basic realm ="Wrong Password !!"'}
-    # )
+    return abort(401, 'Wrong credentials')
 
 
 # signup route
@@ -157,3 +143,10 @@ def signup():
     else:
         # returns 202 if user already exists
         return make_response('User already exists. Please Log in.', 202)
+
+
+@authentication_route.route('/logout', methods=['POST'])
+def logout():
+    resp = make_response()
+    resp.set_cookie(JWT_NAME, "", expires=0)
+    return resp
