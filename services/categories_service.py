@@ -16,39 +16,41 @@ def get_category_by_id(_id):
     return Category.load(database, _id)
 
 
-def create_category(_data):
+def create_category(_name, _parent, _sub_categories):
     """Create a new category only if the same name does not exist already.
     Only existing parent and non-existing children are valid.
     Parameters
-        _data: a dict containing at lease the key 'name', and optionally 'parent' and 'sub_categories'
-            - the 'parent' has to exist already in the DB, or it will be set to None.
-            - the 'sub_categories' has to be a list of strings. If the categories in the list does not exist,
-              they are created as sub_categories of the new one. If they exist, they are ignored.
+        [mandatory]
+        - '_name': a non-empty string
+        [optional]
+        - '_parent' : the parent's id. Has to exist already in the DB, or it will be set to None.
+        - '_sub_categories' : a list of strings. If the categories in the list does not exist,
+           they are created as sub_categories of the new one. If they exist, they are ignored.
     Returns
         The name (and id) of the added category
     """
-    parent_category = None
-    if 'parent' in _data and (parent_category := Category.load(database, _data['parent'])):
-        parent = _data['parent']
+    if _parent:
+        parent_category = Category.load(database, _parent)
+        if parent_category:
+            parent = _parent
     else:
         parent = None
 
     sub_categories = []
-    if 'sub_categories' in _data:
-        for cat in _data['sub_categories']:
+    if _sub_categories:
+        for cat in _sub_categories['sub_categories']:
             existing_cat = Category.load(database, cat)
             if not existing_cat:
-                database[cat] = dict(type='Category', name=cat, parent=_data['name'],
-                                     sub_categories=[])
+                database[cat] = dict(type='Category', name=cat, parent=_name, sub_categories=[])
                 sub_categories.append(cat)
 
-    database[_data['name']] = dict(type='Category', name=_data['name'], parent=parent, sub_categories=sub_categories)
+    database[_name] = dict(type='Category', name=_name, parent=parent, sub_categories=sub_categories)
 
     if parent_category:
-        parent_category.sub_categories.append(_data['name'])
+        parent_category.sub_categories.append(_name)
         parent_category.store(database)
 
-    return _data['name']
+    return _name
 
 
 def delete_category(_id):
@@ -56,7 +58,7 @@ def delete_category(_id):
     category = Category.load(database, _id)
 
     if not category:
-        raise FileNotFoundError
+        raise AttributeError
 
     if category.parent:
         parent = Category.load(database, category.parent)
@@ -76,55 +78,52 @@ def delete_category_and_sub_categories(node: Category):
     return True
 
 
-def edit_category(_id, _data):
+def edit_category(_id, _name, _parent, _sub_categories):
     """Edit a category by its given id and the given data.
     Parameters
-        _data: a dict containing 3 key 'name', 'parent', and 'sub_categories'
-            - the 'name' does not have to be empty nor existing in the DB.
-            - the 'parent' has to either exist in the DB or to be null.
-              if it is not null and does not exist, it is aborted
-            - the 'sub_categories' has to be a list of strings.
-              If it does not have the same items as the original in the DB, the operation is aborted.
-              If it has additional items with parents, it is aborted.
-              If it has additional unknown items, they are created.
+        [mandatory]
+        - _name: does not have to be empty nor existing in the DB.
+        - _parent has to either exist in the DB or to be null.
+          if it is not null and does not exist, it is aborted
+        - _sub_categories: has to be a list of strings.
+          If it does not have the same items as the original in the DB, the operation is aborted.
+          If it has additional items with parents, it is aborted.
+          If it has additional unknown items, they are created.
     Returns
         The name (and id) of the added category
     """
     category = Category.load(database, _id)
 
-    if not category:
-        raise AttributeError
-
     # If a new name is set
-    if _data['name'] != category.name:
-        if not _data['name']:
+    if _name != category.name:
+        if not _name:
             raise AttributeError
-        new_name = Category.load(database, _data['name'])
+        new_name = Category.load(database, _name)
         if new_name:
             raise AttributeError
 
     # If sub_categories are missing, aborting
-    missing_subs = set(category.sub_categories).difference(_data['sub_categories'])
+    missing_subs = set(category.sub_categories).difference(_sub_categories)
     if len(missing_subs) != 0:
         raise AttributeError
 
     # If new sub_categories already have a parent, aborting
-    new_subs = set(_data['sub_categories']).difference(category.sub_categories)
+    new_subs = set(_sub_categories).difference(category.sub_categories)
     for cat in new_subs:
         c = Category.load(database, cat)
         if c and c.parent:
             raise AttributeError
 
     # If the parent is different
-    if category.parent != _data['parent']:
-        if _data['parent']:
+    if category.parent != _parent:
+        if _parent:
             parent = Category.load(database, category.parent)
             if not parent:
                 raise AttributeError
             parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
             parent.store(database)
 
-        category.parent = _data['parent']
+        category.parent = _parent
 
     # For every new added sub_cat, create it or edit its parent
     for cat in new_subs:
@@ -136,10 +135,10 @@ def edit_category(_id, _data):
             create_category({"name": c, "parent": category.name})
 
     # If a new name is given, copy the actual category and rename the copy
-    if _data['name'] != category.name:
-        database.copy(category.name, _data['name'])
-        copy = Category.load(database, _data['name'])
-        copy.name = _data['name']
+    if _name != category.name:
+        database.copy(category.name, _name)
+        copy = Category.load(database, _name)
+        copy.name = _name
         copy.store(database)
 
         # Change the parent of the sub_categories with the new name
@@ -156,4 +155,4 @@ def edit_category(_id, _data):
 
         # Former category deletion
         database.delete(category)
-    return _data['name']
+    return _name

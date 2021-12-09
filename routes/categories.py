@@ -20,7 +20,7 @@ def get_all():
 @categories_route.route('/<string:_id>', methods=['GET'])
 def get_one(_id):
     category = service.get_category_by_id(_id)
-    return jsonify(category.get_data()) if category else flask.abort(404)
+    return jsonify(category.get_data()) if category else flask.abort(404, "Reference not found")
 
 
 @categories_route.route('/', methods=['POST'])
@@ -33,12 +33,25 @@ def create_one(_current_user):
 
     if 'name' not in data:  # No data
         abort(400, "The payload need a field 'name'")
+
     if not data['name']:  # Empty data
         abort(400, "The field 'name' should not be empty")
-    if service.get_category_by_id(data['name']):
-        abort(400, "The category exists already")
-    res = service.create_category(data)
-    return jsonify(res) if res else abort(400, "Something wrong happened")
+
+    if 'parent' not in data:  # No data
+        parent = None
+    else:
+        parent = data['parent']
+
+    if 'sub_categories' not in data:  # No data
+        sub_categories = []
+    else:
+        sub_categories = data['sub_categories'] if isinstance(data['sub_categories'], list) else []
+
+    try:
+        res = service.create_category(data['name'], parent, sub_categories)
+    except AttributeError as e:
+        abort(400, e)
+    return jsonify(res)
 
 
 @categories_route.route('/<string:_id>', methods=['DELETE'])
@@ -46,7 +59,7 @@ def create_one(_current_user):
 def delete_one(_current_user, _id):
     try:
         res = service.delete_category(_id)
-    except FileNotFoundError:
+    except AttributeError:
         abort(404, "Category not found")
     return jsonify(res)
 
@@ -60,8 +73,10 @@ def edit_one(_current_user, _id):
     data = request.json
     if 'name' not in data:
         abort(400, "The payload need a field 'name'")
+    if not data['name']:  # Empty data
+        abort(400, "The field 'name' should not be empty")
     if 'parent' not in data:
         abort(400, "The payload need a field 'parent'")
     if 'sub_categories' not in data:
         abort(400, "The payload need a field 'sub_categories'")
-    return jsonify(service.edit_category(_id, data))
+    return jsonify(service.edit_category(_id, data['name'], data['parent'], data['sub_categories']))
