@@ -79,7 +79,7 @@ def edit_category(_id, _data):
     """Edit a category by its given id and the given data.
     Parameters
         _data: a dict containing 3 key 'name', 'parent', and 'sub_categories'
-            - the 'parent' does not have to be empty nor existing in the DB.
+            - the 'name' does not have to be empty nor existing in the DB.
             - the 'parent' has to either exist in the DB or to be null.
               if it is not null and does not exist, it is aborted
             - the 'sub_categories' has to be a list of strings.
@@ -114,6 +114,7 @@ def edit_category(_id, _data):
         if c and c.parent:
             raise AttributeError
 
+    # If the parent is different
     if category.parent != _data['parent']:
         if _data['parent']:
             parent = Category.load(database, category.parent)
@@ -124,6 +125,7 @@ def edit_category(_id, _data):
 
         category.parent = _data['parent']
 
+    # For every new added sub_cat, create it or edit its parent
     for cat in new_subs:
         c = Category.load(database, cat)
         if c:
@@ -132,21 +134,25 @@ def edit_category(_id, _data):
         else:
             create_category({"name": c, "parent": category.name})
 
-    # If a new name is given
+    # If a new name is given, copy the actual category and rename the copy
     if _data['name'] != category.name:
         database.copy(category.name, _data['name'])
         copy = Category.load(database, _data['name'])
         copy.name = _data['name']
         copy.store(database)
 
+        # Change the parent of the sub_categories with the new name
         for sub in copy.sub_categories:
             c = Category.load(database, sub)
             c.parent = copy.name
             c.store(database)
 
+        # Replacing the sub_category name in the parent's sub_categories list
         if copy.parent:
             parent = Category.load(database, copy.parent)
             parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
             parent.sub_categories.append(copy.name)
+
+        # Former category deletion
         database.delete(category)
     return _data['name']
