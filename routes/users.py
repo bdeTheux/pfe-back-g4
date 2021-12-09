@@ -2,7 +2,7 @@ import flask
 from flask import jsonify, abort, request, Blueprint
 from werkzeug.security import generate_password_hash
 
-import db.couchDB_service as db
+import services.users_service as service
 from models.User import User
 from routes.authentication import token_required
 
@@ -17,14 +17,14 @@ def get_blueprint():
 @users_route.route('/', methods=['GET'])
 @token_required
 def get_all(current_user):
-    return jsonify(db.get_users()) if current_user['is_admin'] \
+    return jsonify(service.get_users()) if current_user['is_admin'] \
         else flask.abort(401)
 
 
 @users_route.route('/<string:_id>', methods=['GET'])
 @token_required
 def get_with_id(current_user, _id):
-    user = db.get_user_by_id(_id)
+    user = service.get_user_by_id(_id)
     if user:
         return jsonify(user.to_admin()) if current_user['is_admin'] \
             else jsonify(user.to_public())
@@ -38,13 +38,13 @@ def ban(current_user, _id):
     if not current_user['is_admin']:
         flask.abort(401)
 
-    return jsonify(db.ban_user(_id))
+    return jsonify(service.ban_user(_id))
 
 
 @users_route.route('/<string:_id>', methods=['DELETE'])
 @token_required
 def delete_one(current_user, _id):
-    return jsonify(db.delete_user(_id)) if current_user['is_admin'] \
+    return jsonify(service.delete_user(_id)) if current_user['is_admin'] \
         else flask.abort(401)
 
 
@@ -67,4 +67,4 @@ def edit_one(current_user, _id):
                 email=email,
                 password=generate_password_hash(password)
                 )
-    return jsonify(db.edit_user(user, _id))
+    return jsonify(service.edit_user(user, _id))

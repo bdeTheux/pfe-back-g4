@@ -1,6 +1,6 @@
 from flask import jsonify, abort, request, Blueprint
 
-import db.couchDB_service as db
+import services.posts_service as service
 
 posts_route = Blueprint('posts-route', __name__)
 
@@ -16,24 +16,24 @@ def get_all():
     campus = request.args.get('campus')
     print(category, campus)
     if campus and category:
-        return jsonify(db.get_post_by_campus_and_category(campus, category))
+        return jsonify(service.get_post_by_campus_and_category(campus, category))
     elif campus:
-        return jsonify(db.get_post_by_campus(campus))
+        return jsonify(service.get_post_by_campus(campus))
     elif category:
-        return jsonify(db.get_post_by_category(category))
+        return jsonify(service.get_post_by_category(category))
 
-    return jsonify(db.get_posts())
+    return jsonify(service.get_posts())
 
 
 @posts_route.route('/pending', methods=['GET'])
 def get_all_pending():
-    return jsonify(db.get_pending_posts())
+    return jsonify(service.get_pending_posts())
 
 
 @posts_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
     # code ...
-    return jsonify(db.get_post_by_id(_id))
+    return jsonify(service.get_post_by_id(_id))
 
 
 @posts_route.route('/', methods=['POST'])
@@ -43,13 +43,13 @@ def add_one():
 
     data = request.get_json(force=True)
 
-    return jsonify(db.create_post())
+    return jsonify(service.create_post())
 
 
 @posts_route.route('/<string:_id>', methods=['DELETE'])
 def delete_one(_id):
     # code ...
-    return jsonify(db.delete_post(_id))
+    return jsonify(service.delete_post(_id))
 
 
 @posts_route.route('/<string:_id>', methods=['PUT'])
@@ -59,4 +59,4 @@ def edit_one(_id):
 
     data = request.get_json(force=True)
 
-    return jsonify(db.edit_post())
+    return jsonify(service.edit_post())

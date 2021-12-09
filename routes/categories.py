@@ -1,7 +1,7 @@
 import flask
 from flask import jsonify, abort, request, Blueprint
 
-import db.couchDB_service as db
+import services.categories_service as service
 from routes.authentication import admin_token_required
 
 categories_route = Blueprint('categories-route', __name__)
@@ -14,12 +14,12 @@ def get_blueprint():
 
 @categories_route.route('/', methods=['GET'])
 def get_all():
-    return jsonify(db.get_categories())
+    return jsonify(service.get_categories())
 
 
 @categories_route.route('/<string:_id>', methods=['GET'])
 def get_one(_id):
-    category = db.get_category_by_id(_id)
+    category = service.get_category_by_id(_id)
     return jsonify(category.get_data()) if category else flask.abort(404)
 
 
@@ -35,9 +35,9 @@ def create_one(_current_user):
         abort(400, "The payload need a field 'name'")
     if not data['name']:  # Empty data
         abort(400, "The field 'name' should not be empty")
-    if db.get_category_by_id(data['name']):
+    if service.get_category_by_id(data['name']):
         abort(400, "The category exists already")
-    res = db.create_category(data)
+    res = service.create_category(data)
     return jsonify(res) if res else abort(400, "Something wrong happened")
 
 
@@ -45,7 +45,7 @@ def create_one(_current_user):
 @admin_token_required
 def delete_one(_current_user, _id):
     try:
-        res = db.delete_category(_id)
+        res = service.delete_category(_id)
     except FileNotFoundError:
         abort(404, "Category not found")
     return jsonify(res)
@@ -64,4 +64,4 @@ def edit_one(_current_user, _id):
         abort(400, "The payload need a field 'parent'")
     if 'sub_categories' not in data:
         abort(400, "The payload need a field 'sub_categories'")
-    return jsonify(db.edit_category(_id, data))
+    return jsonify(service.edit_category(_id, data))

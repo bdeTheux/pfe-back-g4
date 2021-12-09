@@ -16,6 +16,11 @@ def handle_404_error(_error):
     return make_response(jsonify({'error': _error.description}), 404)
 
 
+def handle_405_error(_error):
+    """Return a http 405 error to client"""
+    return make_response(jsonify({'error': _error.description}), 405)
+
+
 def handle_500_error(_error):
     """Return a http 500 error to client"""
     return make_response(jsonify({'error': _error.description}), 500)

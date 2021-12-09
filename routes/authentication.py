@@ -7,7 +7,7 @@ import jwt
 from flask import request, jsonify, make_response, Blueprint, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 
-import db.couchDB_service as db
+import services.users_service as service
 from models.User import User
 
 envFile = dotenv.dotenv_values(".env")  # might cause problem so add ../
@@ -38,7 +38,7 @@ def token_required(f):
             # decoding the payload to fetch the stored details
             data = jwt.decode(token, SECRET_KEY, algorithms=[
                 "HS256"])  # TODO -> signature has expired quand on lance la même requête 2h later ?
-            current_user = db.get_user_by_id(data['public_id'])
+            current_user = service.get_user_by_id(data['public_id'])
         except Exception as e:
             print(e)
             return abort(401, 'Token is invalid !!')
@@ -63,7 +63,7 @@ def admin_token_required(f):
             # decoding the payload to fetch the stored details
             data = jwt.decode(token, SECRET_KEY, algorithms=[
                 "HS256"])  # TODO -> signature has expired quand on lance la même requête 2h later ?
-            current_user = db.get_user_by_id(data['public_id'])
+            current_user = service.get_user_by_id(data['public_id'])
         except Exception as e:
             print(e)
             return abort(401, 'Token is invalid !!')
@@ -89,7 +89,7 @@ def login():
         # {'WWW-Authenticate': 'Basic realm ="Login required !!"'}
         # )
 
-    user = db.get_user_by_email(auth['email'])
+    user = service.get_user_by_email(auth['email'])
 
     if not user:
         # returns 401 if user does not exist
@@ -128,7 +128,7 @@ def signup():
     password = data['password']
 
     # checking for existing user
-    user = db.get_user_by_email(email)
+    user = service.get_user_by_email(email)
     print(user)
     if not user:
         # database ORM object
@@ -142,7 +142,7 @@ def signup():
                     password=generate_password_hash(password)
                     )
         # insert user
-        db.create_user(user)
+        service.create_user(user)
         return make_response('Successfully registered.', 201)
     else:
         # returns 202 if user already exists
