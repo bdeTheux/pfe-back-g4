@@ -39,7 +39,11 @@ def create_one(_current_user):
     if 'long' not in data:
         abort(400, "The payload need a field 'long'")
 
-    return jsonify(service.create_address(data))
+    try:
+        res = service.create_address(data['campus'], data['lat'], data['long'])
+    except AttributeError as e:
+        abort(400, e)
+    return jsonify(res)
 
 
 @addresses_route.route('/<string:_id>', methods=['DELETE'])
@@ -65,8 +69,10 @@ def edit_one(_current_user, _id):
         abort(400, "The payload need a field 'lat'")
     if 'long' not in data:
         abort(400, "The payload need a field 'long'")
+
     try:
-        res = service.edit_address(_id, data)
+        res = service.edit_address(_id, data['campus'], data['lat'], data['long'])
     except AttributeError as e:
         abort(400, e)
+
     return jsonify(res)

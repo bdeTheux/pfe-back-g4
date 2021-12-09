@@ -18,6 +18,7 @@ def get_category_by_id(_id):
 
 def create_category(_data):
     """Create a new category only if the same name does not exist already.
+    Only existing parent and non-existing children are valid.
     Parameters
         _data: a dict containing at lease the key 'name', and optionally 'parent' and 'sub_categories'
             - the 'parent' has to exist already in the DB, or it will be set to None.
