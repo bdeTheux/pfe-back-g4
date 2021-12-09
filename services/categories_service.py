@@ -79,7 +79,7 @@ def edit_category(_id, _data):
     """Edit a category by its given id and the given data.
     Parameters
         _data: a dict containing 3 key 'name', 'parent', and 'sub_categories'
-            - the 'parent' does not have to be empty nor existing in the DB.
+            - the 'name' does not have to be empty nor existing in the DB.
             - the 'parent' has to either exist in the DB or to be null.
               if it is not null and does not exist, it is aborted
             - the 'sub_categories' has to be a list of strings.
