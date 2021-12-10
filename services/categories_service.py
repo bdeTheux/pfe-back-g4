@@ -12,8 +12,34 @@ def get_categories():
     return list(database.find(mango))
 
 
+def get_categories_as_tree():
+    mango = {
+        'selector': {'type': 'Category', 'parent': None},
+        'fields': ['name', 'parent', 'sub_categories']
+    }
+    dic = {x['name']: [] for x in database.find(mango)}
+    dic = _get_sub({x['name']: [] for x in database.find(mango)})
+    return dic
+
+
+def _get_sub(dic):
+    for cat in dic.keys():
+        mango = {
+            'selector': {'type': 'Category', 'parent': cat},
+            'fields': ['name', 'sub_categories']
+        }
+        subs = _get_sub({x['name']: [] for x in database.find(mango)})
+        if subs:
+            dic[cat].append(subs)
+
+    return dic
+
+
 def get_category_by_id(_id):
-    return Category.load(database, _id)
+    category = Category.load(database, _id)
+    if not category:
+        raise AttributeError("Reference not found")
+    return category
 
 
 def create_category(_name, _parent, _sub_categories):
@@ -23,22 +49,23 @@ def create_category(_name, _parent, _sub_categories):
         [mandatory]
         - '_name': a non-empty string
         [optional]
-        - '_parent' : the parent's id. Has to exist already in the DB, or it will be set to None.
+        - '_parent' : the parent's id. Has to exist already in the DB
+           and != than _name, or it will be set to None.
         - '_sub_categories' : a list of strings. If the categories in the list does not exist,
            they are created as sub_categories of the new one. If they exist, they are ignored.
     Returns
         The name (and id) of the added category
     """
-    if _parent:
+    parent_category = None
+    # Check the validity of the parent
+    if _parent and _parent != _name:
         parent_category = Category.load(database, _parent)
-        if parent_category:
-            parent = _parent
-    else:
-        parent = None
+    parent = parent_category.name if parent_category else None
 
     sub_categories = []
+
     if _sub_categories:
-        for cat in _sub_categories['sub_categories']:
+        for cat in _sub_categories:
             existing_cat = Category.load(database, cat)
             if not existing_cat:
                 database[cat] = dict(type='Category', name=cat, parent=_name, sub_categories=[])
@@ -58,24 +85,49 @@ def delete_category(_id):
     category = Category.load(database, _id)
 
     if not category:
-        raise AttributeError
+        raise AttributeError("Reference not found")
 
     if category.parent:
         parent = Category.load(database, category.parent)
         parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
         parent.store(database)
+    return _delete_category_and_sub_categories(category)
 
-    return delete_category_and_sub_categories(category)
 
-
-def delete_category_and_sub_categories(node: Category):
+def _delete_category_and_sub_categories(node: Category) -> bool:
     if not node:
-        return
+        return False
     for child in node.sub_categories:
         cat = Category.load(database, child)
-        delete_category_and_sub_categories(cat)
+        _delete_category_and_sub_categories(cat)
     database.delete(node)
     return True
+
+
+def get_sub_categories(category: Category) -> bool:
+    children = {category.name: category.get_data()}
+    temp = [x for x in category.sub_categories]  # copy
+    while temp:
+        actual = temp.pop()
+        cat = Category.load(database, temp.pop())
+        children[cat.parent] = 0
+        children.append(temp)
+        get_sub_categories(cat, children)
+    return True
+
+
+def get_parents(_id) -> list:
+    parents = []
+    node = Category.load(database, _id)
+    if not node:
+        raise AttributeError("Reference not found")
+    while True:
+        if not node.parent:
+            break
+        parents.append(node.parent)
+        node = Category.load(database, node.parent)
+
+    return parents
 
 
 def edit_category(_id, _name, _parent, _sub_categories):
@@ -97,29 +149,29 @@ def edit_category(_id, _name, _parent, _sub_categories):
     # If a new name is set
     if _name != category.name:
         if not _name:
-            raise AttributeError
+            raise AttributeError("Name is empty")
         new_name = Category.load(database, _name)
         if new_name:
-            raise AttributeError
+            raise AttributeError("Reference with same name found")
 
     # If sub_categories are missing, aborting
     missing_subs = set(category.sub_categories).difference(_sub_categories)
     if len(missing_subs) != 0:
-        raise AttributeError
+        raise AttributeError("Cannot remove sub_categories when editing, please edit those sub_categories")
 
     # If new sub_categories already have a parent, aborting
     new_subs = set(_sub_categories).difference(category.sub_categories)
     for cat in new_subs:
         c = Category.load(database, cat)
         if c and c.parent:
-            raise AttributeError
+            raise AttributeError("Some newly added sub_categories have a parent category already")
 
     # If the parent is different
     if category.parent != _parent:
         if _parent:
             parent = Category.load(database, category.parent)
             if not parent:
-                raise AttributeError
+                raise AttributeError("The parent category does not exist")
             parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
             parent.store(database)
 

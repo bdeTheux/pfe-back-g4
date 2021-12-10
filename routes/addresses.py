@@ -40,7 +40,7 @@ def create_one(_current_user):
         abort(400, "The payload need a field 'long'")
 
     try:
-        res = service.create_address(data['campus'], data['lat'], data['long'])
+        res = service.create_address(data.get('campus'), data.get('lat'), data.get('long'))
     except AttributeError as e:
         abort(400, e)
     return jsonify(res)
@@ -71,7 +71,7 @@ def edit_one(_current_user, _id):
         abort(400, "The payload need a field 'long'")
 
     try:
-        res = service.edit_address(_id, data['campus'], data['lat'], data['long'])
+        res = service.edit_address(_id, data.get('campus'), data.get('lat'), data.get('long'))
     except AttributeError as e:
         abort(400, e)
 

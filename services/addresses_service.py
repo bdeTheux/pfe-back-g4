@@ -26,7 +26,7 @@ def create_address(_campus, _lat, _long):
 def delete_address(_id):
     address = Address.load(database, _id)
     if not address:
-        raise AttributeError("No reference")
+        raise AttributeError("Reference not found")
     return database.delete(address)
 
 
