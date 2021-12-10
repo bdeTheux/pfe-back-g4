@@ -1,7 +1,7 @@
 from flask import jsonify, abort, request, Blueprint
 
 import services.categories_service as service
-from routes.authentication import admin_token_required
+from routes.authentication_route import admin_token_required
 
 categories_route = Blueprint('categories-route', __name__)
 

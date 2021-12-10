@@ -1,8 +1,8 @@
 from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
-from models.Post import Post
-from routes.authentication import admin_token_required, token_required
+from models.Post import Post, PostStates
+from routes.authentication_route import admin_token_required, token_required
 
 posts_route = Blueprint('posts-route', __name__)
 
@@ -125,4 +125,7 @@ def change_state(_current_user, _id):
     data = request.json
 
     state = data['state']
+    if state != PostStates.CLOSED.value and state != PostStates.PENDING.value and state != PostStates.APPROVED.value:
+        abort(400,
+              f"The only valid states are {PostStates.PENDING.value}, {PostStates.APPROVED.value}, and {PostStates.CLOSED.value}")
     return jsonify(service.change_state(_id, state))
