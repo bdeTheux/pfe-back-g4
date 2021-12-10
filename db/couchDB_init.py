@@ -36,7 +36,7 @@ except Exception as e:
 print("database \'pfe-df-g4\' created")
 
 # creating documents
-## USERS
+# USERS
 password = generate_password_hash("azerty")
 id1 = uuid.uuid4().hex
 id2 = uuid.uuid4().hex
@@ -52,7 +52,7 @@ db[id3] = dict(type='User', last_name='Laraki',
                password=password, campus='Louvain-la-Neuve', is_banned=False,
                is_admin=False)
 
-## CATEGORIES
+# CATEGORIES
 db['Maison et Jardin'] = dict(type='Category', name='Maison et Jardin', parent=None,
                               sub_categories=['Outils', 'Meubles', 'Pour la maison', 'Jardin', 'Electroménager'])
 db['Outils'] = dict(type='Category', name='Outils', parent='Maison et Jardin', sub_categories=[])
@@ -83,7 +83,7 @@ db['Vêtements et chaussures hommes'] = dict(type='Category', name='Vêtements e
 db['Bijoux et accessoires'] = dict(type='Category', name='Bijoux et accessoires',
                                    parent='Vêtements et accessoires', sub_categories=[])
 
-## POSTS
+# POSTS
 db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='En attente d\'approbation',
                             title='Converses blanches',
                             description='En très bon état, pointure 38', address_id=['Woluwe'],
