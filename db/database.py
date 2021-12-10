@@ -17,7 +17,7 @@ else:
     password = os.environ["DBProdPassword"]
     host = os.environ["DBProdHost"]
 
-server = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
+server = couchdb.Server('http://%s:%s@%s:5984/' % (username, password, host))
 
 database = server["pfe-df-g4"]
 
