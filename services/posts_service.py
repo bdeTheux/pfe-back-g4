@@ -100,3 +100,10 @@ def get_all_my_posts(_id):
                        'Clôturé': [x for x in my_posts if x['state'] == 'Clôturé']}
 
     return my_sorted_posts
+
+
+def get_closed_posts():
+    mango = {
+        'selector': {'type': 'Post', 'state': 'Clôturé'},
+    }
+    return list(database.find(mango))

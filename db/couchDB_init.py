@@ -85,7 +85,7 @@ db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='En atten
                             title='Converses blanches',
                             description='En très bon état, pointure 38', address_id=['Woluwe'],
                             seller_id=id3, price=1200,
-                            category_id='Vêtements et chaussures femmes')  # seller_id might not work after init of db -> mettre plutôt l'email ?
+                            category_id='Vêtements et chaussures femmes')
 db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='Approuvé', title='Petite robe noire',
                             description='En très bon état, pointure 38', address_id=['Ixelles'],
                             seller_id=id3, price=1200,

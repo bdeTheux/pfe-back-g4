@@ -26,6 +26,12 @@ def get_all():
     return jsonify(service.get_posts())
 
 
+@posts_route.route('/clotured', methods=['GET'])
+@admin_token_required
+def get_all_closed(_current_user):
+    return jsonify(service.get_closed_posts())
+
+
 @posts_route.route('/pending', methods=['GET'])
 @admin_token_required
 def get_pending(_current_user):
@@ -57,7 +63,7 @@ def add_one(_current_user):
     price = 0
     if post_nature == 'À vendre':
         price = data['price']
-    places = data['places']  # Array
+    places = data.get('places', [])
     seller_id = _current_user['_id']
     category_id = data['category_id']
     post = Post(post_nature=post_nature,
