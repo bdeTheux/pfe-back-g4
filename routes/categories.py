@@ -71,6 +71,7 @@ def create_one(_current_user):
 @categories_route.route('/<string:_id>', methods=['DELETE'])
 @admin_token_required
 def delete_one(_current_user, _id):
+    # TODO: gérer posts actifs et posts
     try:
         res = service.delete_category(_id)
     except AttributeError:
