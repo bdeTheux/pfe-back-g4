@@ -55,8 +55,7 @@ def token_required(f):
 
         try:
             current_user = _get_user_from_token(token)
-        except Exception as e:
-            print(e)
+        except Exception:
             return abort(401, 'Token is invalid !!')
         return f(current_user, *args, **kwargs)
 
@@ -72,7 +71,7 @@ def admin_token_required(f):
 
         try:
             current_user = _get_user_from_token(token)
-        except Exception as e:
+        except Exception:
             return abort(401, 'Token is invalid !!')
         if not current_user.is_admin:
             return abort(401, 'Admin only!!')
