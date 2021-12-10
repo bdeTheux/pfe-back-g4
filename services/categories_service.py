@@ -162,6 +162,8 @@ def edit_category(_id, _name, _parent, _sub_categories):
     # If new sub_categories already have a parent, aborting
     new_subs = set(_sub_categories).difference(category.sub_categories)
     for cat in new_subs:
+        if not cat:
+            raise AttributeError("Some newly added sub_categories have an empty name")
         c = Category.load(database, cat)
         if c and c.parent:
             raise AttributeError("Some newly added sub_categories have a parent category already")

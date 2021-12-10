@@ -130,14 +130,12 @@ def login():
 def signup():
     # creates a dictionary of the form data
     data = request.json
-    print(data)
     # gets info
     email = data['email']
     password = data['password']
 
     # checking for existing user
     user = service.get_user_by_email(email)
-    print(user)
     if not user:
         # database ORM object
         first_name = data['first_name']
