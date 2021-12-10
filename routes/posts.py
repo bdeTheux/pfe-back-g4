@@ -26,7 +26,7 @@ def get_all():
     return jsonify(service.get_posts())
 
 
-@posts_route.route('/clotured', methods=['GET'])
+@posts_route.route('/closed', methods=['GET'])
 @admin_token_required
 def get_closed(_current_user):
     return jsonify(service.get_closed_posts())
@@ -46,7 +46,7 @@ def get_all_my_posts(_current_user):
 
 @posts_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
-    post = service.get_post_by_id(_id)
+    post = service.get_post_by_id(_id)  # Conflict with get_all, we can get a closed post ? -> TODO
     return jsonify(post.get_data()) if post else abort(404, "This post doesn't exist")
 
 

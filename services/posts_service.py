@@ -13,14 +13,14 @@ def get_document(_document):
 
 def get_posts():
     mango = {
-        'selector': {'type': 'Post', 'state': 'Approved'},
+        'selector': {'type': 'Post', 'state': 'Approuvé'},
     }
     return list(database.find(mango))
 
 
 def get_posts_by_campus(campus):
     mango = {
-        'selector': {'type': 'Post', 'state': 'Approved'}
+        'selector': {'type': 'Post', 'state': 'Approuvé'}
     }
     list_posts = [row for row in list(database.find(mango)) if campus in row['places']]
     return list_posts
@@ -30,7 +30,7 @@ def get_posts_by_category(category):
     mango = {
         'selector': {'type': 'Post',
                      'category_id': category,
-                     'state': 'Approved'}
+                     'state': 'Approuvé'}
     }
     return list(database.find(mango))
 
