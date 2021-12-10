@@ -127,5 +127,5 @@ def change_state(_current_user, _id):
     state = data['state']
     if state != PostStates.CLOSED.value and state != PostStates.PENDING.value and state != PostStates.APPROVED.value:
         abort(400,
-              f"The only valid states are {PostStates.PENDING.value}, {PostStates.APPROVED.value}, and {PostStates.CLOSED.value}")
+              f"Valid states are {PostStates.PENDING.value}, {PostStates.APPROVED.value}, and {PostStates.CLOSED.value}")
     return jsonify(service.change_state(_id, state))
