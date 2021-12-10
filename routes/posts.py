@@ -28,7 +28,7 @@ def get_all():
 
 @posts_route.route('/clotured', methods=['GET'])
 @admin_token_required
-def get_all_closed(_current_user):
+def get_closed(_current_user):
     return jsonify(service.get_closed_posts())
 
 
