@@ -32,56 +32,65 @@ def get_blueprint():
     return authentication_route
 
 
-# decorator for verifying the JWT
+def _get_user_from_token(token):
+    data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    # TODO -> signature has expired quand on lance la même requête 2h later ?
+    current_user = service.get_user_by_id(data['public_id'])
+    return current_user
+
+
+def _get_token():
+    token = None
+    if JWT_NAME in request.headers:
+        token = request.headers[JWT_NAME]
+    return token
+
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
-        # jwt is passed in the request header
-        if JWT_NAME in request.headers:
-            token = request.headers[JWT_NAME]
-        # return 401 if token is not passed
+        token = _get_token()
         if not token:
             return abort(401, 'Token is missing !!')
 
         try:
-            # decoding the payload to fetch the stored details
-            data = jwt.decode(token, SECRET_KEY, algorithms=[
-                "HS256"])  # TODO -> signature has expired quand on lance la même requête 2h later ?
-            current_user = service.get_user_by_id(data['public_id'])
+            current_user = _get_user_from_token(token)
         except Exception as e:
             print(e)
             return abort(401, 'Token is invalid !!')
-        # returns the current logged in users contex to the routes
         return f(current_user, *args, **kwargs)
 
     return decorated
 
 
 def admin_token_required(f):
-    """Okay that's duplicated code... for now!... we hope so"""
-
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = None
-        # jwt is passed in the request header
-        if JWT_NAME in request.headers:
-            token = request.headers[JWT_NAME]
-        # return 401 if token is not passed
+        token = _get_token()
         if not token:
             return abort(401, 'Token is missing !!')
 
         try:
-            # decoding the payload to fetch the stored details
-            data = jwt.decode(token, SECRET_KEY, algorithms=[
-                "HS256"])  # TODO -> signature has expired quand on lance la même requête 2h later ?
-            current_user = service.get_user_by_id(data['public_id'])
+            current_user = _get_user_from_token(token)
         except Exception as e:
-            print(e)
             return abort(401, 'Token is invalid !!')
         if not current_user.is_admin:
             return abort(401, 'Admin only!!')
-        # returns the current logged in users contex to the routes
+        return f(current_user, *args, **kwargs)
+
+    return decorated
+
+
+def token_welcome(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = _get_token()
+
+        try:
+            current_user = _get_user_from_token(token)
+        except Exception:
+            current_user = None
+
         return f(current_user, *args, **kwargs)
 
     return decorated
@@ -147,10 +156,3 @@ def signup():
     else:
         # returns 202 if user already exists
         return make_response('User already exists. Please Log in.', 202)
-
-
-@authentication_route.route('/logout', methods=['POST'])
-def logout():
-    resp = make_response()
-    resp.set_cookie(JWT_NAME, "", expires=0)
-    return resp
