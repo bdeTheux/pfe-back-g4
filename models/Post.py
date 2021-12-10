@@ -1,4 +1,12 @@
+from enum import Enum
+
 from couchdb.mapping import Document, TextField, FloatField, ListField
+
+
+class PostStates(Enum):
+    APPROVED = "Approuvé"
+    PENDING = "En attente d'approbation"
+    CLOSED = "Clôturé"
 
 
 class Post(Document):

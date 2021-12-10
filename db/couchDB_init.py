@@ -31,6 +31,7 @@ try:
 except Exception as e:
     print(e)
     couch.delete("pfe-df-g4")
+    print("database \'pfe-df-g4\' deleted")
     db = couch.create("pfe-df-g4")
 print("database \'pfe-df-g4\' created")
 
@@ -81,6 +82,8 @@ db['Vêtements et chaussures hommes'] = dict(type='Category', name='Vêtements e
                                             parent='Vêtements et accessoires', sub_categories=[])
 db['Bijoux et accessoires'] = dict(type='Category', name='Bijoux et accessoires',
                                    parent='Vêtements et accessoires', sub_categories=[])
+
+## POSTS
 db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='En attente d\'approbation',
                             title='Converses blanches',
                             description='En très bon état, pointure 38', address_id=['Woluwe'],
