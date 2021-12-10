@@ -81,7 +81,12 @@ db['Vêtements et chaussures hommes'] = dict(type='Category', name='Vêtements e
                                             parent='Vêtements et accessoires', sub_categories=[])
 db['Bijoux et accessoires'] = dict(type='Category', name='Bijoux et accessoires',
                                    parent='Vêtements et accessoires', sub_categories=[])
-db[uuid.uuid4().hex] = dict(type='Post', post_nature='Selling', state='Pending', title='Converses blanches',
-                            description='En très bon état, pointure 38', address_id='Woluwe',
+db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='En attente d\'approbation',
+                            title='Converses blanches',
+                            description='En très bon état, pointure 38', address_id=['Woluwe'],
                             seller_id=id3, price=1200,
-                            category_id='Vêtements et chaussures femmes')  # seller_id might not work after init of db -> mettre plutôt l'email ?
+                            category_id='Vêtements et chaussures femmes')
+db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='Approuvé', title='Petite robe noire',
+                            description='En très bon état, pointure 38', address_id=['Ixelles'],
+                            seller_id=id3, price=1200,
+                            category_id='Vêtements et chaussures femmes')
