@@ -1,6 +1,6 @@
 from db import database
 from models.Category import Category
-from services.posts_service import get_posts_by_category
+from services.posts_service import get_active_posts_by_category
 
 database = database.get_database()
 
@@ -104,8 +104,8 @@ def delete_category(_id: str) -> bool:
     categories = [_id]
     categories.extend(get_sub_categories(_id))  # Adding the sub_categories
     for cat in categories:
-        if get_posts_by_category(cat):
-            raise AttributeError("A sub_category still contains a pending post")
+        if get_active_posts_by_category(cat):
+            raise AttributeError(f"Sub_category '{cat}' contains at least one active post")
 
     if category.parent:
         parent = Category.load(database, category.parent)
