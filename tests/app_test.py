@@ -1,2 +1,2 @@
 def test_always_true():
-    assert True == True
+    assert "test" in "This is a valid test"

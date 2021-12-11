@@ -1,7 +1,7 @@
 import uuid
 
 from db import database
-from models.Post import Post
+from models.Post import Post, PostStates
 
 database = database.get_database()
 
@@ -13,14 +13,14 @@ def get_document(_document):
 
 def get_posts():
     mango = {
-        'selector': {'type': 'Post', 'state': 'Approuvé'},
+        'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
     }
     return list(database.find(mango))
 
 
 def get_posts_by_campus(campus):
     mango = {
-        'selector': {'type': 'Post', 'state': 'Approuvé'}
+        'selector': {'type': 'Post', 'state': PostStates.APPROVED.value}
     }
     list_posts = [row for row in list(database.find(mango)) if campus in row['places']]
     return list_posts
@@ -30,14 +30,14 @@ def get_posts_by_category(category):
     mango = {
         'selector': {'type': 'Post',
                      'category_id': category,
-                     'state': 'Approuvé'}
+                     'state': PostStates.APPROVED.value}
     }
     return list(database.find(mango))
 
 
 def get_pending_posts():
     mango = {
-        'selector': {'type': 'Post', 'state': 'En attente d\'approbation'},
+        'selector': {'type': 'Post', 'state': PostStates.PENDING.value},
     }
     return list(database.find(mango))
 
@@ -48,7 +48,7 @@ def get_post_by_id(_id):
 
 def create_post(post):
     id_post = uuid.uuid4().hex
-    database[id_post] = dict(type='Post', post_nature=post.post_nature, state='En attente d\'approbation',
+    database[id_post] = dict(type='Post', post_nature=post.post_nature, state=PostStates.PENDING.value,
                              title=post.title,
                              description=post.description, places=post.places,
                              seller_id=post.seller_id, category_id=post.category_id)
@@ -95,15 +95,15 @@ def get_all_my_posts(_id):
                      'seller_id': _id}
     }
     my_posts = list(database.find(mango))
-    my_sorted_posts = {'Approuvé': [x for x in my_posts if x['state'] == 'Approuvé'],
-                       'En attente d\'approbation': [x for x in my_posts if x['state'] == 'En attente d\'approbation'],
-                       'Clôturé': [x for x in my_posts if x['state'] == 'Clôturé']}
+    my_sorted_posts = {PostStates.APPROVED.value: [x for x in my_posts if x['state'] == PostStates.APPROVED.value],
+                       PostStates.PENDING.value: [x for x in my_posts if x['state'] == PostStates.PENDING.value],
+                       PostStates.CLOSED.value: [x for x in my_posts if x['state'] == PostStates.CLOSED.value]}
 
     return my_sorted_posts
 
 
 def get_closed_posts():
     mango = {
-        'selector': {'type': 'Post', 'state': 'Clôturé'},
+        'selector': {'type': 'Post', 'state': PostStates.CLOSED.value},
     }
     return list(database.find(mango))

@@ -1,7 +1,7 @@
 from flask import jsonify, abort, request, Blueprint
 
 import services.addresses_service as service
-from routes.authentication import admin_token_required
+from routes.authentication_route import admin_token_required
 
 addresses_route = Blueprint('addresses-route', __name__)
 
@@ -39,7 +39,11 @@ def create_one(_current_user):
     if 'long' not in data:
         abort(400, "The payload need a field 'long'")
 
-    return jsonify(service.create_address(data))
+    try:
+        res = service.create_address(data.get('campus'), data.get('lat'), data.get('long'))
+    except AttributeError as e:
+        abort(400, e)
+    return jsonify(res)
 
 
 @addresses_route.route('/<string:_id>', methods=['DELETE'])
@@ -65,8 +69,10 @@ def edit_one(_current_user, _id):
         abort(400, "The payload need a field 'lat'")
     if 'long' not in data:
         abort(400, "The payload need a field 'long'")
+
     try:
-        res = service.edit_address(_id, data)
+        res = service.edit_address(_id, data.get('campus'), data.get('lat'), data.get('long'))
     except AttributeError as e:
         abort(400, e)
+
     return jsonify(res)

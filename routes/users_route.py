@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash
 
 import services.users_service as service
 from models.User import User
-from routes.authentication import token_required, admin_token_required
+from routes.authentication_route import token_required, token_welcome, admin_token_required
 
 users_route = Blueprint('users-route', __name__)
 
@@ -18,6 +18,12 @@ def get_blueprint():
 @admin_token_required
 def get_all(_current_user):
     return jsonify(service.get_users())
+
+
+@users_route.route('/whoami', methods=['GET'])
+@token_welcome
+def whoami(_current_user: User):
+    return jsonify(_current_user.to_public()) if _current_user else jsonify(None)
 
 
 @users_route.route('/<string:_id>', methods=['GET'])
