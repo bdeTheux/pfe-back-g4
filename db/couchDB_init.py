@@ -30,6 +30,10 @@ try:
     db = couch.create("pfe-df-g4")
 except Exception as e:
     print(e)
+    db = couch["pfe-df-g4"]
+    for doc in db:
+        print("Deleting:", doc)
+        db.delete(db[doc])
     couch.delete("pfe-df-g4")
     print("database \'pfe-df-g4\' deleted")
     db = couch.create("pfe-df-g4")
@@ -87,9 +91,13 @@ db['Bijoux et accessoires'] = dict(type='Category', name='Bijoux et accessoires'
 db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='En attente d\'approbation',
                             title='Converses blanches',
                             description='En très bon état, pointure 38', address_id=['Woluwe'],
-                            seller_id=id3, price=1200,
+                            seller_id=id3, price=35.5,
                             category_id='Vêtements et chaussures femmes')
 db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='Approuvé', title='Petite robe noire',
-                            description='En très bon état, pointure 38', address_id=['Ixelles'],
-                            seller_id=id3, price=1200,
+                            description='Comme neuve', address_id=['Ixelles'],
+                            seller_id=id3, price=20,
                             category_id='Vêtements et chaussures femmes')
+db[uuid.uuid4().hex] = dict(type='Post', post_nature='À donner', state='Clôturé', title='Vieux paquet de chips',
+                            description='Il en reste 3, paprika', address_id=['Ixelles'],
+                            seller_id=id3, price=0,
+                            category_id='Santé et beauté')
