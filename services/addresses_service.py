@@ -6,7 +6,7 @@ database = database.get_database()
 
 def get_addresses():
     mango = {
-        'selector': {'type': 'Addresses'},
+        'selector': {'type': 'Address'},
         'fields': ['campus', 'lat', 'long']
     }
     return list(database.find(mango))
@@ -16,33 +16,33 @@ def get_address_by_id(_id):
     return Address.load(database, _id)
 
 
-def create_address(_data):
-    if Address.load(database, _data.campus):
+def create_address(_campus, _lat, _long):
+    if Address.load(database, _campus):
         raise AttributeError("The address exists already")
-    database[_data['campus']] = {'campus': _data['campus'], 'lat': _data['lat'], 'long': _data['long']}
-    return _data['campus']
+    database[_campus] = dict(type='Address', campus=_campus, lat=_lat, long=_long)
+    return _campus
 
 
 def delete_address(_id):
     address = Address.load(database, _id)
     if not address:
-        raise AttributeError("No reference")
+        raise AttributeError("Reference not found")
     return database.delete(address)
 
 
-def edit_address(_id, _data):
+def edit_address(_id, _campus, _lat, _long):
     address = Address.load(database, _id)
     if not address:
-        raise AttributeError("No reference")
+        raise AttributeError("Reference not found")
 
-    if _data['campus'] and _data['campus'] != address.campus:
-        database.copy(address, _data['campus'])
-        copy = Address.load(database, _data['campus'])
+    if _campus and _campus != address.campus:
+        database.copy(address, _campus)
+        copy = Address.load(database, _campus)
         database.delete(address)
         address = copy
 
-    if _data['lat']:
-        address.lat = _data['lat']
-    if _data['long']:
-        address.long = _data['long']
+    if _lat:
+        address.lat = _lat
+    if _long:
+        address.long = _long
     return address.store(database)
