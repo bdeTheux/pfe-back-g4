@@ -23,7 +23,7 @@ def get_all(_current_user):
 @users_route.route('/whoami', methods=['GET'])
 @token_welcome
 def whoami(_current_user: User):
-    return jsonify(_current_user.to_public()) if _current_user else jsonify(None)
+    return jsonify(_current_user.get_data()) if _current_user else jsonify(None)
 
 
 @users_route.route('/<string:_id>', methods=['GET'])
@@ -31,8 +31,8 @@ def whoami(_current_user: User):
 def get_with_id(current_user, _id):
     user = service.get_user_by_id(_id)
     if user:
-        return jsonify(user.to_admin()) if current_user['is_admin'] \
-            else jsonify(user.to_public())
+        return jsonify(user.get_data()) if current_user['is_admin'] \
+            else jsonify(user.get_limited_data())
     else:
         return flask.abort(404)
 
