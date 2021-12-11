@@ -7,7 +7,7 @@ class User(Document):  # if error, try import couchdb.document maybe
     first_name = TextField()
     email = TextField()
     password = TextField()
-    campus = TextField()  # for now, TODO -> find enum in couchdb.mapping doc
+    campus = TextField()
     is_banned = BooleanField(default=False)
     is_admin = BooleanField(default=False)
 
