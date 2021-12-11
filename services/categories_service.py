@@ -1,5 +1,6 @@
 from db import database
 from models.Category import Category
+from services.posts_service import get_posts_by_category
 
 database = database.get_database()
 
@@ -17,32 +18,45 @@ def get_categories_as_tree():
         'selector': {'type': 'Category', 'parent': None},
         'fields': ['name', 'parent', 'sub_categories']
     }
-    dic = {x['name']: [] for x in database.find(mango)}
-    dic = _get_sub({x['name']: [] for x in database.find(mango)})
+    dic = _get_sub_categories({x['name']: [] for x in database.find(mango)})
     return dic
 
 
-def _get_sub(dic):
+def _get_sub_categories(dic: dict[str]) -> dict[str]:
     for cat in dic.keys():
         mango = {
             'selector': {'type': 'Category', 'parent': cat},
             'fields': ['name', 'sub_categories']
         }
-        subs = _get_sub({x['name']: [] for x in database.find(mango)})
+        subs = _get_sub_categories({x['name']: [] for x in database.find(mango)})
         if subs:
             dic[cat].append(subs)
 
     return dic
 
 
-def get_category_by_id(_id):
+def get_sub_categories(_id: str) -> list[str]:
+    """Fetch the subcategories, their sub_categories, and so on.
+    Returns
+        a list containing every child"""
+    category = get_category_by_id(_id)
+    temp = category.sub_categories
+    children = []
+    while temp:
+        child = get_category_by_id(temp.pop())
+        children.append(child.name)
+        children.extend(child.sub_categories)
+    return children
+
+
+def get_category_by_id(_id: str) -> Category:
     category = Category.load(database, _id)
     if not category:
         raise AttributeError("Reference not found")
     return category
 
 
-def create_category(_name, _parent, _sub_categories):
+def create_category(_name: str, _parent: str, _sub_categories: list[str]) -> str:
     """Create a new category only if the same name does not exist already.
     Only existing parent and non-existing children are valid.
     Parameters
@@ -80,18 +94,37 @@ def create_category(_name, _parent, _sub_categories):
     return _name
 
 
-def delete_category(_id):
+def delete_category(_id: str) -> bool:
     """Delete a category and its sub-categories."""
-    category = Category.load(database, _id)
+    category = get_category_by_id(_id)
 
     if not category:
         raise AttributeError("Reference not found")
+
+    categories = [_id]
+    categories.extend(get_sub_categories(_id))  # Adding the sub_categories
+    for cat in categories:
+        if get_posts_by_category(cat):
+            raise AttributeError("A sub_category still contains a pending post")
 
     if category.parent:
         parent = Category.load(database, category.parent)
         parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
         parent.store(database)
-    return _delete_category_and_sub_categories(category)
+
+    _delete_category_and_sub_categories(category)
+
+    return _move_posts_from_categories_to_reserve(categories)
+
+
+def _move_posts_from_categories_to_reserve(_categories: list[str]) -> bool:
+    """edit every post's category in the given categories and put them in a 'fake' category named Reserve"""
+    for category in _categories:
+        mango = {'selector': {'type': 'Post', 'category_id': category}}
+        for post in list(database.find(mango)):
+            post.category_id = "Reserve"
+            post.store(database)
+    return True
 
 
 def _delete_category_and_sub_categories(node: Category) -> bool:
@@ -104,9 +137,9 @@ def _delete_category_and_sub_categories(node: Category) -> bool:
     return True
 
 
-def get_parents(_id) -> list:
+def get_parents(_id: str) -> list[str]:
     parents = []
-    node = Category.load(database, _id)
+    node = get_category_by_id(_id)
     if not node:
         raise AttributeError("Reference not found")
     while True:
@@ -118,7 +151,7 @@ def get_parents(_id) -> list:
     return parents
 
 
-def edit_category(_id, _name, _parent, _sub_categories):
+def edit_category(_id: str, _name: str, _parent: str, _sub_categories: str) -> str:
     """Edit a category by its given id and the given data.
     Parameters
         [mandatory]
@@ -132,7 +165,7 @@ def edit_category(_id, _name, _parent, _sub_categories):
     Returns
         The name (and id) of the added category
     """
-    category = Category.load(database, _id)
+    category = get_category_by_id(_id)
 
     _check_new_name_validity_for_editing(_name, category.name)
 
@@ -186,7 +219,7 @@ def edit_category(_id, _name, _parent, _sub_categories):
     return _name
 
 
-def _check_new_sub_categories_for_editing(new_sub_categories):
+def _check_new_sub_categories_for_editing(new_sub_categories: list[str]):
     for cat in new_sub_categories:
         if not cat:
             raise AttributeError("Some newly added sub_categories have an empty name")
@@ -195,14 +228,14 @@ def _check_new_sub_categories_for_editing(new_sub_categories):
             raise AttributeError("Some newly added sub_categories have a parent category already")
 
 
-def _check_categories_for_editing(_new_sub_categories, _actual_sub_categories):
+def _check_categories_for_editing(_new_sub_categories: list[str], _actual_sub_categories: list[str]):
     # extracting elements presents in the first data structure and not the second
     missing_subs = set(_actual_sub_categories).difference(_new_sub_categories)
     if len(missing_subs) != 0:
         raise AttributeError("Cannot remove sub_categories when editing, please edit those sub_categories")
 
 
-def _check_new_name_validity_for_editing(_new_name, _actual_name):
+def _check_new_name_validity_for_editing(_new_name: str, _actual_name: str):
     if _new_name != _actual_name:
         if not _new_name:
             raise AttributeError("Name is empty")
