@@ -4,7 +4,7 @@ from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
 from errorHandler import error_handler
-from routes import users_route, posts_route, addresses_route, categories_route, authentication_route
+from routes import users_route, posts_route, addresses_route, categories_route, authentication_route, database_route
 
 app = Flask(__name__)
 CORS(app)
@@ -16,6 +16,8 @@ app.register_blueprint(posts_route.get_blueprint(), url_prefix='/posts')
 app.register_blueprint(addresses_route.get_blueprint(), url_prefix='/addresses')
 app.register_blueprint(categories_route.get_blueprint(), url_prefix='/categories')
 app.register_blueprint(authentication_route.get_blueprint())
+
+app.register_blueprint(database_route.get_blueprint(), url_prefix='/database')
 
 # HTTP errors handler
 app.register_error_handler(HTTPException, error_handler.generic_http_handler)
