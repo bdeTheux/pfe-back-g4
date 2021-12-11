@@ -39,7 +39,7 @@ except Exception as e:
     db = couch.create("pfe-df-g4")
 print("database \'pfe-df-g4\' created")
 
-# creating documents
+# Creating documents
 # USERS
 password = generate_password_hash("azerty")
 id1 = uuid.uuid4().hex
