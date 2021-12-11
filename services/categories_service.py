@@ -104,18 +104,6 @@ def _delete_category_and_sub_categories(node: Category) -> bool:
     return True
 
 
-def get_sub_categories(category: Category) -> bool:
-    children = {category.name: category.get_data()}
-    temp = [x for x in category.sub_categories]  # copy
-    while temp:
-        actual = temp.pop()
-        cat = Category.load(database, temp.pop())
-        children[cat.parent] = 0
-        children.append(temp)
-        get_sub_categories(cat, children)
-    return True
-
-
 def get_parents(_id) -> list:
     parents = []
     node = Category.load(database, _id)
@@ -146,27 +134,13 @@ def edit_category(_id, _name, _parent, _sub_categories):
     """
     category = Category.load(database, _id)
 
-    # If a new name is set
-    if _name != category.name:
-        if not _name:
-            raise AttributeError("Name is empty")
-        new_name = Category.load(database, _name)
-        if new_name:
-            raise AttributeError("Reference with same name found")
+    _check_new_name_validity_for_editing(_name, category.name)
 
-    # If sub_categories are missing, aborting
-    missing_subs = set(category.sub_categories).difference(_sub_categories)
-    if len(missing_subs) != 0:
-        raise AttributeError("Cannot remove sub_categories when editing, please edit those sub_categories")
+    _check_categories_for_editing(_sub_categories, category.sub_categories)
 
-    # If new sub_categories already have a parent, aborting
-    new_subs = set(_sub_categories).difference(category.sub_categories)
-    for cat in new_subs:
-        if not cat:
-            raise AttributeError("Some newly added sub_categories have an empty name")
-        c = Category.load(database, cat)
-        if c and c.parent:
-            raise AttributeError("Some newly added sub_categories have a parent category already")
+    new_sub_categories = set(_sub_categories).difference(category.sub_categories)
+
+    _check_new_sub_categories_for_editing(new_sub_categories)
 
     # If the parent is different
     if category.parent != _parent:
@@ -180,7 +154,7 @@ def edit_category(_id, _name, _parent, _sub_categories):
         category.parent = _parent
 
     # For every new added sub_cat, create it or edit its parent
-    for cat in new_subs:
+    for cat in new_sub_categories:
         c = Category.load(database, cat)
         if c:
             c.parent = category.name
@@ -210,3 +184,27 @@ def edit_category(_id, _name, _parent, _sub_categories):
         # Former category deletion
         database.delete(category)
     return _name
+
+
+def _check_new_sub_categories_for_editing(new_sub_categories):
+    for cat in new_sub_categories:
+        if not cat:
+            raise AttributeError("Some newly added sub_categories have an empty name")
+        c = Category.load(database, cat)
+        if c and c.parent:
+            raise AttributeError("Some newly added sub_categories have a parent category already")
+
+
+def _check_categories_for_editing(_new_sub_categories, _actual_sub_categories):
+    # extracting elements presents in the first data structure and not the second
+    missing_subs = set(_actual_sub_categories).difference(_new_sub_categories)
+    if len(missing_subs) != 0:
+        raise AttributeError("Cannot remove sub_categories when editing, please edit those sub_categories")
+
+
+def _check_new_name_validity_for_editing(_new_name, _actual_name):
+    if _new_name != _actual_name:
+        if not _new_name:
+            raise AttributeError("Name is empty")
+        if Category.load(database, _new_name):
+            raise AttributeError("Reference with same name found")

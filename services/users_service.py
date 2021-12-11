@@ -54,11 +54,11 @@ def edit_user(new_user, _id):
     for field in new_user:
         previous_user[field] = new_user[field]
     previous_user.store(database)
-    return previous_user.to_public()
+    return previous_user.get_limited_data()
 
 
 def ban_user(_id):
     user = get_user_by_id(_id)
     user['is_banned'] = not user['is_banned']
     user.store(database)
-    return user.to_admin()
+    return user.get_data()
