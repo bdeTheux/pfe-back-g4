@@ -185,15 +185,21 @@ def edit_category(_id: str, _name: str, _parent: str, _sub_categories: str) -> s
             parent.store(database)
 
         category.parent = _parent
+        category.store(database)
 
     # For every new added sub_cat, create it or edit its parent
-    for cat in new_sub_categories:
-        c = Category.load(database, cat)
-        if c:
-            c.parent = category.name
-            c.store(database)
-        else:
-            create_category(_name=c, _parent=category.name, _sub_categories=[])
+    if new_sub_categories:
+        for cat in new_sub_categories:
+            c = Category.load(database, cat)
+            if c:
+                c.parent = category.name
+                c.store(database)
+            else:
+                create_category(_name=cat, _parent=category.name, _sub_categories=[])
+                c = Category.load(database, cat)
+            category.sub_categories.append(cat)
+
+        category.store(database)
 
     # If a new name is given, copy the actual category and rename the copy
     if _name != category.name:
