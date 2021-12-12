@@ -35,6 +35,22 @@ def get_posts_by_category(category):
     return list(database.find(mango))
 
 
+def get_active_posts_by_category(category):
+    mango_pending = {
+        'selector': {'type': 'Post',
+                     'category_id': category,
+                     'state': PostStates.PENDING.value}
+    }
+    mango_approved = {
+        'selector': {'type': 'Post',
+                     'category_id': category,
+                     'state': PostStates.APPROVED.value}
+    }
+    posts = list(database.find(mango_pending))
+    posts.extend(list(database.find(mango_approved)))
+    return posts
+
+
 def get_pending_posts():
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.PENDING.value},
