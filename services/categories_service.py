@@ -193,7 +193,7 @@ def edit_category(_id: str, _name: str, _parent: str, _sub_categories: str) -> s
             c.parent = category.name
             c.store(database)
         else:
-            create_category({"name": c, "parent": category.name})
+            create_category(_name=c, _parent=category.name, _sub_categories=[])
 
     # If a new name is given, copy the actual category and rename the copy
     if _name != category.name:
