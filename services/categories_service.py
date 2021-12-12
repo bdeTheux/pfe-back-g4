@@ -178,7 +178,7 @@ def edit_category(_id: str, _name: str, _parent: str, _sub_categories: str) -> s
     # If the parent is different
     if category.parent != _parent:
         if _parent:
-            parent = Category.load(database, category.parent) if category.parent else None
+            parent = Category.load(database, _parent)
             if not parent:
                 raise AttributeError("The parent category does not exist")
             parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
