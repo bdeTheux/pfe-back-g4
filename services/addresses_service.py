@@ -4,7 +4,7 @@ from models.Address import Address
 database = database.get_database()
 
 
-def get_addresses():
+def get_addresses() -> list:
     mango = {
         'selector': {'type': 'Address'},
         'fields': ['campus', 'lat', 'long']
@@ -12,25 +12,25 @@ def get_addresses():
     return list(database.find(mango))
 
 
-def get_address_by_id(_id):
+def get_address_by_id(_id: str) -> Address:
     return Address.load(database, _id)
 
 
-def create_address(_campus, _lat, _long):
+def create_address(_campus: str, _lat: str, _long: str) -> str:
     if Address.load(database, _campus):
         raise AttributeError("The address exists already")
     database[_campus] = dict(type='Address', campus=_campus, lat=_lat, long=_long)
     return _campus
 
 
-def delete_address(_id):
+def delete_address(_id: str):
     address = Address.load(database, _id)
     if not address:
         raise AttributeError("Reference not found")
     return database.delete(address)
 
 
-def edit_address(_id, _campus, _lat, _long):
+def edit_address(_id: str, _campus: str, _lat: str, _long: str):
     address = Address.load(database, _id)
     if not address:
         raise AttributeError("Reference not found")

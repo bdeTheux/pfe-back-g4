@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash
 
 import services.users_service as service
 from models.User import User
-from routes.authentication_route import token_required, token_welcome, admin_token_required
+from utils.utils import token_required, token_welcome, admin_token_required
 
 users_route = Blueprint('users-route', __name__)
 

@@ -35,6 +35,22 @@ def get_posts_by_category(category):
     return list(database.find(mango))
 
 
+def get_active_posts_by_category(category):
+    mango_pending = {
+        'selector': {'type': 'Post',
+                     'category_id': category,
+                     'state': PostStates.PENDING.value}
+    }
+    mango_approved = {
+        'selector': {'type': 'Post',
+                     'category_id': category,
+                     'state': PostStates.APPROVED.value}
+    }
+    posts = list(database.find(mango_pending))
+    posts.extend(list(database.find(mango_approved)))
+    return posts
+
+
 def get_pending_posts():
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.PENDING.value},
@@ -49,7 +65,7 @@ def get_post_by_id(_id):
 def create_post(post):
     id_post = uuid.uuid4().hex
     database[id_post] = dict(type='Post', post_nature=post.post_nature, state=PostStates.PENDING.value,
-                             title=post.title,
+                             title=post.title, price=post.price,
                              description=post.description, places=post.places,
                              seller_id=post.seller_id, category_id=post.category_id)
     return id_post

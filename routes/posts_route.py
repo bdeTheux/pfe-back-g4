@@ -2,7 +2,7 @@ from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
 from models.Post import Post, PostStates
-from routes.authentication_route import admin_token_required, token_required
+from utils.utils import admin_token_required, token_required, token_welcome
 
 posts_route = Blueprint('posts-route', __name__)
 
@@ -45,9 +45,19 @@ def get_all_my_posts(_current_user):
 
 
 @posts_route.route('/<string:_id>', methods=['GET'])
-def get_with_id(_id):
-    post = service.get_post_by_id(_id)  # Conflict with get_all, we can get a closed post ? -> TODO
-    return jsonify(post.get_data()) if post else abort(404, "This post doesn't exist")
+@token_welcome
+def get_with_id(_current_user, _id):
+    post = service.get_post_by_id(_id)
+    if post:
+        if post.state != PostStates.APPROVED.value:
+            if not _current_user:
+                return abort(401, "You can't do that")
+            elif _current_user['is_admin'] or (post['seller_id'] == _current_user['id']):
+                return jsonify(post.get_data())
+        else:
+            return jsonify(post.get_data())
+
+    return abort(404, "This post doesn't exist")
 
 
 @posts_route.route('/', methods=['POST'])
