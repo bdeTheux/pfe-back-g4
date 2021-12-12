@@ -40,7 +40,7 @@ def _get_token():
 def create_token(user):
     return jwt.encode({
         'public_id': str(user['_id']),
-        'exp': datetime.utcnow() + timedelta(minutes=120),
+        'exp': datetime.utcnow() + timedelta(days=30),
         'algorithm': "HS256"
     }, SECRET_KEY)
 
