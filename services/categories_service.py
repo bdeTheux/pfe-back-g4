@@ -52,7 +52,7 @@ def get_sub_categories(_id: str) -> list[str]:
 def get_category_by_id(_id: str) -> Category:
     category = Category.load(database, _id)
     if not category:
-        raise AttributeError("Reference not found")
+        raise AttributeError("La catégorie n'existe pas/plus.")
     return category
 
 
@@ -99,13 +99,13 @@ def delete_category(_id: str) -> bool:
     category = get_category_by_id(_id)
 
     if not category:
-        raise AttributeError("Reference not found")
+        raise AttributeError("La catégorie n'existe pas/plus.")
 
     categories = [_id]
     categories.extend(get_sub_categories(_id))  # Adding the sub_categories
     for cat in categories:
         if get_active_posts_by_category(cat):
-            raise AttributeError(f"Sub_category '{cat}' contains at least one active post")
+            raise AttributeError(f"La sous-catégorie'{cat}' contient au moins un post actif.")
 
     if category.parent:
         parent = Category.load(database, category.parent)
@@ -141,7 +141,7 @@ def get_parents(_id: str) -> list[str]:
     parents = []
     node = get_category_by_id(_id)
     if not node:
-        raise AttributeError("Reference not found")
+        raise AttributeError("La catégorie n'existe pas/plus.")
     while True:
         if not node.parent:
             break
@@ -180,7 +180,7 @@ def edit_category(_id: str, _name: str, _parent: str, _sub_categories: str) -> s
         if _parent:
             parent = Category.load(database, _parent)
             if not parent:
-                raise AttributeError("The parent category does not exist")
+                raise AttributeError("La catégorie parent n'existe pas/plus.")
             parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
             parent.store(database)
 

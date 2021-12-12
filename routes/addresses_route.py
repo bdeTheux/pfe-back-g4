@@ -20,7 +20,7 @@ def get_all():
 def get_with_id(_id):
     try:
         res = service.get_address_by_id(_id)
-    except AttributeError as e:
+    except AttributeError as e:  # add explicit error message ? -> prévenir Nina au cas où -> TODO
         abort(400, e)
     return jsonify(res)
 

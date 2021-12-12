@@ -53,14 +53,14 @@ def create_one(_current_user):
     name = data.get('name')
 
     if not name:  # Empty data
-        abort(400, "The field 'name' should be there and should not be empty")
+        abort(400, "Le champ 'nom' ne doit pas être vide.")
 
     parent = data.get('parent', None)
     sub_categories = data.get('sub_categories') if isinstance(data['sub_categories'], list) else []
 
     try:
         res = service.create_category(name, parent, sub_categories)
-    except AttributeError as e:
+    except AttributeError as e:  # Add explicit error message ? -> prévenir Nina si c'est modifié -> TODO
         abort(400, e)
     return jsonify(res)
 
@@ -87,7 +87,7 @@ def edit_one(_current_user, _id):
     sub_categories = data.get('sub_categories', [])
 
     if not name:  # Empty data
-        abort(400, "The payload need a field 'name' and it should not be empty")
+        abort(400, "Vous devez indiquer un nom de catégorie.")
     if not isinstance(sub_categories, list):
         abort(400, "The payload field 'sub_categories' should be a list")
 

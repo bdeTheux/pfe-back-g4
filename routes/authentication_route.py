@@ -1,5 +1,5 @@
 # flask imports
-from flask import request, make_response, Blueprint, abort
+from flask import request, Blueprint, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import services.users_service as service
@@ -22,19 +22,19 @@ def login():
 
     if not auth or not auth['email'] or not auth['password']:
         # returns 401 if any email or / and password is missing
-        return abort(401, 'Wrong credentials')
+        return abort(401, 'Email ou mot de passe incorrect(s)')
 
     user = service.get_user_by_email(auth['email'])
 
     if not user:
         # returns 401 if user does not exist
-        return abort(401, 'Wrong credentials')
+        return abort(401, 'Email ou mot de passe incorrect(s)')
 
     if check_password_hash(user['password'], auth['password']):
         # generates the JWT Token
         return create_response_with_token(user)
     # returns 403 if password is wrong
-    return abort(401, 'Wrong credentials')
+    return abort(401, 'Email ou mot de passe incorrect(s)')
 
 
 # signup route
@@ -65,4 +65,4 @@ def signup():
         return create_response_with_token(user, 201)
     else:
         # returns 202 if user already exists
-        return make_response('User already exists. Please Log in.', 202)
+        return abort(202, 'L\'utilisateur existe déjà : Connectez-vous.')
