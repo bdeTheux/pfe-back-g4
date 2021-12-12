@@ -74,8 +74,8 @@ def delete_one(_current_user, _id):
     # TODO: gérer posts actifs et posts
     try:
         res = service.delete_category(_id)
-    except AttributeError:
-        abort(404, "Category not found")
+    except AttributeError as e:
+        abort(404, e)
     return jsonify(res)
 
 
@@ -95,4 +95,9 @@ def edit_one(_current_user, _id):
     if not isinstance(sub_categories, list):
         abort(400, "The payload field 'sub_categories' should be a list")
 
-    return jsonify(service.edit_category(_id, name, parent, sub_categories))
+    try:
+        res = service.edit_category(_id, name, parent, sub_categories)
+    except AttributeError as e:
+        abort(400, e)
+
+    return jsonify(res)
