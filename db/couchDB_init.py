@@ -23,30 +23,34 @@ else:
     exit(0)
 
 # connecting with couchdb server
-couch = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
+server = couchdb.Server('http://%s:%s@%s:5984' % (username, password, host))
 
 response = input("""What do you want to do?
 'init' -> deletes the DB and its documents if needed then create new ones
 'iter' -> displays every documents in the DB
 Type anything else to stop the script
 """)
-if response == 'iter':
-    db = couch["pfe-df-g4"]
+
+
+def display_db_docs():
+    db = server["pfe-df-g4"]
     for doc in db:
         print(db[doc])
-elif response == 'init':
+
+
+def init_database():
     # creating database
     try:
-        db = couch.create("pfe-df-g4")
+        db = server.create("pfe-df-g4")
     except Exception as e:
         print(e)
-        db = couch["pfe-df-g4"]
+        db = server["pfe-df-g4"]
         for doc in db:
             print("Deleting:", doc)
             db.delete(db[doc])
-        couch.delete("pfe-df-g4")
+        server.delete("pfe-df-g4")
         print("database \'pfe-df-g4\' deleted")
-        db = couch.create("pfe-df-g4")
+        db = server.create("pfe-df-g4")
     print("database \'pfe-df-g4\' created")
 
     # Creating documents
@@ -115,7 +119,7 @@ elif response == 'init':
 
     # POSTS
     giving = "À donner"
-    selling = "À vendre"
+    selling = "En vente"
 
     pending = 'En attente d\'approbation'
     approved = 'Approuvé'
@@ -188,7 +192,10 @@ elif response == 'init':
                                 category_id='Electroménager')
 
     # Displaying added documents
-    print("Documents now in the database")
-    db = couch["pfe-df-g4"]
-    for doc in db:
-        print(db[doc])
+    display_db_docs()
+
+
+if response == 'iter':
+    display_db_docs()
+elif response == 'init':
+    init_database()
