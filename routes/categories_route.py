@@ -95,4 +95,9 @@ def edit_one(_current_user, _id):
     if not isinstance(sub_categories, list):
         abort(400, "The payload field 'sub_categories' should be a list")
 
-    return jsonify(service.edit_category(_id, name, parent, sub_categories))
+    try:
+        res = service.edit_category(_id, name, parent, sub_categories)
+    except AttributeError as e:
+        abort(400, e)
+
+    return jsonify(res)
