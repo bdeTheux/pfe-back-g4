@@ -58,6 +58,13 @@ def get_pending_posts():
     return list(database.find(mango))
 
 
+def get_rejected_posts():
+    mango = {
+        'selector': {'type': 'Post', 'state': PostStates.REJECTED.value},
+    }
+    return list(database.find(mango))
+
+
 def get_post_by_id(_id):
     return Post.load(database, _id)
 

@@ -38,6 +38,12 @@ def get_pending(_current_user):
     return jsonify(service.get_pending_posts())
 
 
+@posts_route.route('/rejected', methods=['GET'])
+@admin_token_required
+def get_pending(_current_user):
+    return jsonify(service.get_rejected_posts())
+
+
 @posts_route.route('/myPosts', methods=['GET'])
 @token_required
 def get_all_my_posts(_current_user):
@@ -135,7 +141,9 @@ def change_state(_current_user, _id):
     data = request.json
 
     state = data['state']
-    if state != PostStates.CLOSED.value and state != PostStates.PENDING.value and state != PostStates.APPROVED.value:
+    if state != PostStates.CLOSED.value and state != PostStates.PENDING.value and \
+            state != PostStates.APPROVED.value and state != PostStates.REJECTED.value:
         abort(400,
-              f"Valid states are {PostStates.PENDING.value}, {PostStates.APPROVED.value}, and {PostStates.CLOSED.value}")
+              f"Valid states are {PostStates.PENDING.value}, {PostStates.APPROVED.value}"
+              f", {PostStates.REJECTED.value}, and {PostStates.CLOSED.value}")
     return jsonify(service.change_state(_id, state))
