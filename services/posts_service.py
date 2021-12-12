@@ -49,7 +49,7 @@ def get_post_by_id(_id):
 def create_post(post):
     id_post = uuid.uuid4().hex
     database[id_post] = dict(type='Post', post_nature=post.post_nature, state=PostStates.PENDING.value,
-                             title=post.title,
+                             title=post.title, price=post.price,
                              description=post.description, places=post.places,
                              seller_id=post.seller_id, category_id=post.category_id)
     return id_post
