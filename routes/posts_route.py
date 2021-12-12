@@ -2,7 +2,7 @@ from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
 from models.Post import Post, PostStates
-from routes.authentication_route import admin_token_required, token_required
+from utils.utils import admin_token_required, token_required
 
 posts_route = Blueprint('posts-route', __name__)
 

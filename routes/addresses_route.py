@@ -1,7 +1,7 @@
 from flask import jsonify, abort, request, Blueprint
 
 import services.addresses_service as service
-from routes.authentication_route import admin_token_required
+from utils.utils import admin_token_required
 
 addresses_route = Blueprint('addresses-route', __name__)
 
