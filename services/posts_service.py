@@ -11,26 +11,33 @@ def get_document(_document):
     return database.get
 
 
-def get_posts():
+def get_posts(order):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
+        'fields': ['price'],
+        # 'sort': [{'price': order}]
+        # TODO : indexer les prix avant tri...? https://docs.couchdb.org/en/stable/api/database/find.html#db-index
     }
+    for row in database.find(mango):
+        print(row['price'])
     return list(database.find(mango))
 
 
-def get_posts_by_campus(campus):
+def get_posts_by_campus(campus, order):
     mango = {
-        'selector': {'type': 'Post', 'state': PostStates.APPROVED.value}
+        'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
+        # 'sort': [{'price': order}]
     }
     list_posts = [row for row in list(database.find(mango)) if campus in row['places']]
     return list_posts
 
 
-def get_posts_by_category(category):
+def get_posts_by_category(category, order):
     mango = {
         'selector': {'type': 'Post',
                      'category_id': category,
-                     'state': PostStates.APPROVED.value}
+                     'state': PostStates.APPROVED.value},
+        # 'sort': [{'price': order}]
     }
     return list(database.find(mango))
 
@@ -96,12 +103,16 @@ def edit_post(new_post, _id):
     return previous_post.get_data()
 
 
-def get_posts_by_campus_and_category(campus, category):
-    mango = {
-        'selector': {'type': 'Post',
-                     'category_id': category}
-    }
-    list_posts = [row for row in list(database.find(mango)) if campus in row['places']]
+def get_posts_by_campus_and_category(campus, categories, order):
+    list_posts = []
+    for category in categories:
+        mango = {
+            'selector': {'type': 'Post',
+                         'category_id': category,
+                         'state': PostStates.APPROVED.value},
+            # 'sort': [{'price': order}]
+        }
+        list_posts.extend([row for row in list(database.find(mango)) if campus in row['places']])
     return list_posts
 
 

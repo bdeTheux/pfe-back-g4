@@ -14,16 +14,20 @@ def get_blueprint():
 
 @posts_route.route('/', methods=['GET'])
 def get_all():
-    category = request.args.get('category')
+    categories = request.args.get('category')
     campus = request.args.get('campus')
-    if campus and category:
-        return jsonify(service.get_posts_by_campus_and_category(campus, category))
+    order = request.args.get('order')
+    if order != 'asc' and order != 'desc':
+        order = 'asc'
+    print(order)
+    if campus and categories:
+        return jsonify(service.get_posts_by_campus_and_category(campus, categories, order))
     elif campus:
-        return jsonify(service.get_posts_by_campus(campus))
-    elif category:
-        return jsonify(service.get_posts_by_category(category))
+        return jsonify(service.get_posts_by_campus(campus, order))
+    elif categories:
+        return jsonify(service.get_posts_by_category(categories, order))
 
-    return jsonify(service.get_posts())
+    return jsonify(service.get_posts(order))
 
 
 @posts_route.route('/closed', methods=['GET'])
@@ -40,7 +44,7 @@ def get_pending(_current_user):
 
 @posts_route.route('/rejected', methods=['GET'])
 @admin_token_required
-def get_pending(_current_user):
+def get_rejected(_current_user):
     return jsonify(service.get_rejected_posts())
 
 
