@@ -49,7 +49,7 @@ def get_all_my_posts(_current_user):
 def get_with_id(_current_user, _id):
     post = service.get_post_by_id(_id)
     if post:
-        if post.state != PostStates.APPROVED:
+        if post.state != PostStates.APPROVED.value:
             if not _current_user:
                 return abort(401, "You can't do that")
             elif _current_user['is_admin'] or (post['seller_id'] == _current_user['id']):
