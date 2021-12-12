@@ -62,7 +62,7 @@ def signup():
                     )
         # insert user
         service.create_user(user)
-        return make_response('Successfully registered.', 201)
+        return create_response_with_token(user, 201)
     else:
         # returns 202 if user already exists
         return make_response('User already exists. Please Log in.', 202)

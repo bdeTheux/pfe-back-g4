@@ -36,13 +36,17 @@ def _get_token():
     return token
 
 
-def create_response_with_token(user):
-    token = jwt.encode({
+def create_token(user):
+    return jwt.encode({
         'public_id': str(user['_id']),
         'exp': datetime.utcnow() + timedelta(minutes=120),
         'algorithm': "HS256"
     }, SECRET_KEY)
-    resp = make_response(jsonify({'token': token}))
+
+
+def create_response_with_token(user, code=200):
+    token = create_token(user)
+    resp = make_response(jsonify({'token': token}), code)
     resp.headers[JWT_NAME] = token
     return resp
 
