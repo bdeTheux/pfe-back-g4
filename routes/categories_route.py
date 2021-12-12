@@ -49,16 +49,13 @@ def get_parents(_id):
 def create_one(_current_user):
     if not request.json:
         abort(400, "The payload is empty")
-
     data = request.json
-
     name = data.get('name')
 
     if not name:  # Empty data
         abort(400, "The field 'name' should be there and should not be empty")
 
     parent = data.get('parent', None)
-
     sub_categories = data.get('sub_categories') if isinstance(data['sub_categories'], list) else []
 
     try:
@@ -71,7 +68,6 @@ def create_one(_current_user):
 @categories_route.route('/<string:_id>', methods=['DELETE'])
 @admin_token_required
 def delete_one(_current_user, _id):
-    # TODO: gérer posts actifs et posts
     try:
         res = service.delete_category(_id)
     except AttributeError as e:
