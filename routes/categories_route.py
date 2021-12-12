@@ -74,8 +74,8 @@ def delete_one(_current_user, _id):
     # TODO: gérer posts actifs et posts
     try:
         res = service.delete_category(_id)
-    except AttributeError:
-        abort(404, "Category not found")
+    except AttributeError as e:
+        abort(404, e)
     return jsonify(res)
 
 
