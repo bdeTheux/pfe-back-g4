@@ -6,8 +6,8 @@ from werkzeug.security import generate_password_hash
 
 envfile = dotenv.dotenv_values("../.env")
 
-response = input("""Type \"dev\" to edit the development DB
-Type \"prod\" to edit the development DB
+response = input("""Type \"dev\" to user the development DB
+Type \"prod\" to user the development DB
 Type anything else to stop the script
 """)
 
@@ -100,14 +100,18 @@ elif response == 'init':
     # POSTS
     db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='En attente d\'approbation',
                                 title='Converses blanches',
-                                description='En très bon état, pointure 38', address_id=['Woluwe'],
+                                description='En très bon état, pointure 38', places=['Woluwe'],
                                 seller_id=id3, price=35.5,
                                 category_id='Vêtements et chaussures femmes')
     db[uuid.uuid4().hex] = dict(type='Post', post_nature='En vente', state='Approuvé', title='Petite robe noire',
-                                description='Comme neuve', address_id=['Ixelles'],
+                                description='Comme neuve', places=['Ixelles'],
                                 seller_id=id3, price=20,
                                 category_id='Vêtements et chaussures femmes')
     db[uuid.uuid4().hex] = dict(type='Post', post_nature='À donner', state='Clôturé', title='Vieux paquet de chips',
-                                description='Il en reste 3, paprika', address_id=['Ixelles'],
+                                description='Il en reste 3, paprika', places=['Ixelles'],
                                 seller_id=id3, price=0,
                                 category_id='Santé et beauté')
+
+    db['Woluwe'] = dict(type="Address", campus='Woluwe', lat="0", long="0")
+    db['Louvain-la-Neuve'] = dict(type="Address", campus='Louvain-la-Neuve', lat="100", long="100")
+    db['Ixelles'] = dict(type="Address", campus='Ixelles', lat="0", long="0")
