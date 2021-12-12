@@ -170,7 +170,7 @@ elif response == 'init':
                                 description="Non, peut-être?",
                                 places=['Louvain-la-Neuve'],
                                 seller_id=samy, price=0,
-                                category_id='Vêtements et chaussures femmes')
+                                category_id='Outils')
 
     # Closed
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
@@ -186,6 +186,13 @@ elif response == 'init':
                                 places=['Ixelles'],
                                 seller_id=nina, price=14999.9,
                                 category_id='Electroménager')
+
+    db['Woluwe'] = dict(type="Address", campus='Woluwe',
+                        lat="50.849857061691836", long="4.453360810918974")
+    db['Louvain-la-Neuve'] = dict(type="Address", campus='Louvain-la-Neuve',
+                                  lat="50.84981962233335", long="4.453745477375748")
+    db['Ixelles'] = dict(type="Address", campus='Ixelles',
+                         lat="50.835525846476465", long="4.376626359487836")
 
     # Displaying added documents
     print("Documents now in the database")
