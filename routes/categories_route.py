@@ -94,8 +94,6 @@ def edit_one(_current_user, _id):
         abort(400, "The payload need a field 'name' and it should not be empty")
     if not parent:
         abort(400, "The payload need a field 'parent' and it should not be empty")
-    if not sub_categories:
-        abort(400, "The payload need a field 'sub_categories' and it should not be empty")
     if not isinstance(sub_categories, list):
         abort(400, "The payload field 'sub_categories' should be a list")
 
