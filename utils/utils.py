@@ -7,6 +7,7 @@ import jwt
 from flask import make_response, request, abort, jsonify
 
 import services.users_service as service
+from models.User import User
 
 envfile = dotenv.dotenv_values(".env")
 
@@ -44,7 +45,7 @@ def create_token(user):
     }, SECRET_KEY)
 
 
-def create_response_with_token(user, code=200):
+def create_response_with_token(user: User, code=200):
     token = create_token(user)
     resp = make_response(jsonify({'token': token}), code)
     resp.headers[JWT_NAME] = token

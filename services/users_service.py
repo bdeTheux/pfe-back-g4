@@ -7,10 +7,12 @@ database = database.get_database()
 
 
 def create_user(user):
-    database[uuid.uuid4().hex] = dict(type='User', last_name=user.last_name,
-                                      first_name=user.first_name, email=user.email,
-                                      password=user.password, campus=user.campus, is_banned=False,
-                                      is_admin=False)
+    user_id = uuid.uuid4().hex
+    database[user_id] = dict(type='User', last_name=user.last_name,
+                             first_name=user.first_name, email=user.email,
+                             password=user.password, campus=user.campus, is_banned=False,
+                             is_admin=False)
+    return user_id
 
 
 def get_user_by_id(_id):

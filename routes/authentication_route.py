@@ -1,5 +1,4 @@
 # flask imports
-
 from flask import request, make_response, Blueprint, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -61,7 +60,8 @@ def signup():
                     password=generate_password_hash(password)
                     )
         # insert user
-        service.create_user(user)
+        user_id = service.create_user(user)
+        user = service.get_user_by_id(user_id)
         return create_response_with_token(user, 201)
     else:
         # returns 202 if user already exists
