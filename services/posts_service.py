@@ -12,8 +12,12 @@ def get_document(_document):
 
 
 def _order_posts(posts, order):
-    return sorted(posts, key=lambda i: (i['price'])) if order == "asc" \
-        else sorted(posts, key=lambda i: (i['price']), reverse=True)
+    if order == 'asc':
+        return sorted(posts, key=lambda i: (i['price']))
+    if order == 'desc':
+        return sorted(posts, key=lambda i: (i['price']), reverse=True)
+    
+    return posts
 
 
 def get_posts(order):

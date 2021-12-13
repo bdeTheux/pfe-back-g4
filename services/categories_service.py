@@ -105,7 +105,7 @@ def delete_category(_id: str) -> bool:
     categories.extend(get_sub_categories(_id))  # Adding the sub_categories
     for cat in categories:
         if get_active_posts_by_category(cat):
-            raise AttributeError(f"La sous-catégorie '{cat}' contient au moins une transaction active")
+            raise AttributeError(f"La sous-catégorie '{cat}' contient au moins une annonce active")
 
     if category.parent:
         parent = Category.load(database, category.parent)
