@@ -1,11 +1,9 @@
-import cloudinary
-from cloudinary import uploader
 from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
 from models.Post import Post, PostStates
 from services.categories_service import get_category_by_id
-from utils.utils import admin_token_required, token_required, token_welcome
+from utils.utils import admin_token_required, token_required, token_welcome, upload_files
 
 posts_route = Blueprint('posts-route', __name__)
 
@@ -81,7 +79,7 @@ def add_one(_current_user):
     price = 0
     if post_nature == 'À vendre':
         price = data.get('price')
-    places = data.get('places', [])
+    places = data.getlist('places')
     seller_id = _current_user['_id']
     category_id = data.get('category_id')
     if not post_nature:
@@ -97,13 +95,8 @@ def add_one(_current_user):
     if not category_id:
         abort(400, "Le champ 'category_id' doit être présent et non vide")
 
-    images = []
-    for file_to_upload in request.files.getlist("files[]"):
-        try:
-            if file_to_upload:
-                images.append(cloudinary.uploader.upload(file_to_upload).get('url'))
-        except Exception:
-            pass
+    files = request.files.getlist("files")
+    images = upload_files(files)
 
     post = Post(post_nature=post_nature,
                 title=title,
