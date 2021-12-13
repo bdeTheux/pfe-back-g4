@@ -113,7 +113,7 @@ def edit_one(_current_user, _id):
 
     data = request.json
     post = service.get_post_by_id(_id)
-    if post.get('seller_id') != _current_user['_id']:
+    if post['seller_id'] != _current_user['_id']:
         abort(401,
               "Vous ne pouvez pas modifier cette annonce.")
 
