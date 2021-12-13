@@ -27,7 +27,7 @@ def create_address(_campus: str, _lat: str, _long: str) -> str:
 def delete_address(_id: str):
     address = Address.load(database, _id)
     if not address:
-        raise AttributeError("Référence invalide")
+        raise AttributeError("Cette adresse n'existe pas/plus")
 
     return database.delete(address)
 
@@ -35,7 +35,7 @@ def delete_address(_id: str):
 def edit_address(_id: str, _campus: str, _lat: str, _long: str):
     address = Address.load(database, _id)
     if not address:
-        raise AttributeError("Référence invalide")
+        raise AttributeError("Cette adresse n'existe pas/plus")
 
     if _campus and _campus != address.campus:
         database.copy(address, _campus)

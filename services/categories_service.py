@@ -99,7 +99,7 @@ def delete_category(_id: str) -> bool:
     category = get_category_by_id(_id)
 
     if not category:
-        raise AttributeError("Référence invalide")
+        raise AttributeError("Cette catégorie n'existe pas/plus")
 
     categories = [_id]
     categories.extend(get_sub_categories(_id))  # Adding the sub_categories
@@ -141,7 +141,7 @@ def get_parents(_id: str) -> list[str]:
     parents = []
     node = get_category_by_id(_id)
     if not node:
-        raise AttributeError("Référence invalide")
+        raise AttributeError("Cette catégorie n'existe pas/plus")
     while True:
         if not node.parent:
             break
