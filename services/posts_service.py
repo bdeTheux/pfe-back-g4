@@ -14,11 +14,12 @@ def get_document(_document):
 def get_posts(order):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
-        'fields': ['price'],
-        # 'sort': [{'price': order}]
+        # 'fields': ['_id', 'post_nature', 'state', 'title', 'description',
+        #          'price', 'places', 'seller_id', 'category_id'],
+        # 'sort': [{'price': order}],
         # TODO : indexer les prix avant tri...? https://docs.couchdb.org/en/stable/api/database/find.html#db-index
     }
-    for row in database.find(mango):
+    for row in database.find({'selector': mango}):
         print(row['price'])
     return list(database.find(mango))
 
