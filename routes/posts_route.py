@@ -2,7 +2,7 @@ from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
 from models.Post import Post, PostStates
-from utils.utils import admin_token_required, token_required, token_welcome, upload_images
+from utils.utils import admin_token_required, token_required, token_welcome
 
 posts_route = Blueprint('posts-route', __name__)
 
@@ -73,19 +73,29 @@ def add_one(_current_user):
         abort(400, "La requête est vide")
 
     data = request.json
-    post_nature = data['post_nature']
-    title = data['title']
-    description = data['description']
+    post_nature = data.get('post_nature')
+    title = data.get('title')
+    description = data.get('description')
     price = 0
     if post_nature == 'À vendre':
-        price = data['price']
+        price = data.get('price')
     places = data.get('places', [])
     seller_id = _current_user['_id']
-    category_id = data['category_id']
-    print(data)
-    images = upload_images(data.get('files', []))
-    print(images)
-    STOP
+    category_id = data.get('category_id')
+    images = data.get('files', [])
+    if not post_nature:
+        abort(400, "Le champ 'post_nature' doit être présent et non vide")
+    if not title:
+        abort(400, "Le champ 'title' doit être présent et non vide")
+    if not description:
+        abort(400, "Le champ 'description' doit être présent et non vide")
+    if not isinstance(places, list):
+        abort(400, "Le champ 'places' doit être une liste")
+    if not seller_id:
+        abort(400, "Le champ 'seller_id' doit être présent et non vide")
+    if not category_id:
+        abort(400, "Le champ 'category_id' doit être présent et non vide")
+
     post = Post(post_nature=post_nature,
                 title=title,
                 description=description,

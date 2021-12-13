@@ -108,9 +108,8 @@ def token_welcome(f):
 
 
 def upload_images(images):
-    print('in upload route', images)
-
     upload_result = []
     for image in images:
+        print(image)
         upload_result.append(uploader.upload(image))
     return upload_result

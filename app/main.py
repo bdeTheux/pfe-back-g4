@@ -2,7 +2,8 @@ import os
 
 import cloudinary
 import dotenv
-from flask import Flask
+from cloudinary import uploader
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
@@ -45,3 +46,15 @@ app.register_blueprint(database_route.get_blueprint(), url_prefix='/database')
 
 # HTTP errors handler
 app.register_error_handler(HTTPException, error_handler.generic_http_handler)
+
+
+@app.route("/upload", methods=['POST'])
+def upload_file():
+    upload_result = []
+    for file_to_upload in request.files.getlist("files[]"):
+        try:
+            if file_to_upload:
+                upload_result.append(cloudinary.uploader.upload(file_to_upload).get('url'))
+        except Exception:
+            pass
+    return jsonify(upload_result)
