@@ -113,17 +113,17 @@ def edit_one(_current_user, _id):
 
     data = request.json
     post = service.get_post_by_id(_id)
-    if post['seller_id'] != _current_user['_id']:
+    if post.get('seller_id') != _current_user['_id']:
         abort(401,
               "Vous ne pouvez pas modifier cette annonce.")
 
     post_nature = data.get('post_nature', post['post_nature'])
-    title = data['title', post['title']]
+    title = data.get('title', post['title'])
     description = data.get('description', post['description'])
 
     price = 0
     if post_nature != 'À donner':
-        price = data['price']
+        price = data.get('price', post['price'])
     places = data.get('places', post['places'])
     category = data.get('category', post['category_id'])
 
