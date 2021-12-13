@@ -14,7 +14,7 @@ def get_document(_document):
 def get_posts(order):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
-        'fields': ['price'],
+        # 'fields': ['price'],
         # 'sort': [{'price': order}]
         # TODO : indexer les prix avant tri...? https://docs.couchdb.org/en/stable/api/database/find.html#db-index
     }
