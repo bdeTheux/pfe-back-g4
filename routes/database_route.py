@@ -1,6 +1,7 @@
 from flask import jsonify, Blueprint
 
 from db import database
+from db.couchDB_functions import init_database, display_db_docs
 
 database = database.get_database()
 
@@ -14,8 +15,10 @@ def get_blueprint():
 
 @database_route.route('/documents', methods=['GET'])
 def get_documents():
-    documents = []
-    for doc in database:
-        documents.append(database[doc])
+    return jsonify(display_db_docs(database))
 
-    return jsonify(documents)
+
+@database_route.route('/init', methods=['GET'])
+def reinit_database():
+    init_database(database)
+    return jsonify(display_db_docs(database))
