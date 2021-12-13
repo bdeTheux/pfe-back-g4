@@ -18,7 +18,6 @@ def get_all():
     categories = request.args.get('category')
     campus = request.args.get('campus')
     order = request.args.get('order', None)
-    print(order)
     if campus and categories:
         return jsonify(service.get_posts_by_campus_and_category(campus, categories, order))
     elif campus:
