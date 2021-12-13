@@ -131,28 +131,32 @@ def init_database():
                                 description='Un seul lacet, 28cm',
                                 places=['Woluwe', 'Ixelles'],
                                 seller_id=kevin, price=0,
-                                category_id='Vêtements et accessoires')
+                                category_id='Vêtements et accessoires',
+                                images=[])
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Furet mâle',
                                 description='En forme, 3 ans, aime manger les lacets bleus',
                                 places=['Woluwe', 'Ixelles'],
                                 seller_id=kevin, price=25,
-                                category_id='Famille')
+                                category_id='Famille',
+                                images=[])
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Converses blanches',
                                 description='En très bon état, pointure 38',
                                 places=['Woluwe'],
                                 seller_id=narjis, price=35.5,
-                                category_id='Vêtements et chaussures femmes')
+                                category_id='Vêtements et chaussures femmes',
+                                images=[])
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Éperons portés par Billy the kid',
                                 description="Tout est dans le titre, c'est pas un fake!",
                                 places=['Woluwe', 'Louvain-la-Neuve'],
                                 seller_id=nina, price=120000.3,
-                                category_id='Fournitures pour animaux')
+                                category_id='Fournitures pour animaux',
+                                images=[])
 
     # Accepted
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
@@ -160,21 +164,24 @@ def init_database():
                                 description='Comme neuve',
                                 places=['Ixelles'],
                                 seller_id=narjis, price=20,
-                                category_id='Vêtements et chaussures femmes')
+                                category_id='Vêtements et chaussures femmes',
+                                images=[])
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
                                 title='Recette de cocktail',
                                 description='Une base gingembre, évidemment! De quoi rester en bonne santé',
                                 places=['Woluwe'],
                                 seller_id=boris, price=1.5,
-                                category_id='Vêtements et chaussures femmes')
+                                category_id='Vêtements et chaussures femmes',
+                                images=[])
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=approved,
                                 title='Talent',
                                 description="Non, peut-être?",
                                 places=['Louvain-la-Neuve'],
                                 seller_id=samy, price=0,
-                                category_id='Vêtements et chaussures femmes')
+                                category_id='Vêtements et chaussures femmes',
+                                images=[])
 
     # Closed
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
@@ -182,28 +189,32 @@ def init_database():
                                 description='Il en reste 3, paprika, à peine humides',
                                 places=['Ixelles'],
                                 seller_id=kevin, price=0,
-                                category_id='Santé et beauté')
+                                category_id='Santé et beauté',
+                                images=[])
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=closed,
                                 title='Mazda rouge',
                                 description='Superbe voiture',
                                 places=['Ixelles'],
                                 seller_id=nina, price=14999.9,
-                                category_id='Electroménager')
+                                category_id='Electroménager',
+                                images=[])
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
                                 title='Papier peint',
                                 description='Rouge et vert',
                                 places=['Ixelles'],
                                 seller_id=boris, price=0,
-                                category_id='Reserve')
+                                category_id='Reserve',
+                                images=[])
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
                                 title='Bonnet vert',
                                 description='en laine',
                                 places=['Louvain-la-Neuve'],
                                 seller_id=nina, price=0,
-                                category_id='Reserve')
+                                category_id='Reserve',
+                                images=[])
 
     db['Woluwe'] = dict(type="Address", campus='Woluwe',
                         lat="50.849857061691836", long="4.453360810918974")
