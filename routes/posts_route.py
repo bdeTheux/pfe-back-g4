@@ -60,7 +60,7 @@ def get_with_id(_current_user, _id):
     post = service.get_post_by_id(_id)
     if post:
         if post.state != PostStates.APPROVED.value:
-            if _current_user['is_admin'] or (post['seller_id'] == _current_user['id']):
+            if _current_user and (_current_user['is_admin'] or (post['seller_id'] == _current_user['id'])):
                 return jsonify(post.get_data())
         else:
             return jsonify(post.get_data())
@@ -104,7 +104,7 @@ def add_one(_current_user):
                 images.append(cloudinary.uploader.upload(file_to_upload).get('url'))
         except Exception:
             pass
-        
+
     post = Post(post_nature=post_nature,
                 title=title,
                 description=description,
