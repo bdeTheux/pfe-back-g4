@@ -19,6 +19,7 @@ def _order_posts(posts, order):
 def get_posts(order):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
+    }
 
     return _order_posts(list(database.find(mango)), order)
 
@@ -28,7 +29,7 @@ def get_posts_by_campus(campus, order):
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
     }
     list_posts = [row for row in list(database.find(mango)) if campus in row['places']]
-    return _order_posts(list(database.find(mango)), order)
+    return _order_posts(list_posts, order)
 
 
 def get_posts_by_category(category, order):

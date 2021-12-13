@@ -65,14 +65,14 @@ def get_with_id(_current_user, _id):
         else:
             return jsonify(post.get_data())
 
-    return abort(404, "Ce post n'existe pas/plus.")
+    return abort(404, "Cette annonce n'existe pas/plus.")
 
 
 @posts_route.route('/', methods=['POST'])
 @token_required
 def add_one(_current_user):
     if not request.json:
-        abort(400, "The payload is empty")
+        abort(400, "La requête est vide")
 
     data = request.json
     post_nature = data['post_nature']
@@ -94,7 +94,7 @@ def add_one(_current_user):
                 )
 
     res = service.create_post(post)
-    return jsonify(res) if res else abort(400, "Il y a eu un problème.")
+    return jsonify(res) if res else abort(500, "Il y a eu un problème.")
 
 
 @posts_route.route('/<string:_id>', methods=['DELETE'])
@@ -103,7 +103,7 @@ def delete_one(_current_user, _id):
     try:
         res = service.delete_post(_id)
     except FileNotFoundError:
-        abort(404, "Ce post n'existe pas/plus.")
+        abort(404, "Cette annonce n'existe pas/plus.")
     return jsonify(res)
 
 
@@ -111,12 +111,13 @@ def delete_one(_current_user, _id):
 @token_required
 def edit_one(_current_user, _id):
     if not request.json:
-        abort(400, "The payload is empty")
+        abort(400, "La requête est vide")
 
     data = request.json
     post = service.get_post_by_id(_id)
     if post['seller_id'] != _current_user['_id']:
-        abort(401, "Vous ne pouvez pas modifier ce post.")  # User can only change his own post, can admin ? -> TODO
+        abort(401,
+              "Vous ne pouvez pas modifier cette annonce.")  # User can only change his own post, can admin ? -> TODO
 
     post_nature = data['post_nature']
     title = data['title']
@@ -139,7 +140,7 @@ def edit_one(_current_user, _id):
 @admin_token_required
 def change_state(_current_user, _id):
     if not request.json:
-        abort(400, "The payload is empty")
+        abort(400, "La requête est vide")
     data = request.json
 
     state = data['state']
