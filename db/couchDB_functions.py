@@ -169,7 +169,7 @@ def init_database(database):
     database['Woluwe'] = dict(type="Address", campus='Woluwe',
                               lat="50.849857061691836", long="4.453360810918974")
     database['Louvain-la-Neuve'] = dict(type="Address", campus='Louvain-la-Neuve',
-                                        lat="50.84981962233335", long="4.453745477375748")
+                                        lat="50.670452676255934", long="4.611500148709881")
     database['Ixelles'] = dict(type="Address", campus='Ixelles',
                                lat="50.835525846476465", long="4.376626359487836")
 
