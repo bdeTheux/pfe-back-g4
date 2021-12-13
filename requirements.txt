@@ -10,6 +10,7 @@ couchdb==1.2
 flake8==4.0.1
 pytest==6.2.5
 python-mango==0.1.7
+cloudinary==1.28.0
 
 # boto==2.49.0
 

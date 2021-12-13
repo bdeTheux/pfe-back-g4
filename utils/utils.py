@@ -4,6 +4,7 @@ from functools import wraps
 
 import dotenv
 import jwt
+from cloudinary import uploader
 from flask import make_response, request, abort, jsonify
 
 import services.users_service as service
@@ -104,3 +105,12 @@ def token_welcome(f):
         return f(current_user, *args, **kwargs)
 
     return decorated
+
+
+def upload_images(images):
+    print('in upload route', images)
+
+    upload_result = []
+    for image in images:
+        upload_result.append(uploader.upload(image))
+    return upload_result

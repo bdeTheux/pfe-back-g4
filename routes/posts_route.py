@@ -2,7 +2,7 @@ from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
 from models.Post import Post, PostStates
-from utils.utils import admin_token_required, token_required, token_welcome
+from utils.utils import admin_token_required, token_required, token_welcome, upload_images
 
 posts_route = Blueprint('posts-route', __name__)
 
@@ -82,6 +82,10 @@ def add_one(_current_user):
     places = data.get('places', [])
     seller_id = _current_user['_id']
     category_id = data['category_id']
+    print(data)
+    images = upload_images(data.get('files', []))
+    print(images)
+    STOP
     post = Post(post_nature=post_nature,
                 title=title,
                 description=description,
@@ -89,6 +93,7 @@ def add_one(_current_user):
                 places=places,
                 seller_id=seller_id,
                 category_id=category_id,
+                images=images
                 )
 
     res = service.create_post(post)
