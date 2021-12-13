@@ -49,11 +49,11 @@ def delete_one(_current_user, _id):
     return jsonify(service.delete_user(_id))
 
 
-@users_route.route('/<string:_id>', methods=['PUT'])
+@users_route.route('/edit', methods=['PUT'])
 @token_required
-def edit_one(current_user, _id):
-    if current_user['_id'] != _id:
-        abort(401, "Vous n'avez pas accès à cette fonctionnalité.")
+def edit_one(current_user):
+    if not request.json:
+        abort(400, "La requête est vide")
 
     data = request.json
     email = data.get('email')
@@ -61,14 +61,14 @@ def edit_one(current_user, _id):
     last_name = data.get('last_name')
     campus = data.get('campus')
     password = data.get('password')
-    user = User(_id=_id,
+    user = User(_id=current_user['_id'],
                 first_name=first_name,
                 last_name=last_name,
                 campus=campus,
                 email=email,
                 password=generate_password_hash(password)
                 )
-    return jsonify(service.edit_user(user, _id))
+    return jsonify(service.edit_user(user, current_user['_id']))
 
 
 @users_route.route('/changepassword', methods=['POST'])
