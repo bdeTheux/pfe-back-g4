@@ -4,6 +4,7 @@ from functools import wraps
 
 import dotenv
 import jwt
+from cloudinary import uploader
 from flask import make_response, request, abort, jsonify
 from werkzeug.security import check_password_hash
 
@@ -107,6 +108,14 @@ def token_welcome(f):
     return decorated
 
 
+def upload_images(images):
+    upload_result = []
+    for image in images:
+        print(image)
+        upload_result.append(uploader.upload(image))
+    return upload_result
+
+  
 def check_password(current, given):
     if not check_password_hash(current, given):
         return abort(401, 'Mot de passe incorrect.')
