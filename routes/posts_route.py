@@ -2,6 +2,7 @@ from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
 from models.Post import Post, PostStates
+from services.categories_service import get_category_by_id
 from utils.utils import admin_token_required, token_required, token_welcome
 
 posts_route = Blueprint('posts-route', __name__)
@@ -17,7 +18,6 @@ def get_all():
     categories = request.args.get('category')
     campus = request.args.get('campus')
     order = request.args.get('order', None)
-    print(order)
     if campus and categories:
         return jsonify(service.get_posts_by_campus_and_category(campus, categories, order))
     elif campus:
@@ -115,21 +115,27 @@ def edit_one(_current_user, _id):
     post = service.get_post_by_id(_id)
     if post['seller_id'] != _current_user['_id']:
         abort(401,
-              "Vous ne pouvez pas modifier cette annonce.")  # User can only change his own post, can admin ? -> TODO
+              "Vous ne pouvez pas modifier cette annonce.")
 
-    post_nature = data['post_nature']
-    title = data['title']
-    description = data['description']
+    post_nature = data.get('post_nature', post['post_nature'])
+    title = data['title', post['title']]
+    description = data.get('description', post['description'])
+
     price = 0
     if post_nature != 'À donner':
         price = data['price']
-    places = data['places']
-    post = Post(post_nature=post_nature,
-                title=title,
-                description=description,
-                price=price,
-                places=places,
-                )
+    places = data.get('places', post['places'])
+    category = data.get('category', post['category_id'])
+
+    if get_category_by_id(category):
+        post = Post(_id=_id,
+                    post_nature=post_nature,
+                    title=title,
+                    description=description,
+                    price=price,
+                    places=places,
+                    category_id=category,
+                    )
 
     return jsonify(service.edit_post(post, _id))
 
