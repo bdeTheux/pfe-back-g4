@@ -189,7 +189,7 @@ def init_database():
                                 description='Superbe voiture',
                                 places=['Ixelles'],
                                 seller_id=nina, price=14999.9,
-                                category_id='Electroménager')
+                                category_id='Reserve')
 
     db['Woluwe'] = dict(type="Address", campus='Woluwe',
                         lat="50.849857061691836", long="4.453360810918974")
