@@ -19,7 +19,6 @@ def _order_posts(posts, order):
 def get_posts(order):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
-    }
 
     return _order_posts(list(database.find(mango)), order)
 

@@ -70,7 +70,7 @@
 | **/posts?campus=value&category=value** | GET | Non | Non | READ ALL FILTERED : filtre selon les deux critères fournis;                          |
 | **/posts/closed**                      | GET | Non | Non | READ ALL : récupère tous les posts de la db étant en état "Clôturé"                  |
 | **/posts/pending**                     | GET | Non | Non | READ ALL : récupère tous les posts de la db étant en état "En attende d'approbation" |
-| **/posts/myposts**                     | GET | Non | Non | READ ALL : récupère tous les posts de l'utilisateur courant'                         |
+| **/posts/myPosts**                     | GET | Non | Non | READ ALL : récupère tous les posts de l'utilisateur courant'                         |
 | **/posts/{id}**                        | GET | Non | Non | READ ONE : récupère un post de la db                                                 |
 | **/posts**                             | POST | Oui | Non | CREATE ONE : rajoute un nouveau post dans la db                                      |
 | **/posts/{id}**                        | PUT | Oui | Oui si pas seller | UPDATE ONE : modifie le post ayant l&#39;id passé en paramètre                       |

@@ -85,6 +85,7 @@ def edit_one(_current_user, _id):
 
     if not name:  # Empty data
         abort(400, "Le champ 'name' doit être présent et non vide")
+
     if not isinstance(sub_categories, list):
         abort(400, "Le champ de requête 'sub_categories' doit être une liste")
 

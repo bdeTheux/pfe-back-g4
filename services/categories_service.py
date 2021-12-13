@@ -52,7 +52,7 @@ def get_sub_categories(_id: str) -> list[str]:
 def get_category_by_id(_id: str) -> Category:
     category = Category.load(database, _id)
     if not category:
-        raise AttributeError("Reference not found")
+        raise AttributeError("La catégorie n'existe pas/plus.")
     return category
 
 
@@ -181,6 +181,7 @@ def edit_category(_id: str, _name: str, _parent: str, _sub_categories: str) -> s
             parent = Category.load(database, _parent)
             if not parent:
                 raise AttributeError("La catégorie parente n'existe pas")
+
             parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
             parent.store(database)
 

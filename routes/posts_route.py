@@ -60,14 +60,12 @@ def get_with_id(_current_user, _id):
     post = service.get_post_by_id(_id)
     if post:
         if post.state != PostStates.APPROVED.value:
-            if not _current_user:
-                return abort(401, "You can't do that")
-            elif _current_user['is_admin'] or (post['seller_id'] == _current_user['id']):
+            if _current_user['is_admin'] or (post['seller_id'] == _current_user['id']):
                 return jsonify(post.get_data())
         else:
             return jsonify(post.get_data())
 
-    return abort(404, "This post doesn't exist")
+    return abort(404, "Ce post n'existe pas/plus.")
 
 
 @posts_route.route('/', methods=['POST'])
@@ -96,7 +94,7 @@ def add_one(_current_user):
                 )
 
     res = service.create_post(post)
-    return jsonify(res) if res else abort(400, "Something wrong happened")
+    return jsonify(res) if res else abort(400, "Il y a eu un problème.")
 
 
 @posts_route.route('/<string:_id>', methods=['DELETE'])
@@ -105,7 +103,7 @@ def delete_one(_current_user, _id):
     try:
         res = service.delete_post(_id)
     except FileNotFoundError:
-        abort(404, "Post not found")
+        abort(404, "Ce post n'existe pas/plus.")
     return jsonify(res)
 
 
@@ -118,13 +116,13 @@ def edit_one(_current_user, _id):
     data = request.json
     post = service.get_post_by_id(_id)
     if post['seller_id'] != _current_user['_id']:
-        abort(401, "You can only change your own post")
+        abort(401, "Vous ne pouvez pas modifier ce post.")  # User can only change his own post, can admin ? -> TODO
 
     post_nature = data['post_nature']
     title = data['title']
     description = data['description']
     price = 0
-    if post_nature != 'Giving':
+    if post_nature != 'À donner':
         price = data['price']
     places = data['places']
     post = Post(post_nature=post_nature,
@@ -148,6 +146,6 @@ def change_state(_current_user, _id):
     if state != PostStates.CLOSED.value and state != PostStates.PENDING.value and \
             state != PostStates.APPROVED.value and state != PostStates.REJECTED.value:
         abort(400,
-              f"Valid states are {PostStates.PENDING.value}, {PostStates.APPROVED.value}"
-              f", {PostStates.REJECTED.value}, and {PostStates.CLOSED.value}")
+              f"Les états valides sont {PostStates.PENDING.value}, {PostStates.APPROVED.value}"
+              f", {PostStates.REJECTED.value}, et {PostStates.CLOSED.value}")
     return jsonify(service.change_state(_id, state))

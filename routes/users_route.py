@@ -53,7 +53,7 @@ def delete_one(_current_user, _id):
 @token_required
 def edit_one(current_user, _id):
     if current_user['_id'] != _id:
-        abort(401)
+        abort(401, 'Vous n\'avez pas accès à cette fonctionnalité.')
 
     data = request.json
     email = data.get('email')
