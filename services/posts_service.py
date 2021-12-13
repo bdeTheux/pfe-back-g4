@@ -16,7 +16,7 @@ def _order_posts(posts, order):
         return sorted(posts, key=lambda i: (i['price']))
     if order == 'desc':
         return sorted(posts, key=lambda i: (i['price']), reverse=True)
-    
+
     return posts
 
 
@@ -95,11 +95,8 @@ def delete_post(_id):
 
 def edit_post(new_post, _id):
     previous_post = get_post_by_id(_id)
-    new_post['_id'] = _id
-    new_post['state'] = new_post['state']
-    new_post['category_id'] = previous_post['category_id']
+    new_post['state'] = previous_post['state']
     new_post['seller_id'] = previous_post['seller_id']
-
     for field in new_post:
         previous_post[field] = new_post[field]
     previous_post.store(database)

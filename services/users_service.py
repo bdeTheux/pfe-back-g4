@@ -11,7 +11,7 @@ def create_user(user):
     database[user_id] = dict(type='User', last_name=user.last_name,
                              first_name=user.first_name, email=user.email,
                              password=user.password, campus=user.campus, is_banned=False,
-                             is_admin=False)
+                             is_admin=False, favorites=[])
     return user_id
 
 

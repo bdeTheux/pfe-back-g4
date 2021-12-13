@@ -2,6 +2,7 @@ from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
 from models.Post import Post, PostStates
+from services.categories_service import get_category_by_id
 from utils.utils import admin_token_required, token_required, token_welcome
 
 posts_route = Blueprint('posts-route', __name__)
@@ -108,6 +109,7 @@ def delete_one(_current_user, _id):
 @posts_route.route('/<string:_id>', methods=['PUT'])
 @token_required
 def edit_one(_current_user, _id):
+    # TODO add checks
     if not request.json:
         abort(400, "La requête est vide")
 
@@ -120,16 +122,22 @@ def edit_one(_current_user, _id):
     post_nature = data['post_nature']
     title = data['title']
     description = data['description']
+
     price = 0
     if post_nature != 'À donner':
         price = data['price']
     places = data['places']
-    post = Post(post_nature=post_nature,
-                title=title,
-                description=description,
-                price=price,
-                places=places,
-                )
+    category = data['category']
+
+    if get_category_by_id(category):
+        post = Post(_id=_id,
+                    post_nature=post_nature,
+                    title=title,
+                    description=description,
+                    price=price,
+                    places=places,
+                    category_id=category,
+                    )
 
     return jsonify(service.edit_post(post, _id))
 

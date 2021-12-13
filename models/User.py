@@ -8,12 +8,13 @@ class User(Document):  # if error, try import couchdb.document maybe
     email = TextField()
     password = TextField()
     campus = TextField()
+    # favorites = ListField()
     is_banned = BooleanField(default=False)
     is_admin = BooleanField(default=False)
 
     def get_limited_data(self):
         return {"_id": self.id, "last_name": self.last_name, "first_name": self.first_name, "email": self.email,
-                "campus": self.campus}
+                "campus": self.campus, "favorites": self.favorites}
 
     def get_data(self):
         data = self.get_limited_data()
