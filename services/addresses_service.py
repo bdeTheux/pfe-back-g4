@@ -13,7 +13,7 @@ def get_addresses() -> list:
 
 
 def get_address_by_id(_id: str) -> Address:
-    return Address.load(database, _id)
+    return (Address.load(database, _id)).get_data()
 
 
 def create_address(_campus: str, _lat: str, _long: str) -> str:

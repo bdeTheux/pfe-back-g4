@@ -5,6 +5,7 @@ from functools import wraps
 import dotenv
 import jwt
 from flask import make_response, request, abort, jsonify
+from werkzeug.security import check_password_hash
 
 import services.users_service as service
 from models.User import User
@@ -104,3 +105,8 @@ def token_welcome(f):
         return f(current_user, *args, **kwargs)
 
     return decorated
+
+
+def check_password(current, given):
+    if not check_password_hash(current, given):
+        return abort(401, 'Mot de passe incorrect.')
