@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 
 import services.users_service as service
 from models.User import User
+from services.posts_service import get_post_by_id
 from utils.utils import token_required, token_welcome, admin_token_required, check_password
 
 users_route = Blueprint('users-route', __name__)
@@ -83,3 +84,13 @@ def change_password(_current_user):
 
     new_password = generate_password_hash(data.get('new_password'))
     return jsonify(service.change_password(_current_user['_id'], new_password))
+
+
+@users_route.route('/addfavorite/<string:_id>', methods=['POST'])
+@token_required
+def add_favorite(current_user, _id):  # id post
+    post = get_post_by_id(_id)
+    if not post:
+        abort(404, "Cette annonce n'existe pas/plus.")
+
+    return jsonify(service.add_favorite(current_user['_id'], _id))

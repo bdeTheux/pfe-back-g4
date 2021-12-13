@@ -51,5 +51,5 @@ if reserve:
     if response == 'Y':
         for post in reserve:
             print(f"Deletion of {post}")
-            elem = Post.load(database, post)
+            elem = Post.load(post, database)
             database.delete(post)
