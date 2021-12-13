@@ -125,16 +125,16 @@ def edit_one(_current_user, _id):
     if post_nature != 'À donner':
         price = data.get('price', post['price'])
     places = data.get('places', post['places'])
-    category = data.get('category', post['category_id'])
+    category_id = data.get('category_id', post['category_id'])
 
-    if get_category_by_id(category):
+    if get_category_by_id(category_id):
         post = Post(_id=_id,
                     post_nature=post_nature,
                     title=title,
                     description=description,
                     price=price,
                     places=places,
-                    category_id=category,
+                    category_id=category_id,
                     )
 
     return jsonify(service.edit_post(post, _id))
@@ -154,3 +154,14 @@ def change_state(_current_user, _id):
               f"Les états valides sont {PostStates.PENDING.value}, {PostStates.APPROVED.value}"
               f", {PostStates.REJECTED.value}, et {PostStates.CLOSED.value}")
     return jsonify(service.change_state(_id, state))
+
+
+@posts_route.route('/<string:_id>/sold', methods=['POST'])
+@token_required
+def sell_one(_current_user, _id):
+    post = service.get_post_by_id(_id)
+    if post['seller_id'] != _current_user['_id']:
+        abort(401,
+              "Vous ne pouvez pas clôturer cette annonce.")
+
+    return jsonify(service.sell_one(_id))
