@@ -1,4 +1,6 @@
 # flask imports
+import re
+
 from flask import request, Blueprint, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -46,6 +48,8 @@ def signup():
     email = data['email']
     password = data['password']
 
+    if not re.match("^\w+\.\w+@(student\.vinci\.be|vinci\.be)$", email):
+        return abort(422, "L\'email doit être sous la forme prenom.nom@student.vinci.be ou prenom.nom@vinci.be")
     # checking for existing user
     user = service.get_user_by_email(email)
     if not user:
@@ -64,5 +68,4 @@ def signup():
         user = service.get_user_by_id(user_id)
         return create_response_with_token(user, 201)
     else:
-        # returns 202 if user already exists
-        return abort(202, 'L\'utilisateur existe déjà : Connectez-vous.')
+        return abort(409, 'L\'utilisateur existe déjà : Connectez-vous.')
