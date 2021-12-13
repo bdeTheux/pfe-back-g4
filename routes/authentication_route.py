@@ -58,7 +58,7 @@ def signup():
         last_name = data['last_name']
         campus = data['campus']
         if not password or not first_name or not last_name or not campus:
-            abort(400, "Veuillez remplir tous les champs.")
+            return abort(400, "Veuillez remplir tous les champs.")
         user = User(first_name=first_name,
                     last_name=last_name,
                     campus=campus,
