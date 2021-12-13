@@ -46,7 +46,7 @@ def get_rejected(_current_user):
     return jsonify(service.get_rejected_posts())
 
 
-@posts_route.route('/myPosts', methods=['GET'])
+@posts_route.route('/myposts', methods=['GET'])
 @token_required
 def get_all_my_posts(_current_user):
     return jsonify(service.get_all_my_posts(_current_user['_id']))
