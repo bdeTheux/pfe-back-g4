@@ -19,7 +19,7 @@ def get_all():
 @addresses_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
     res = service.get_address_by_id(_id)
-    return jsonify(res) if res else abort(404, "Cette adresse n'existe pas/plus")
+    return jsonify(res.get_data()) if res else abort(404, "Cette adresse n'existe pas/plus")
 
 
 @addresses_route.route('/', methods=['POST'])

@@ -41,11 +41,11 @@
 | **/users/signup**   | POST | Non | Non        | CREATE ONE : ajoute un nouvel utilisateur avec les données du corps de la requête                                |
 | **/users**          | GET | Oui | Oui        | READ ALL : récupère tous les utilisateurs de la db                                                               |
 | **/users/whoami**   | GET | Oui | Oui        | READ ONE : récupère l'utilisateur courant ssi le token est présent et valide, sinon renvoie null                 |
-| **/users/{id}/ban** | POST | Oui | Oui        | UPDATE ONE : Modifie le statut banned d&#39;un utilisateur ayant l&#39;id passé en paramètre                     |
+| **/users/{id}/ban** | POST | Oui | Oui        | UPDATE ONE : modifie le statut banned d&#39;un utilisateur ayant l&#39;id passé en paramètre                     |
 | **/users/{id}**     | GET | Oui | Non        | READ ONE : récupère un utilisateur de la db                                                                      |
-| **/users/{id}**     | PUT | Oui | Non\*      | UPDATE ONE : modifie l&#39;utilisateur ayant l&#39;id passé en paramètre avec les données du corps de la requête |
+| **/users/edit**     | PUT | Oui | Non\*      | UPDATE ONE : modifie l&#39;utilisateur ayant l&#39;id passé en paramètre avec les données du corps de la requête |
 | **/users/{id}**     | DELETE | Oui | Non        | DELETE ONE : supprime l&#39;utilisateur avec l&#39;id passé en paramètre                                         |
-
+| **/users/changepassword**     | POST | Oui | Non        | UPDATE ONE: modifie le mot de passe de l&#39;utilisateur connecté                                         |
 ### Categories :
 
 | **Uri**                            | **Méthode** | **Auth ?** | **Admin ?** | **Action**                                                                                                              |
@@ -70,7 +70,7 @@
 | **/posts?campus=value&category=value** | GET | Non | Non | READ ALL FILTERED : filtre selon les deux critères fournis;                          |
 | **/posts/closed**                      | GET | Non | Non | READ ALL : récupère tous les posts de la db étant en état "Clôturé"                  |
 | **/posts/pending**                     | GET | Non | Non | READ ALL : récupère tous les posts de la db étant en état "En attende d'approbation" |
-| **/posts/myPosts**                     | GET | Non | Non | READ ALL : récupère tous les posts de l'utilisateur courant'                         |
+| **/posts/myposts**                     | GET | Non | Non | READ ALL : récupère tous les posts de l'utilisateur courant'                         |
 | **/posts/{id}**                        | GET | Non | Non | READ ONE : récupère un post de la db                                                 |
 | **/posts**                             | POST | Oui | Non | CREATE ONE : rajoute un nouveau post dans la db                                      |
 | **/posts/{id}**                        | PUT | Oui | Oui si pas seller | UPDATE ONE : modifie le post ayant l&#39;id passé en paramètre                       |
