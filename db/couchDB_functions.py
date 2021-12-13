@@ -152,6 +152,13 @@ def init_database(database):
                                       seller_id=nina, price=14999.9,
                                       category_id='Electroménager')
 
+    database['Woluwe'] = dict(type="Address", campus='Woluwe',
+                              lat="50.849857061691836", long="4.453360810918974")
+    database['Louvain-la-Neuve'] = dict(type="Address", campus='Louvain-la-Neuve',
+                                        lat="50.84981962233335", long="4.453745477375748")
+    database['Ixelles'] = dict(type="Address", campus='Ixelles',
+                               lat="50.835525846476465", long="4.376626359487836")
+
 
 def display_db_docs(database):
     print("Database documents asked")
