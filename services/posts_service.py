@@ -140,3 +140,10 @@ def get_closed_posts():
         'selector': {'type': 'Post', 'state': PostStates.CLOSED.value},
     }
     return list(database.find(mango))
+
+
+def sell_one(_id):
+    post = get_post_by_id(_id)
+    post['state'] = PostStates.CLOSED.value
+    post.store(database)
+    return post.get_data()
