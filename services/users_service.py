@@ -64,3 +64,10 @@ def ban_user(_id):
     user['is_banned'] = not user['is_banned']
     user.store(database)
     return user.get_data()
+
+
+def change_password(_id, new_password):
+    user = get_user_by_id(_id)
+    user['password'] = new_password
+    user.store(database)
+    return user.get_data()

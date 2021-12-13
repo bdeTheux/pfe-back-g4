@@ -1,6 +1,6 @@
 import flask
 from flask import jsonify, abort, request, Blueprint
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 import services.users_service as service
 from models.User import User
@@ -69,3 +69,18 @@ def edit_one(current_user, _id):
                 password=generate_password_hash(password)
                 )
     return jsonify(service.edit_user(user, _id))
+
+
+@users_route.route('/changepassword', methods=['POST'])
+@token_required
+def change_password(_current_user):
+    if not request.json:
+        abort(400, "La requête est vide")
+    data = request.json
+    current_password = data.get('current_password')
+
+    if not check_password_hash(_current_user['password'], current_password):
+        return abort(401, 'Mot de passe incorrect.')
+
+    new_password = generate_password_hash(data.get('new_password'))
+    return jsonify(service.change_password(_current_user['_id'], new_password))
