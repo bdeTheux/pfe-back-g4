@@ -18,29 +18,29 @@ def get_all():
 
 @addresses_route.route('/<string:_id>', methods=['GET'])
 def get_with_id(_id):
-    try:
-        res = service.get_address_by_id(_id)
-    except AttributeError as e:
-        abort(400, e)
-    return jsonify(res)
+    res = service.get_address_by_id(_id)
+    return jsonify(res) if res else abort(404, 'Référence invalide')
 
 
 @addresses_route.route('/', methods=['POST'])
 @admin_token_required
 def create_one(_current_user):
     if not request.json:
-        abort(400, "The payload is empty")
+        abort(400, "La requête est vide")
 
     data = request.json
-    if 'campus' not in data:
-        abort(400, "The payload need a field 'campus'")
-    if 'lat' not in data:
-        abort(400, "The payload need a field 'lat'")
-    if 'long' not in data:
-        abort(400, "The payload need a field 'long'")
+    campus = data.get('campus', None)
+    lat = data.get('lat', None)
+    long = data.get('long', None)
+    if not campus:
+        abort(400, "La requête nécessite un champ 'campus' non vide")
+    if not lat:
+        abort(400, "La requête nécessite un champ 'lat' non vide")
+    if not long:
+        abort(400, "La requête nécessite un champ 'long' non vide")
 
     try:
-        res = service.create_address(data.get('campus'), data.get('lat'), data.get('long'))
+        res = service.create_address(campus, lat, long)
     except AttributeError as e:
         abort(400, e)
     return jsonify(res)
@@ -63,15 +63,18 @@ def edit_one(_current_user, _id):
         abort(400, "The payload is empty")
 
     data = request.json
-    if 'campus' not in data:
-        abort(400, "The payload need a field 'campus'")
-    if 'lat' not in data:
-        abort(400, "The payload need a field 'lat'")
-    if 'long' not in data:
-        abort(400, "The payload need a field 'long'")
+    campus = data.get('campus', None)
+    lat = data.get('lat', None)
+    long = data.get('long', None)
+    if not campus:
+        abort(400, "La requête nécessite un champ 'campus' non vide")
+    if not lat:
+        abort(400, "La requête nécessite un champ 'lat' non vide")
+    if not long:
+        abort(400, "La requête nécessite un champ 'long' non vide")
 
     try:
-        res = service.edit_address(_id, data.get('campus'), data.get('lat'), data.get('long'))
+        res = service.edit_address(_id, campus, lat, long)
     except AttributeError as e:
         abort(400, e)
 

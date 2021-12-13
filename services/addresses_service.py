@@ -18,7 +18,7 @@ def get_address_by_id(_id: str) -> Address:
 
 def create_address(_campus: str, _lat: str, _long: str) -> str:
     if Address.load(database, _campus):
-        raise AttributeError("The address exists already")
+        raise AttributeError("L'adresse existe déjà")
     database[_campus] = dict(type='Address', campus=_campus, lat=_lat, long=_long)
     return _campus
 
@@ -26,14 +26,14 @@ def create_address(_campus: str, _lat: str, _long: str) -> str:
 def delete_address(_id: str):
     address = Address.load(database, _id)
     if not address:
-        raise AttributeError("Reference not found")
+        raise AttributeError("Référence invalide")
     return database.delete(address)
 
 
 def edit_address(_id: str, _campus: str, _lat: str, _long: str):
     address = Address.load(database, _id)
     if not address:
-        raise AttributeError("Reference not found")
+        raise AttributeError("Référence invalide")
 
     if _campus and _campus != address.campus:
         database.copy(address, _campus)

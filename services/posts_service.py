@@ -11,25 +11,25 @@ def get_document(_document):
     return database.get
 
 
+def _order_posts(posts, order):
+    return sorted(posts, key=lambda i: (i['price'])) if order == "asc" \
+        else sorted(posts, key=lambda i: (i['price']), reverse=True)
+
+
 def get_posts(order):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
-        # 'fields': ['price'],
-        # 'sort': [{'price': order}]
-        # TODO : indexer les prix avant tri...? https://docs.couchdb.org/en/stable/api/database/find.html#db-index
     }
-    for row in database.find(mango):
-        print(row['price'])
-    return list(database.find(mango))
+
+    return _order_posts(list(database.find(mango)), order)
 
 
 def get_posts_by_campus(campus, order):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
-        # 'sort': [{'price': order}]
     }
     list_posts = [row for row in list(database.find(mango)) if campus in row['places']]
-    return list_posts
+    return _order_posts(list(database.find(mango)), order)
 
 
 def get_posts_by_category(category, order):
@@ -37,9 +37,8 @@ def get_posts_by_category(category, order):
         'selector': {'type': 'Post',
                      'category_id': category,
                      'state': PostStates.APPROVED.value},
-        # 'sort': [{'price': order}]
     }
-    return list(database.find(mango))
+    return _order_posts(list(database.find(mango)), order)
 
 
 def get_active_posts_by_category(category):
@@ -110,10 +109,9 @@ def get_posts_by_campus_and_category(campus, categories, order):
             'selector': {'type': 'Post',
                          'category_id': category,
                          'state': PostStates.APPROVED.value},
-            # 'sort': [{'price': order}]
         }
         list_posts.extend([row for row in list(database.find(mango)) if campus in row['places']])
-    return list_posts
+    return _order_posts(list_posts, order)
 
 
 def change_state(_id, state):

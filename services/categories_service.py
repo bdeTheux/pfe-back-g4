@@ -99,13 +99,13 @@ def delete_category(_id: str) -> bool:
     category = get_category_by_id(_id)
 
     if not category:
-        raise AttributeError("Reference not found")
+        raise AttributeError("Référence invalide")
 
     categories = [_id]
     categories.extend(get_sub_categories(_id))  # Adding the sub_categories
     for cat in categories:
         if get_active_posts_by_category(cat):
-            raise AttributeError(f"Sub_category '{cat}' contains at least one active post")
+            raise AttributeError(f"La sous-catégorie '{cat}' contient au moins une transaction active")
 
     if category.parent:
         parent = Category.load(database, category.parent)
@@ -141,7 +141,7 @@ def get_parents(_id: str) -> list[str]:
     parents = []
     node = get_category_by_id(_id)
     if not node:
-        raise AttributeError("Reference not found")
+        raise AttributeError("Référence invalide")
     while True:
         if not node.parent:
             break
@@ -180,7 +180,7 @@ def edit_category(_id: str, _name: str, _parent: str, _sub_categories: str) -> s
         if _parent:
             parent = Category.load(database, _parent)
             if not parent:
-                raise AttributeError("The parent category does not exist")
+                raise AttributeError("La catégorie parente n'existe pas")
             parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
             parent.store(database)
 
@@ -228,22 +228,23 @@ def edit_category(_id: str, _name: str, _parent: str, _sub_categories: str) -> s
 def _check_new_sub_categories_for_editing(new_sub_categories: list[str]):
     for cat in new_sub_categories:
         if not cat:
-            raise AttributeError("Some newly added sub_categories have an empty name")
+            raise AttributeError("Une des nouvelles sous-catégories a un nom vide")
         c = Category.load(database, cat)
         if c and c.parent:
-            raise AttributeError("Some newly added sub_categories have a parent category already")
+            raise AttributeError("Une des nouvelles sous-catégories a déjà une catégorie parente")
 
 
 def _check_categories_for_editing(_new_sub_categories: list[str], _actual_sub_categories: list[str]):
     # extracting elements presents in the first data structure and not the second
     missing_subs = set(_actual_sub_categories).difference(_new_sub_categories)
     if len(missing_subs) != 0:
-        raise AttributeError("Cannot remove sub_categories when editing, please edit those sub_categories")
+        raise AttributeError(
+            "Impossible de supprimer une sous-catégorie lors de l'édition, veuillez éditer cette catégorie")
 
 
 def _check_new_name_validity_for_editing(_new_name: str, _actual_name: str):
     if _new_name != _actual_name:
         if not _new_name:
-            raise AttributeError("Name is empty")
+            raise AttributeError("Le nom est vide")
         if Category.load(database, _new_name):
-            raise AttributeError("Reference with same name found")
+            raise AttributeError("Référence portant le même nom trouvée")

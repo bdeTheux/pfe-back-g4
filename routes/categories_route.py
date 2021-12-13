@@ -48,21 +48,18 @@ def get_parents(_id):
 @admin_token_required
 def create_one(_current_user):
     if not request.json:
-        abort(400, "The payload is empty")
+        abort(400, "La requête est vide")
     data = request.json
     name = data.get('name')
 
     if not name:  # Empty data
-        abort(400, "The field 'name' should be there and should not be empty")
+        abort(400, "Le champ 'name' doit être présent et non vide")
 
     parent = data.get('parent', None)
     sub_categories = data.get('sub_categories') if isinstance(data['sub_categories'], list) else []
 
-    try:
-        res = service.create_category(name, parent, sub_categories)
-    except AttributeError as e:
-        abort(400, e)
-    return jsonify(res)
+    res = service.create_category(name, parent, sub_categories)
+    return jsonify(res) if res else abort(500, 'Une erreur est survenue')
 
 
 @categories_route.route('/<string:_id>', methods=['DELETE'])
@@ -79,7 +76,7 @@ def delete_one(_current_user, _id):
 @admin_token_required
 def edit_one(_current_user, _id):
     if not request.json:
-        abort(400, "The payload is empty")
+        abort(400, "La requête est vide")
 
     data = request.json
     name = data.get('name')
@@ -87,9 +84,9 @@ def edit_one(_current_user, _id):
     sub_categories = data.get('sub_categories', [])
 
     if not name:  # Empty data
-        abort(400, "The payload need a field 'name' and it should not be empty")
+        abort(400, "Le champ 'name' doit être présent et non vide")
     if not isinstance(sub_categories, list):
-        abort(400, "The payload field 'sub_categories' should be a list")
+        abort(400, "Le champ de requête 'sub_categories' doit être une liste")
 
     try:
         res = service.edit_category(_id, name, parent, sub_categories)
