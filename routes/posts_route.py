@@ -1,3 +1,5 @@
+import cloudinary
+from cloudinary import uploader
 from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
@@ -58,7 +60,7 @@ def get_with_id(_current_user, _id):
     post = service.get_post_by_id(_id)
     if post:
         if post.state != PostStates.APPROVED.value:
-            if _current_user['is_admin'] or (post['seller_id'] == _current_user['id']):
+            if _current_user and (_current_user['is_admin'] or (post['seller_id'] == _current_user['id'])):
                 return jsonify(post.get_data())
         else:
             return jsonify(post.get_data())
@@ -69,10 +71,10 @@ def get_with_id(_current_user, _id):
 @posts_route.route('/', methods=['POST'])
 @token_required
 def add_one(_current_user):
-    if not request.json:
+    if not request.form:
         abort(400, "La requête est vide")
 
-    data = request.json
+    data = request.form
     post_nature = data.get('post_nature')
     title = data.get('title')
     description = data.get('description')
@@ -82,7 +84,6 @@ def add_one(_current_user):
     places = data.get('places', [])
     seller_id = _current_user['_id']
     category_id = data.get('category_id')
-    images = data.get('files', [])
     if not post_nature:
         abort(400, "Le champ 'post_nature' doit être présent et non vide")
     if not title:
@@ -95,6 +96,14 @@ def add_one(_current_user):
         abort(400, "Le champ 'seller_id' doit être présent et non vide")
     if not category_id:
         abort(400, "Le champ 'category_id' doit être présent et non vide")
+
+    images = []
+    for file_to_upload in request.files.getlist("files[]"):
+        try:
+            if file_to_upload:
+                images.append(cloudinary.uploader.upload(file_to_upload).get('url'))
+        except Exception:
+            pass
 
     post = Post(post_nature=post_nature,
                 title=title,
