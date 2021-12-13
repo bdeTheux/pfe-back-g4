@@ -20,25 +20,25 @@ def init_database(database):
     samy = uuid.uuid4().hex
 
     database[admin] = dict(type='User', last_name='admin',
-                           first_name='admin', email='admin@vinci.be',
+                           first_name='admin', email='admin@vinci.be', favorites=[],
                            password=password, campus='Ixelles', is_banned=False, is_admin=True)
     database[kevin] = dict(type='User', last_name='Jullien',
-                           first_name='Kevin', email='kevin.jullien@student.vinci.be',
+                           first_name='Kevin', email='kevin.jullien@student.vinci.be', favorites=[],
                            password=password, campus='Woluwe', is_banned=False, is_admin=False)
     database[narjis] = dict(type='User', last_name='Laraki',
-                            first_name='Narjis', email='narjis.laraki@student.vinci.be',
+                            first_name='Narjis', email='narjis.laraki@student.vinci.be', favorites=[],
                             password=password, campus='Louvain-la-Neuve', is_banned=False,
                             is_admin=False)
     database[nina] = dict(type='User', last_name='Heuzer',
-                          first_name='Nina', email='nina.heuzer@student.vinci.be',
+                          first_name='Nina', email='nina.heuzer@student.vinci.be', favorites=[],
                           password=password, campus='Ixelles', is_banned=False,
                           is_admin=False)
     database[boris] = dict(type='User', last_name='de Theux',
-                           first_name='Boris', email='boris.detheux@student.vinci.be',
+                           first_name='Boris', email='boris.detheux@student.vinci.be', favorites=[],
                            password=password, campus='Louvain-la-Neuve', is_banned=False,
                            is_admin=False)
     database[samy] = dict(type='User', last_name='Alliche',
-                          first_name='Samy', email='samy.alliche@student.vinci.be',
+                          first_name='Samy', email='samy.alliche@student.vinci.be', favorites=[],
                           password=password, campus='Louvain-la-Neuve', is_banned=False,
                           is_admin=False)
 

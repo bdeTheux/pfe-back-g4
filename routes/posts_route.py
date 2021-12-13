@@ -109,7 +109,6 @@ def delete_one(_current_user, _id):
 @posts_route.route('/<string:_id>', methods=['PUT'])
 @token_required
 def edit_one(_current_user, _id):
-    # TODO add checks
     if not request.json:
         abort(400, "La requête est vide")
 

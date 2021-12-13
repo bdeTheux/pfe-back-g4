@@ -31,7 +31,7 @@ def get_user_by_email(_email):
 def get_users():
     mango = {
         'selector': {'type': 'User'},
-        'fields': ['_id', 'last_name', 'first_name', 'email', 'campus', 'is_admin', 'is_banned']
+        'fields': ['_id', 'last_name', 'first_name', 'email', 'campus', 'is_admin', 'is_banned', 'favorites']
     }
     return list(database.find(mango))
 
@@ -62,5 +62,12 @@ def edit_user(new_user, _id):
 def ban_user(_id):
     user = get_user_by_id(_id)
     user['is_banned'] = not user['is_banned']
+    user.store(database)
+    return user.get_data()
+
+
+def add_favorite(_id_user, _id_post):
+    user = get_user_by_id(_id_user)
+    user['favorites'].append(_id_post)
     user.store(database)
     return user.get_data()

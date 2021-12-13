@@ -1,4 +1,4 @@
-from couchdb.mapping import Document, TextField, BooleanField
+from couchdb.mapping import Document, TextField, BooleanField, ListField
 
 
 class User(Document):  # if error, try import couchdb.document maybe
@@ -8,7 +8,7 @@ class User(Document):  # if error, try import couchdb.document maybe
     email = TextField()
     password = TextField()
     campus = TextField()
-    # favorites = ListField()
+    favorites = ListField(TextField(), default=[])
     is_banned = BooleanField(default=False)
     is_admin = BooleanField(default=False)
 
