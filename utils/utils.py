@@ -22,9 +22,11 @@ except Exception:
 if environment == "development":
     JWT_NAME = envfile.get("JWTName")
     SECRET_KEY = envfile.get("JWTSecret")
+    FOLDER = "PFE_dev"
 else:
     JWT_NAME = os.environ["JWTName"]
     SECRET_KEY = os.environ["JWTSecret"]
+    FOLDER = "PFE_prod"
 
 
 def _get_user_from_token(token):
@@ -130,10 +132,9 @@ def upload_files(files):
     images = []
     print(files)
     for file_to_upload in files:
-        print(file_to_upload)
         try:
             if file_to_upload:
-                images.append(cloudinary.uploader.upload(file_to_upload, folder="PFE").get('url'))
+                images.append(cloudinary.uploader.upload(file_to_upload, folder=FOLDER).get('url'))
         except Exception:
             pass
     return images

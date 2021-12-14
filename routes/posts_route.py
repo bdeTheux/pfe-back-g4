@@ -15,15 +15,15 @@ def get_blueprint():
 
 @posts_route.route('/', methods=['GET'])
 def get_all():
-    categories = request.args.get('category')
+    category = request.args.get('category')
     campus = request.args.get('campus')
     order = request.args.get('order', None)
-    if campus and categories:
-        return jsonify(service.get_posts_by_campus_and_category(campus, categories, order))
+    if campus and category:
+        return jsonify(service.get_posts_by_campus_and_category(campus, category, order))
     elif campus:
         return jsonify(service.get_posts_by_campus(campus, order))
-    elif categories:
-        return jsonify(service.get_posts_by_category(categories, order))
+    elif category:
+        return jsonify(service.get_posts_by_category(category, order))
 
     return jsonify(service.get_posts(order))
 

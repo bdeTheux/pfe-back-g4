@@ -11,7 +11,7 @@ def get_document(_document):
     return database.get
 
 
-def _order_posts(posts, order):
+def _order_posts(posts, order=None):
     if order == 'asc':
         return sorted(posts, key=lambda i: (i['price']))
     if order == 'desc':
@@ -20,7 +20,7 @@ def _order_posts(posts, order):
     return posts
 
 
-def get_posts(order):
+def get_posts(order=None):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
     }
@@ -28,7 +28,7 @@ def get_posts(order):
     return _order_posts(list(database.find(mango)), order)
 
 
-def get_posts_by_campus(campus, order):
+def get_posts_by_campus(campus, order=None):
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
     }
@@ -36,13 +36,12 @@ def get_posts_by_campus(campus, order):
     return _order_posts(list_posts, order)
 
 
-def get_posts_by_category(category, order):
-    mango = {
-        'selector': {'type': 'Post',
-                     'category_id': category,
-                     'state': PostStates.APPROVED.value},
-    }
-    return _order_posts(list(database.find(mango)), order)
+def get_posts_by_category(category, order=None):
+    categories = [category, get_parents(category)]
+    posts = []
+    for cat in categories:
+        posts.append(get_posts_by_subcategory(cat))
+    return _order_posts(posts, order)
 
 
 def get_active_posts_by_category(category):
@@ -103,15 +102,18 @@ def edit_post(new_post, _id):
     return previous_post.get_data()
 
 
-def get_posts_by_campus_and_category(campus, categories, order):
+def get_posts_by_subcategory(category):
+    mango = {
+        'selector': {'type': 'Post',
+                     'category_id': category,
+                     'state': PostStates.APPROVED.value},
+    }
+    return list(database.find(mango))
+
+
+def get_posts_by_campus_and_category(campus, category, order):
     list_posts = []
-    for category in categories:
-        mango = {
-            'selector': {'type': 'Post',
-                         'category_id': category,
-                         'state': PostStates.APPROVED.value},
-        }
-        list_posts.extend([row for row in list(database.find(mango)) if campus in row['places']])
+    list_posts.extend([row for row in get_posts_by_category(category) if campus in row['places']])
     return _order_posts(list_posts, order)
 
 
