@@ -22,9 +22,11 @@ except Exception:
 if environment == "development":
     JWT_NAME = envfile.get("JWTName")
     SECRET_KEY = envfile.get("JWTSecret")
+    FOLDER = "PFE_dev"
 else:
     JWT_NAME = os.environ["JWTName"]
     SECRET_KEY = os.environ["JWTSecret"]
+    FOLDER = "PFE_prod"
 
 
 def _get_user_from_token(token):
@@ -61,15 +63,16 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token = _get_token()
         if not token:
-            return abort(401, 'Token is missing !!')
+            return abort(401, 'Token manquant')
 
         try:
             current_user = _get_user_from_token(token)
         except Exception:
-            return abort(401, 'Token is invalid !!')
+            return abort(401, 'Token invalide')
         if not current_user:
-            abort(401, 'Token is invalid !!')
-        # TODO: bloquer si profil banni
+            abort(401, 'Token invalide')
+        if current_user.is_banned:
+            abort(401, 'Vous êtes banni!')
         return f(current_user, *args, **kwargs)
 
     return decorated
@@ -80,16 +83,18 @@ def admin_token_required(f):
     def decorated(*args, **kwargs):
         token = _get_token()
         if not token:
-            return abort(401, 'Token is missing !!')
+            return abort(401, 'Token manquant')
 
         try:
             current_user = _get_user_from_token(token)
         except Exception:
-            return abort(401, 'Token is invalid !!')
+            return abort(401, 'Token invalide')
         if not current_user:
-            abort(401, 'Token is invalid !!')
+            abort(401, 'Token invalide')
         if not current_user.is_admin:
-            return abort(401, 'Admin only!!')
+            return abort(401, 'Accès administrateur uniquement')
+        if current_user.is_banned:
+            abort(401, 'Vous êtes banni!')
         return f(current_user, *args, **kwargs)
 
     return decorated
@@ -128,7 +133,7 @@ def upload_files(files):
     for file_to_upload in files:
         try:
             if file_to_upload:
-                images.append(cloudinary.uploader.upload(file_to_upload, folder="PFE").get('url'))
+                images.append(cloudinary.uploader.upload(file_to_upload, folder=folder).get('url'))
         except Exception:
             pass
     return images
