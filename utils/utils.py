@@ -131,9 +131,10 @@ def check_password(current, given):
 def upload_files(files):
     images = []
     for file_to_upload in files:
+        print(file_to_upload)
         try:
             if file_to_upload:
-                images.append(cloudinary.uploader.upload(file_to_upload, folder=folder).get('url'))
+                images.append(cloudinary.uploader.upload(file_to_upload, folder=FOLDER).get('url'))
         except Exception:
             pass
     return images
