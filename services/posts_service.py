@@ -147,3 +147,16 @@ def sell_one(_id):
     post['state'] = PostStates.CLOSED.value
     post.store(database)
     return post.get_data()
+
+
+def delete_image(_post, _image_name) -> bool:
+    found = None
+    for path in _post['images']:
+        if _image_name in path:
+            found = path
+    if not found:
+        raise AttributeError("L'image n'existe pas dans l'annonce donnée")
+
+    _post['images'] = [x for x in _post['images'] if x != found]
+    _post.store(database)
+    return True
