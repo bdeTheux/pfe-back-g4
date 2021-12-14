@@ -6,11 +6,6 @@ from models.Post import Post, PostStates
 database = database.get_database()
 
 
-def get_document(_document):
-    print(database, _document)
-    return database.get
-
-
 def _order_posts(posts, order=None):
     if order == 'asc':
         return sorted(posts, key=lambda i: (i['price']))
@@ -37,11 +32,13 @@ def get_posts_by_campus(campus, order=None):
 
 
 def get_posts_by_category(category, order=None):
-    categories = [category, get_parents(category)]
-    posts = []
-    for cat in categories:
-        posts.append(get_posts_by_subcategory(cat))
-    return _order_posts(posts, order)
+    print(category)
+    mango = {
+        'selector': {'type': 'Post',
+                     'state': PostStates.APPROVED.value,
+                     "category_id": category},
+    }
+    return _order_posts(list(database.find(mango)), order)
 
 
 def get_active_posts_by_category(category):
@@ -112,8 +109,9 @@ def get_posts_by_subcategory(category):
 
 
 def get_posts_by_campus_and_category(campus, category, order):
-    list_posts = []
-    list_posts.extend([row for row in get_posts_by_category(category) if campus in row['places']])
+    posts_in_cat = get_posts_by_category(category)
+    print(posts_in_cat)
+    list_posts = [row for row in posts_in_cat if campus in row['places']]
     return _order_posts(list_posts, order)
 
 
