@@ -174,12 +174,15 @@ def change_state(_current_user, _id):
     return jsonify(service.change_state(_id, state))
 
 
-@posts_route.route('/<string:_id>/sold', methods=['POST'])
+@posts_route.route('/<string:_id>/sell', methods=['POST'])
 @token_required
 def sell_one(_current_user, _id):
     post = service.get_post_by_id(_id)
     if post['seller_id'] != _current_user['_id']:
-        abort(401,
-              "Vous ne pouvez pas clôturer cette annonce.")
+        return abort(401,
+                     "Vous ne pouvez pas clôturer cette annonce.")
 
+    if post['state'] == PostStates.REJECTED.value:
+        return abort(401,
+                     "Vous ne pouvez pas clôturer une annonce refusée.")
     return jsonify(service.sell_one(_id))
