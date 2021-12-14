@@ -66,11 +66,12 @@ def token_required(f):
             return abort(401, 'Token manquant')
 
         try:
-            current_user = _get_user_from_token(token)
+            current_user: User = _get_user_from_token(token)
         except Exception:
             return abort(401, 'Token invalide')
         if not current_user:
             abort(401, 'Token invalide')
+            print(current_user.is_banned)
         if current_user.is_banned:
             abort(401, 'Vous êtes banni!')
         return f(current_user, *args, **kwargs)
@@ -86,13 +87,14 @@ def admin_token_required(f):
             return abort(401, 'Token manquant')
 
         try:
-            current_user = _get_user_from_token(token)
+            current_user: User = _get_user_from_token(token)
         except Exception:
             return abort(401, 'Token invalide')
         if not current_user:
             abort(401, 'Token invalide')
         if not current_user.is_admin:
             return abort(401, 'Accès administrateur uniquement')
+        print(current_user.is_banned)
         if current_user.is_banned:
             abort(401, 'Vous êtes banni!')
         return f(current_user, *args, **kwargs)
