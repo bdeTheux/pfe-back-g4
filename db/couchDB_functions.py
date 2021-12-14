@@ -86,6 +86,8 @@ def init_database(db):
     approved = 'Approuvé'
     closed = 'Clôturé'
 
+    generic_image = [
+        "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639385026/samples/ecommerce/accessories-bag.jpg"]
     # Pending
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=pending,
                                 title='Lacet bleu',
@@ -93,7 +95,7 @@ def init_database(db):
                                 places=['Woluwe', 'Ixelles'],
                                 seller_id=kevin, price=0,
                                 category_id='Vêtements et accessoires',
-                                images=[])
+                                images=generic_image)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Furet mâle',
@@ -101,7 +103,7 @@ def init_database(db):
                                 places=['Woluwe', 'Ixelles'],
                                 seller_id=kevin, price=25,
                                 category_id='Famille',
-                                images=[])
+                                images=generic_image)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Converses blanches',
@@ -109,7 +111,7 @@ def init_database(db):
                                 places=['Woluwe'],
                                 seller_id=narjis, price=35.5,
                                 category_id='Vêtements et chaussures femmes',
-                                images=[])
+                                images=generic_image)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Éperons portés par Billy the kid',
@@ -117,7 +119,7 @@ def init_database(db):
                                 places=['Woluwe', 'Louvain-la-Neuve'],
                                 seller_id=nina, price=120000.3,
                                 category_id='Fournitures pour animaux',
-                                images=[])
+                                images=generic_image)
 
     # Accepted
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
@@ -126,7 +128,7 @@ def init_database(db):
                                 places=['Ixelles'],
                                 seller_id=narjis, price=20,
                                 category_id='Vêtements et chaussures femmes',
-                                images=[])
+                                images=generic_image)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
                                 title='Recette de cocktail',
@@ -134,7 +136,7 @@ def init_database(db):
                                 places=['Woluwe'],
                                 seller_id=boris, price=1.5,
                                 category_id='Vêtements et chaussures femmes',
-                                images=[])
+                                images=generic_image)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=approved,
                                 title='Talent',
@@ -142,7 +144,7 @@ def init_database(db):
                                 places=['Louvain-la-Neuve'],
                                 seller_id=samy, price=0,
                                 category_id='Vêtements et chaussures femmes',
-                                images=[])
+                                images=generic_image)
 
     # Closed
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
@@ -151,7 +153,7 @@ def init_database(db):
                                 places=['Ixelles'],
                                 seller_id=kevin, price=0,
                                 category_id='Santé et beauté',
-                                images=[])
+                                images=generic_image)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=closed,
                                 title='Mazda rouge',
@@ -159,7 +161,7 @@ def init_database(db):
                                 places=['Ixelles'],
                                 seller_id=nina, price=14999.9,
                                 category_id='Electroménager',
-                                images=[])
+                                images=generic_image)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
                                 title='Papier peint',
@@ -167,7 +169,7 @@ def init_database(db):
                                 places=['Ixelles'],
                                 seller_id=boris, price=0,
                                 category_id='Reserve',
-                                images=[])
+                                images=generic_image)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
                                 title='Bonnet vert',
@@ -175,7 +177,7 @@ def init_database(db):
                                 places=['Louvain-la-Neuve'],
                                 seller_id=nina, price=0,
                                 category_id='Reserve',
-                                images=[])
+                                images=generic_image)
 
     db['Woluwe'] = dict(type="Address", campus='Woluwe',
                         lat="50.849857061691836", long="4.453360810918974")
