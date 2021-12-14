@@ -50,7 +50,7 @@
 
 ### Categories :
 
-| **Uri**                            | **Méthode** | **Auth ?** | **Admin ?** | **Action**                                                                                                              |
+| **Uri**                            | **Méthode** | **Auth?** | **Admin ?** | **Action**                                                                                                              |
 | ---------------------------------- | --- | --- | --- | ------------------------------------------------------------------------------------------------------------------------|
 | **/categories**                    | GET | Non | Non | READ ALL : récupère toutes les catégories de la db                                                                      |
 | **/categories/tree**               | GET | Non | Non | READ ALL : récupère toutes les catégories de la db et les affiches en arborescence, les parents contenant les sous-catégories |
@@ -63,14 +63,14 @@
 
 ### Posts :
 
-| **Uri**                                | **Méthode** | **Auth ?** | **Admin ?** | **Action**                                                                     |
+| **Uri**                                | **Méthode** | **Auth?** | **Admin ?** | **Action**                                                                     |
 | -------------------------------------- | ------ | --- | ----------------- | ------------------------------------------------------------------------------------ |
 | **/posts**                             | GET    | Non | Non               | READ ALL : récupère tous les posts de la db                                          |
 | **/posts?category=value\***              | GET    | Non | Non               | READ ALL FILTERED : récupère tous les posts dont la catégorie est &#39;value&#39;    |
 | **/posts?campus=value\***                | GET    | Non | Non               | READ ALL FILTERED : récupère tous les posts dont le campus est &#39;value&#39;       |
 | **/posts?order=value\***                 | GET    | Non | Non               | READ ALL ORDERED : ordonne selon le prix, où value est 'asc' ou 'desc                |
 | **/posts/closed**                      | GET    | Oui | Non              | READ ALL : récupère tous les posts de la db étant en état "Clôturé"                  |
-| **/posts/pending**                     | GET    | Oui | Oui               | READ ALL : récupère tous les posts en état "En attente d'approbation"                        |
+| **/posts/pending**                     | GET    | Oui | Oui               | READ ALL : récupère tous les posts de la db étant en état "En attente d'approbation"                        |
 | **/posts/myposts**                     | GET    | Oui | Non               | READ ALL : récupère tous les posts de l'utilisateur courant'                         |
 | **/posts/{id}**                        | GET    | Non | Non               | READ ONE : récupère un post de la db                                                 |
 | **/posts**                             | POST   | Oui | Non               | CREATE ONE : rajoute un nouveau post dans la db                                      |
@@ -80,7 +80,7 @@
 &#42; les paramètres sont cumulables
 ### Addresses :
 
-| **Uri** | **Méthode** | **Auth ?** | **Admin ?** | **Action** |
+| **Uri** | **Méthode** | **Auth?** | **Admin?** | **Action** |
 | ------------------------ | ------ | --- | --- | ------------------------------------------------------------------- |
 | **/addresses**           | GET    | Non | Non | READ ALL : récupère toutes les adresses de la db                    |
 | **/addresses/{id}**      | GET    | Oui | Non | READ ONE : récupère une adresse de la db                            |
