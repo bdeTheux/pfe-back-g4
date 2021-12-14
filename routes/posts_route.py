@@ -99,7 +99,7 @@ def add_one(_current_user):
         abort(400, "Le champ 'category_id' doit être présent et non vide")
 
     files = request.files.getlist("files")
-    images = upload_files(files)
+    images, video = upload_files(files)
 
     post = Post(post_nature=post_nature,
                 title=title,
@@ -108,7 +108,8 @@ def add_one(_current_user):
                 places=places,
                 seller_id=seller_id,
                 category_id=category_id,
-                images=images
+                images=images,
+                video=video
                 )
 
     res = service.create_post(post)

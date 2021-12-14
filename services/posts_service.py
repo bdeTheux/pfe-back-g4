@@ -80,7 +80,8 @@ def create_post(post):
     database[id_post] = dict(type='Post', post_nature=post.post_nature, state=PostStates.PENDING.value,
                              title=post.title, price=post.price,
                              description=post.description, places=post.places,
-                             seller_id=post.seller_id, category_id=post.category_id, images=post.images)
+                             seller_id=post.seller_id, category_id=post.category_id, images=post.images,
+                             video=post.video)
     return id_post
 
 
