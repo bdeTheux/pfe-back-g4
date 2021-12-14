@@ -3,7 +3,7 @@ from flask import jsonify, abort, request, Blueprint
 import services.posts_service as service
 from models.Post import Post, PostStates
 from services.categories_service import get_category_by_id
-from utils.utils import admin_token_required, token_required, token_welcome, upload_files
+from utils.utils import admin_token_required, token_required, token_welcome, upload_files, remove_file
 
 posts_route = Blueprint('posts-route', __name__)
 
@@ -188,3 +188,15 @@ def sell_one(_current_user, _id):
         return abort(401,
                      "Vous ne pouvez pas clôturer une annonce refusée.")
     return jsonify(service.sell_one(_id))
+
+
+@posts_route.route('/<string:_id>/image/<string:_image>', methods=['DELETE'])
+@token_required
+def delete_one_image(_current_user, _id, _image):
+    post = service.get_post_by_id(_id)
+    if post['seller_id'] != _current_user['_id'] and not _current_user['is_admin']:
+        return abort(401,
+                     "Vous ne pouvez pas supprimer d'image pour cette annonce")
+    service.delete_image(post, _image)
+
+    return jsonify(remove_file(_image))

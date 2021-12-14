@@ -140,6 +140,8 @@ def upload_files(files):
     return images
 
 
-def remove_file(_file: str):
-    file_id = _file.split('/')[-1].split('.')[1]
-    print(file_id)
+def remove_file(_file_id: str):
+    print(_file_id)
+    if _file_id == "accessories-bag":  # Generic image
+        AttributeError("Vous ne pouvez pas supprimer l'image par défaut")
+    return cloudinary.uploader.destroy(f'{FOLDER}/{_file_id}')
