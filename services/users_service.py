@@ -66,9 +66,12 @@ def ban_user(_id):
     return user.get_data()
 
 
-def add_favorite(_id_user, _id_post):
+def change_favorite(_id_user, _id_post):
     user = get_user_by_id(_id_user)
-    user['favorites'].append(_id_post)
+    if _id_post in user['favorites']:
+        user['favorites'].remove(_id_post)
+    else:
+        user['favorites'].append(_id_post)
     user.store(database)
     return user.get_data()
 
