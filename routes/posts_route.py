@@ -80,7 +80,7 @@ def add_one(_current_user):
     price = 0
     if post_nature == 'À vendre':
         price = data.get('price')
-    places = data.getlist('places')
+    places = data.get('places').split(',')
     seller_id = _current_user['_id']
     category_id = data.get('category_id')
     if not post_nature:
