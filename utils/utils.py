@@ -66,12 +66,12 @@ def token_required(f):
             return abort(401, 'Token manquant')
 
         try:
-            current_user = _get_user_from_token(token)
+            current_user: User = _get_user_from_token(token)
         except Exception:
             return abort(401, 'Token invalide')
         if not current_user:
             abort(401, 'Token invalide')
-        if current_user.is_banned:
+        if current_user['is_banned']:
             abort(401, 'Vous êtes banni!')
         return f(current_user, *args, **kwargs)
 
@@ -86,14 +86,14 @@ def admin_token_required(f):
             return abort(401, 'Token manquant')
 
         try:
-            current_user = _get_user_from_token(token)
+            current_user: User = _get_user_from_token(token)
         except Exception:
             return abort(401, 'Token invalide')
         if not current_user:
             abort(401, 'Token invalide')
         if not current_user.is_admin:
             return abort(401, 'Accès administrateur uniquement')
-        if current_user.is_banned:
+        if current_user['is_banned']:
             abort(401, 'Vous êtes banni!')
         return f(current_user, *args, **kwargs)
 
@@ -138,3 +138,8 @@ def upload_files(files):
         except Exception:
             pass
     return images
+
+
+def remove_file(_file: str):
+    file_id = _file.split('/')[-1].split('.')[1]
+    print(file_id)
