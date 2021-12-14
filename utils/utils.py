@@ -130,14 +130,20 @@ def check_password(current, given):
 
 def upload_files(files):
     images = []
-    print(files)
+    video = None
     for file_to_upload in files:
         try:
             if file_to_upload:
-                images.append(cloudinary.uploader.upload(file_to_upload, folder=FOLDER).get('url'))
-        except Exception:
-            pass
-    return images
+                if "video" in file_to_upload.content_type and not video:  # One video only, no matter what
+                    video = cloudinary.uploader.upload(file_to_upload, folder=FOLDER, resource_type="video",
+                                                       quality="25").get('url')
+                elif "image" in file_to_upload.content_type:
+                    images.append(cloudinary.uploader.upload(file_to_upload, folder=FOLDER).get('url'))
+        except Exception as e:
+            print("error", e)
+        pass
+
+    return images, video
 
 
 def remove_file(_file_id: str):
