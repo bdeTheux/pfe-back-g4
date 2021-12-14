@@ -66,7 +66,7 @@ def token_required(f):
             return abort(401, 'Token manquant')
 
         try:
-            current_user: User = _get_user_from_token(token)
+            current_user = _get_user_from_token(token)
         except Exception:
             return abort(401, 'Token invalide')
         if not current_user:
@@ -86,7 +86,7 @@ def admin_token_required(f):
             return abort(401, 'Token manquant')
 
         try:
-            current_user: User = _get_user_from_token(token)
+            current_user = _get_user_from_token(token)
         except Exception:
             return abort(401, 'Token invalide')
         if not current_user:

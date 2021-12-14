@@ -31,8 +31,7 @@ def login():
     if not user:
         # returns 401 if user does not exist
         return abort(401, 'Email ou mot de passe incorrect(s)')
-    if user.is_banned:
-        # returns 401 if user does not exist
+    if user['is_banned']:
         return abort(401, 'Vous êtes banni!')
     if check_password_hash(user['password'], auth['password']):
         # generates the JWT Token
