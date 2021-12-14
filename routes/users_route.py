@@ -57,11 +57,11 @@ def edit_one(current_user):
         abort(400, "La requête est vide")
 
     data = request.json
-    email = data.get('email')
-    first_name = data.get('first_name')
-    last_name = data.get('last_name')
-    campus = data.get('campus')
-    password = data.get('password')
+    email = data.get('email', current_user['email'])
+    first_name = data.get('first_name', current_user['first_name'])
+    last_name = data.get('last_name', current_user['last_name'])
+    campus = data.get('campus', current_user['campus'])
+    password = data.get('password', current_user['password'])
     user = User(_id=current_user['_id'],
                 first_name=first_name,
                 last_name=last_name,
@@ -86,11 +86,11 @@ def change_password(_current_user):
     return jsonify(service.change_password(_current_user['_id'], new_password))
 
 
-@users_route.route('/addfavorite/<string:_id>', methods=['POST'])
+@users_route.route('/changefavorite/<string:_id>', methods=['POST'])
 @token_required
-def add_favorite(current_user, _id):  # id post
+def change_favorite(current_user, _id):  # id post
     post = get_post_by_id(_id)
     if not post:
         abort(404, "Cette annonce n'existe pas/plus.")
 
-    return jsonify(service.add_favorite(current_user['_id'], _id))
+    return jsonify(service.change_favorite(current_user['_id'], _id))
