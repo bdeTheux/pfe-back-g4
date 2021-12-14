@@ -73,6 +73,7 @@ def add_one(_current_user):
         abort(400, "La requête est vide")
 
     data = request.form
+    print(data)
     post_nature = data.get('post_nature')
     title = data.get('title')
     description = data.get('description')
