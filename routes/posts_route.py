@@ -58,8 +58,10 @@ def get_with_id(_current_user, _id):
     post = service.get_post_by_id(_id)
     if post:
         if post.state != PostStates.APPROVED.value:
-            if _current_user and (_current_user['is_admin'] or (post['seller_id'] == _current_user['id'])):
+            if _current_user and (_current_user['is_admin'] or (post['seller_id'] == _current_user['_id'])):
                 return jsonify(post.get_data())
+            else:
+                return abort(401, "Vous n'avez pas accès à cette annonce.")
         else:
             return jsonify(post.get_data())
 
