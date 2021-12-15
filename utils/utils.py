@@ -31,7 +31,6 @@ else:
 
 def _get_user_from_token(token):
     data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-    # TODO -> signature has expired quand on lance la même requête 2h later ?
     current_user = service.get_user_by_id(data['public_id'])
     return current_user
 

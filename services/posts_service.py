@@ -6,7 +6,7 @@ from models.Post import Post, PostStates
 database = database.get_database()
 
 
-def _order_posts(posts, order=None):
+def _order_posts(posts: list[Post], order=None) -> list[Post]:
     if order == 'asc':
         return sorted(posts, key=lambda i: (i['price']))
     if order == 'desc':
@@ -15,7 +15,7 @@ def _order_posts(posts, order=None):
     return posts
 
 
-def get_posts(order=None):
+def get_posts(order=None) -> list[Post]:
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
     }
@@ -23,7 +23,7 @@ def get_posts(order=None):
     return _order_posts(list(database.find(mango)), order)
 
 
-def get_posts_by_campus(campus, order=None):
+def get_posts_by_campus(campus: str, order=None) -> list[Post]:
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
     }
@@ -31,7 +31,7 @@ def get_posts_by_campus(campus, order=None):
     return _order_posts(list_posts, order)
 
 
-def get_posts_by_category(category, order=None):
+def get_posts_by_category(category: str, order=None) -> list[Post]:
     print(category)
     mango = {
         'selector': {'type': 'Post',
@@ -41,7 +41,7 @@ def get_posts_by_category(category, order=None):
     return _order_posts(list(database.find(mango)), order)
 
 
-def get_active_posts_by_category(category):
+def get_active_posts_by_category(category: str) -> list[Post]:
     mango_pending = {
         'selector': {'type': 'Post',
                      'category_id': category,
@@ -57,25 +57,25 @@ def get_active_posts_by_category(category):
     return posts
 
 
-def get_pending_posts():
+def get_pending_posts() -> list[Post]:
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.PENDING.value},
     }
     return list(database.find(mango))
 
 
-def get_rejected_posts():
+def get_rejected_posts() -> list[Post]:
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.REJECTED.value},
     }
     return list(database.find(mango))
 
 
-def get_post_by_id(_id):
+def get_post_by_id(_id: str):
     return Post.load(database, _id)
 
 
-def create_post(post):
+def create_post(post: Post) -> str:
     id_post = uuid.uuid4().hex
     database[id_post] = dict(type='Post', post_nature=post.post_nature, state=PostStates.PENDING.value,
                              title=post.title, price=post.price,
@@ -85,12 +85,12 @@ def create_post(post):
     return id_post
 
 
-def delete_post(_id):
+def delete_post(_id: str):
     post = get_post_by_id(_id)
     return database.delete(post)
 
 
-def edit_post(new_post, _id):
+def edit_post(new_post, _id: str) -> dict[str]:
     previous_post = get_post_by_id(_id)
     new_post['state'] = previous_post['state']
     new_post['seller_id'] = previous_post['seller_id']
@@ -100,7 +100,7 @@ def edit_post(new_post, _id):
     return previous_post.get_data()
 
 
-def get_posts_by_subcategory(category):
+def get_posts_by_subcategory(category: str) -> list[Post]:
     mango = {
         'selector': {'type': 'Post',
                      'category_id': category,
@@ -109,21 +109,21 @@ def get_posts_by_subcategory(category):
     return list(database.find(mango))
 
 
-def get_posts_by_campus_and_category(campus, category, order):
+def get_posts_by_campus_and_category(campus: str, category: str, order: str) -> list[Post]:
     posts_in_cat = get_posts_by_category(category)
     print(posts_in_cat)
     list_posts = [row for row in posts_in_cat if campus in row['places']]
     return _order_posts(list_posts, order)
 
 
-def change_state(_id, state):
-    post = get_post_by_id(_id)
+def change_state(_id: str, state: str) -> dict[str]:
+    post: Post = get_post_by_id(_id)
     post['state'] = state
     post.store(database)
     return post.get_data()
 
 
-def get_all_my_posts(_id):
+def get_all_my_posts(_id: str) -> dict[list[Post]]:
     mango = {
         'selector': {'type': 'Post',
                      'seller_id': _id}
@@ -136,28 +136,33 @@ def get_all_my_posts(_id):
     return my_sorted_posts
 
 
-def get_closed_posts():
+def get_closed_posts() -> list[Post]:
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.CLOSED.value},
     }
     return list(database.find(mango))
 
 
-def sell_one(_id):
-    post = get_post_by_id(_id)
+def sell_one(_id: str) -> dict[str]:
+    post: Post = get_post_by_id(_id)
     post['state'] = PostStates.CLOSED.value
     post.store(database)
     return post.get_data()
 
 
-def delete_image(_post, _image_name) -> bool:
+def delete_image(_post: Post, _image_name: str) -> bool:
     found = None
-    for path in _post['images']:
-        if _image_name in path:
-            found = path
+    if _image_name in _post['video']:
+        found = _post['video']
+        _post['video'] = None
+    else:
+        for path in _post['images']:
+            if _image_name in path:
+                found = path
+                _post['images'] = [x for x in _post['images'] if x != found]
+                break
     if not found:
         raise AttributeError("L'image n'existe pas dans l'annonce donnée")
 
-    _post['images'] = [x for x in _post['images'] if x != found]
     _post.store(database)
     return True
