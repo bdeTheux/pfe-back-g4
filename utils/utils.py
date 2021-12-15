@@ -127,26 +127,27 @@ def check_password(current, given):
         return abort(401, 'Mot de passe incorrect.')
 
 
-def upload_files(files):
+def upload_files(files) -> (list[str], str):
     images = []
     video = None
     for file_to_upload in files:
         try:
             if file_to_upload:
                 if "video" in file_to_upload.content_type and not video:  # One video only, no matter what
+                    # videos are set at 25% of quality to be lighter only. Test should be made with the max
                     video = cloudinary.uploader.upload(file_to_upload, folder=FOLDER, resource_type="video",
                                                        quality="25").get('url')
                 elif "image" in file_to_upload.content_type:
                     images.append(cloudinary.uploader.upload(file_to_upload, folder=FOLDER).get('url'))
         except Exception as e:
-            print("error", e)
+            print("error", e)  # Just ignoring problems since there is a wide range of them and little time
         pass
 
     return images, video
 
 
 def remove_file(_file_id: str):
-    print(_file_id)
+    # TODO images are found but not videos, same path and everything...?
     if _file_id == "accessories-bag":  # Generic image
         AttributeError("Vous ne pouvez pas supprimer l'image par défaut")
     return cloudinary.uploader.destroy(f'{FOLDER}/{_file_id}')

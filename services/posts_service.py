@@ -150,14 +150,14 @@ def sell_one(_id: str) -> dict[str]:
     return post.get_data()
 
 
-def delete_image(_post: Post, _image_name: str) -> bool:
+def delete_file(_post: Post, _file_id: str) -> bool:
     found = None
-    if _image_name in _post['video']:
+    if _post['video'] and _file_id in _post['video']:
         found = _post['video']
         _post['video'] = None
     else:
         for path in _post['images']:
-            if _image_name in path:
+            if _file_id in path:
                 found = path
                 _post['images'] = [x for x in _post['images'] if x != found]
                 break
