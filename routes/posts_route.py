@@ -83,7 +83,7 @@ def add_one(_current_user):
     price = 0
     if post_nature == 'À vendre':
         price = data.get('price')
-        if price <= 0:
+        if float(price) <= 0:
             return abort(401, "Vous ne pouvez pas mettre ce prix-là.")
     places = data.get('places').split(',')
     seller_id = _current_user['_id']
