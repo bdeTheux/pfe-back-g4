@@ -60,7 +60,7 @@ def edit_one(current_user):
     first_name = data.get('first_name', current_user['first_name'])
     last_name = data.get('last_name', current_user['last_name'])
     campus = data.get('campus', current_user['campus'])
-    try_password = data.get('password')
+    try_password = data.get('password', "")
     current_password = current_user['password']
     check_password(current_password, try_password)
     user = User(_id=current_user['_id'],
