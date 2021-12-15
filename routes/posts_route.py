@@ -72,9 +72,7 @@ def get_with_id(_current_user, _id):
 @posts_route.route('/favourites', methods=['GET'])
 @token_required
 def get_favourites(_current_user):
-    service.get_favourites(_current_user)
-
-    return abort(404, "Cette annonce n'existe pas/plus.")
+    return jsonify(service.get_favourites(_current_user))
 
 
 @posts_route.route('/', methods=['POST'])
