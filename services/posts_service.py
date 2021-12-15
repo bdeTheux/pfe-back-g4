@@ -182,7 +182,7 @@ def get_favourites(_current_user: User) -> list[dict[str]]:
     for fav in favourites:
         post = get_post_by_id(fav)
         if post and post.state == PostStates.APPROVED.value:
-            favs.append(get_post_by_id(fav))
+            favs.append(get_post_by_id(fav).get_data())
         else:
             _current_user['favorites'].remove(fav)
     return favs
