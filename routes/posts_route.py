@@ -192,7 +192,7 @@ def sell_one(_current_user, _id):
     return jsonify(service.sell_one(_id))
 
 
-@posts_route.route('/<string:_id>/image/<string:_image>', methods=['DELETE'])
+@posts_route.route('/<string:_id>/file/<string:_image>', methods=['DELETE'])
 @token_required
 def delete_one_image(_current_user, _id, _id_file):
     post = service.get_post_by_id(_id)
