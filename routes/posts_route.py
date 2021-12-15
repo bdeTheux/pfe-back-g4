@@ -69,6 +69,14 @@ def get_with_id(_current_user, _id):
     return abort(404, "Cette annonce n'existe pas/plus.")
 
 
+@posts_route.route('/favourites', methods=['GET'])
+@token_required
+def get_favourites(_current_user):
+    service.get_favourites(_current_user)
+
+    return abort(404, "Cette annonce n'existe pas/plus.")
+
+
 @posts_route.route('/', methods=['POST'])
 @token_required
 def add_one(_current_user):
