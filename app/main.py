@@ -32,8 +32,8 @@ cloudinary.config(
     api_secret=api_secret,
     secure=True
 )
-
 # Routes
+
 app.register_blueprint(users_route.get_blueprint(), url_prefix='/users')
 app.register_blueprint(posts_route.get_blueprint(), url_prefix='/posts')
 app.register_blueprint(addresses_route.get_blueprint(), url_prefix='/addresses')

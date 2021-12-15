@@ -53,6 +53,8 @@ def edit_user(new_user, _id):
 
     new_user['_id'] = _id
     previous_user = get_user_by_id(_id)
+    new_user['is_admin'] = previous_user['is_admin']
+    new_user['is_banned'] = previous_user['is_banned']
     for field in new_user:
         previous_user[field] = new_user[field]
     previous_user.store(database)
