@@ -46,7 +46,7 @@ def get_sub_categories(_id: str) -> list[str]:
     while temp:
         child = get_category_by_id(temp.pop())
         children.append(child.name)
-        children.extend(child.sub_categories)
+        temp.extend(child.sub_categories)
     return children
 
 
