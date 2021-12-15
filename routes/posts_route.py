@@ -185,7 +185,7 @@ def change_state(_current_user, _id):
 @token_required
 def sell_one(_current_user, _id):
     post = service.get_post_by_id(_id)
-    if post['seller_id'] != _current_user['_id']:
+    if post['seller_id'] != _current_user['_id'] and not _current_user['is_admin']:
         return abort(401,
                      "Vous ne pouvez pas clôturer cette annonce.")
 
