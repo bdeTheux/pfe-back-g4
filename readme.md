@@ -4,7 +4,7 @@
 
 * Python 3.9+ installé sur la machine
     * https://www.python.org/
-* PyCharm
+* PyCharm (ou utiliser l'environnement virtuel)
     * https://www.jetbrains.com/pycharm/download/
 * Récupérer le projet
     * ```git clone [url du projet]```
@@ -29,7 +29,15 @@
 
 ### Sélection de l'environnement
 
-* Sous PyCharm, sélectionner l'environnement virtuel du projet
+* Sous PyCharm, sélectionner l'environnement virtuel du projet, ou celui de votre choix
+
+### Lancement
+* Utiliser PyCharm directement
+* OU
+* lancer, dans l'environnement virtuel (suite à la seconde commande de son installation), ```flask run```
+
+### Information supplémentaires
+https://flask.palletsprojects.com/en/2.0.x/installation/
 
 # Routes
 
@@ -46,7 +54,7 @@
 | **/users/edit**     | PUT         | Oui | Non        | UPDATE ONE : modifie l&#39;utilisateur ayant l&#39;id passé en paramètre avec les données du corps de la requête |
 | **/users/{id}**     | DELETE      | Oui | Non        | DELETE ONE : supprime l&#39;utilisateur avec l&#39;id passé en paramètre                                         |
 | **/users/changepassword**  | POST | Oui | Non        | UPDATE ONE: modifie le mot de passe de l&#39;utilisateur connecté                                                |
-| **/users/changefavorite/{id}**  | POST | Oui | Non   | UPDATE ONE: modifie la liste des favoris de l'utilisateur connecté                                          |
+| **/users/changefavorite/{id}**  | POST | Oui | Non   | UPDATE ONE: modifie la liste des favoris de l'utilisateur connecté                                               |
 
 ### Categories :
 
@@ -63,19 +71,20 @@
 
 ### Posts :
 
-| **Uri**                                | **Méthode** | **Auth?** | **Admin ?** | **Action**                                                                     |
-| -------------------------------------- | ------ | --- | ----------------- | ------------------------------------------------------------------------------------ |
-| **/posts**                             | GET    | Non | Non               | READ ALL : récupère tous les posts de la db                                          |
-| **/posts?category=value\***              | GET    | Non | Non               | READ ALL FILTERED : récupère tous les posts dont la catégorie est &#39;value&#39;    |
-| **/posts?campus=value\***                | GET    | Non | Non               | READ ALL FILTERED : récupère tous les posts dont le campus est &#39;value&#39;       |
-| **/posts?order=value\***                 | GET    | Non | Non               | READ ALL ORDERED : ordonne selon le prix, où value est 'asc' ou 'desc                |
-| **/posts/closed**                      | GET    | Oui | Non              | READ ALL : récupère tous les posts de la db étant en état "Clôturé"                  |
-| **/posts/pending**                     | GET    | Oui | Oui               | READ ALL : récupère tous les posts de la db étant en état "En attente d'approbation"                        |
-| **/posts/myposts**                     | GET    | Oui | Non               | READ ALL : récupère tous les posts de l'utilisateur courant'                         |
-| **/posts/{id}**                        | GET    | Non | Non               | READ ONE : récupère un post de la db                                                 |
-| **/posts**                             | POST   | Oui | Non               | CREATE ONE : rajoute un nouveau post dans la db                                      |
-| **/posts/{id}**                        | PUT    | Oui | Oui si pas seller | UPDATE ONE : modifie le post ayant l&#39;id passé en paramètre                       |
-| **/posts/{id}**                        | DELETE | Oui | Oui si pas seller | DELETE ONE : supprime un post ayant l&#39;id passé en paramètre                      |
+| **Uri**                          | **Méthode** | **Auth?** | **Admin ?** | **Action**                                                                                  |
+| -------------------------------- | ------ | --- | ----------------- | ------------------------------------------------------------------------------------------------ |
+| **/posts**                       | GET    | Non | Non               | READ ALL : récupère toutes les annonces de la db                                                 |
+| **/posts?category=value\***      | GET    | Non | Non               | READ ALL FILTERED : récupère toutes les annonces dont la catégorie est &#39;value&#39;           |
+| **/posts?campus=value\***        | GET    | Non | Non               | READ ALL FILTERED : récupère toutes les annonces dont le campus est &#39;value&#39;              |
+| **/posts?order=value\***         | GET    | Non | Non               | READ ALL ORDERED : ordonne selon le prix, où value est 'asc' ou 'desc                            |
+| **/posts/closed**                | GET    | Oui | Non               | READ ALL : récupère toutes les annonces de la db étant en état "Clôturé"                         |
+| **/posts/pending**               | GET    | Oui | Oui               | READ ALL : récupère toutes les annonces de la db étant en état "En attente d'approbation"        |
+| **/posts/myposts**               | GET    | Oui | Non               | READ ALL : récupère toutes les annonces de l'utilisateur courant'                                |
+| **/posts/{id}**                  | GET    | Non | Non               | READ ONE : récupère une annonce de la db                                                         |
+| **/posts**                       | POST   | Oui | Non               | CREATE ONE : rajoute une nouvelle annonce dans la db                                             |
+| **/posts/{id}**                  | PUT    | Oui | Oui si pas seller | UPDATE ONE : modifie l'annoce ayant l&#39;id passé en paramètre                                  |
+| **/posts/{id}**                  | DELETE | Oui | Oui si pas seller | DELETE ONE : supprime une annonce ayant l&#39;id passé en paramètre                              |
+| **/posts/{id}/file/{file_id}**   | DELETE | Oui | Oui si pas seller | DELETE ONE : supprime un fichier ayant l&#39;id comme id d'annonce et file_id comme id propre    |
 
 &#42; les paramètres sont cumulables
 ### Addresses :
