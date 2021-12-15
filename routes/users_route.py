@@ -80,10 +80,15 @@ def change_password(_current_user):
         abort(400, "La requête est vide")
     data = request.json
     current_password = data.get('current_password')
+    new_password = data.get('new_password')
+    new_password_check = data.get('new_password_check')
+
+    if new_password != new_password_check:
+        abort(400, "Les mots de passes ne correspondent pas")
 
     check_password(_current_user['password'], current_password)
 
-    new_password = generate_password_hash(data.get('new_password'))
+    new_password = generate_password_hash(new_password)
     return jsonify(service.change_password(_current_user['_id'], new_password))
 
 
