@@ -83,6 +83,8 @@ def add_one(_current_user):
     price = 0
     if post_nature == 'À vendre':
         price = data.get('price')
+        if float(price) <= 0:
+            return abort(401, "Vous ne pouvez pas mettre ce prix-là.")
     places = data.get('places').split(',')
     seller_id = _current_user['_id']
     category_id = data.get('category_id')
@@ -185,7 +187,7 @@ def change_state(_current_user, _id):
 @token_required
 def sell_one(_current_user, _id):
     post = service.get_post_by_id(_id)
-    if post['seller_id'] != _current_user['_id']:
+    if post['seller_id'] != _current_user['_id'] and not _current_user['is_admin']:
         return abort(401,
                      "Vous ne pouvez pas clôturer cette annonce.")
 
