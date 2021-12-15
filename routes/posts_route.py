@@ -194,14 +194,14 @@ def sell_one(_current_user, _id):
 
 @posts_route.route('/<string:_id>/image/<string:_image>', methods=['DELETE'])
 @token_required
-def delete_one_image(_current_user, _id, _image):
+def delete_one_image(_current_user, _id, _id_file):
     post = service.get_post_by_id(_id)
     if post['seller_id'] != _current_user['_id'] and not _current_user['is_admin']:
         return abort(401,
                      "Vous ne pouvez pas supprimer d'image pour cette annonce")
     try:
-        service.delete_image(post, _image)
+        service.delete_image(post, _id_file)
     except AttributeError as e:
         abort(404, e)
 
-    return jsonify(remove_file(_image))
+    return jsonify(remove_file(_id_file))
