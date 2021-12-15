@@ -217,6 +217,14 @@ def init_database():
                                 category_id='Reserve',
                                 images=generic_image, video=None)
 
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
+                                title='Clef hexagonale 12 pouces',
+                                description='neuve',
+                                places=['Louvain-la-Neuve'],
+                                seller_id=samy, price=0,
+                                category_id='Outils',
+                                images=generic_image, video=None)
+
     db['Woluwe'] = dict(type="Address", campus='Woluwe',
                         lat="50.849857061691836", long="4.453360810918974")
     db['Louvain-la-Neuve'] = dict(type="Address", campus='Louvain-la-Neuve',

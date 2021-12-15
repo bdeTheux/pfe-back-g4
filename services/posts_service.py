@@ -32,13 +32,20 @@ def get_posts_by_campus(campus: str, order=None) -> list[Post]:
 
 
 def get_posts_by_category(category: str, order=None) -> list[Post]:
-    print(category)
-    mango = {
-        'selector': {'type': 'Post',
-                     'state': PostStates.APPROVED.value,
-                     "category_id": category},
-    }
-    return _order_posts(list(database.find(mango)), order)
+    # Import does no work in the upper scope (flask error) so... here it is, a bandage
+    import services.categories_service as service
+
+    categories = [category]
+    categories.extend(service.get_sub_categories(category))
+    posts = []
+    for category in categories:
+        mango = {
+            'selector': {'type': 'Post',
+                         'state': PostStates.APPROVED.value,
+                         "category_id": category},
+        }
+        posts.extend(list(database.find(mango)))
+    return _order_posts(posts, order)
 
 
 def get_active_posts_by_category(category: str) -> list[Post]:

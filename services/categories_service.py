@@ -1,6 +1,7 @@
 from db import database
 from models.Category import Category
 from services.posts_service import get_active_posts_by_category
+from services.posts_service import get_post_by_id
 
 database = database.get_database()
 
@@ -45,7 +46,7 @@ def get_sub_categories(_id: str) -> list[str]:
     while temp:
         child = get_category_by_id(temp.pop())
         children.append(child.name)
-        children.extend(child.sub_categories)
+        temp.extend(child.sub_categories)
     return children
 
 
@@ -125,8 +126,9 @@ def _move_posts_from_categories_to_reserve(_categories: list[str]) -> bool:
     for category in _categories:
         mango = {'selector': {'type': 'Post', 'category_id': category}}
         for post in list(database.find(mango)):
-            post.category_id = "Reserve"
-            post.store(database)
+            p = get_post_by_id(post['_id'])
+            p.category_id = "Reserve"
+            p.store(database)
     return True
 
 
