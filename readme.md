@@ -81,7 +81,7 @@ https://flask.palletsprojects.com/en/2.0.x/installation/
 | **/posts/pending**               | GET    | Oui | Oui               | READ ALL : récupère toutes les annonces de la db étant en état "En attente d'approbation"          |
 | **/posts/myposts**               | GET    | Oui | Non               | READ ALL : récupère toutes les annonces de l'utilisateur courant'                                  |
 | **/posts/{id}**                  | GET    | Non | Non               | READ ONE : récupère une annonce de la db                                                           |
-| **/posts/favourites**            | GET    | Non | Non               | READ ALL SELECTED : récupère toutes les annonces de la liste des favoris et supprime les invalides |
+| **/posts/favourites**            | GET    | Oui | Non               | READ ALL SELECTED : récupère toutes les annonces de la liste des favoris et supprime les invalides |
 | **/posts**                       | POST   | Oui | Non               | CREATE ONE : rajoute une nouvelle annonce dans la db                                               |
 | **/posts/{id}**                  | PUT    | Oui | Oui si pas seller | UPDATE ONE : modifie l'annoce ayant l&#39;id passé en paramètre                                    |
 | **/posts/{id}**                  | DELETE | Oui | Oui si pas seller | DELETE ONE : supprime une annonce ayant l&#39;id passé en paramètre                                |
