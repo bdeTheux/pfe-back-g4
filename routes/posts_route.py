@@ -135,7 +135,7 @@ def edit_one(_current_user, _id):
 
     data = request.json
     post = service.get_post_by_id(_id)
-    if post['seller_id'] != _current_user['_id']:
+    if post['seller_id'] != _current_user['_id'] and not _current_user['is_admin']:
         abort(401,
               "Vous ne pouvez pas modifier cette annonce.")
 
@@ -196,6 +196,8 @@ def sell_one(_current_user, _id):
 @token_required
 def delete_one_file(_current_user, _id, _id_file):
     post = service.get_post_by_id(_id)
+    if not post:
+        return abort(404, "L'annonce n'existe pas")
     if post['seller_id'] != _current_user['_id'] and not _current_user['is_admin']:
         return abort(401,
                      "Vous ne pouvez pas supprimer d'image pour cette annonce")
