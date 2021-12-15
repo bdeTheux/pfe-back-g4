@@ -55,7 +55,6 @@ def delete_one(_current_user, _id):
 def edit_one(current_user):
     if not request.json:
         abort(400, "La requête est vide")
-
     data = request.json
     email = data.get('email', current_user['email'])
     first_name = data.get('first_name', current_user['first_name'])

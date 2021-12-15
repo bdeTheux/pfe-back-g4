@@ -98,19 +98,16 @@ def create_category(_name: str, _parent: str, _sub_categories: list[str]) -> str
 def delete_category(_id: str) -> bool:
     """Delete a category and its sub-categories."""
     category = get_category_by_id(_id)
-    print("hello")
     if not category:
         raise AttributeError("Cette catégorie n'existe pas/plus")
 
     categories = [_id]
     categories.extend(get_sub_categories(_id))  # Adding the sub_categories
     for cat in categories:
-        print("wwooww")
         if get_active_posts_by_category(cat):
             raise AttributeError(f"La sous-catégorie '{cat}' contient au moins une annonce active")
 
     if category.parent:
-        print("hellooo")
         parent = Category.load(database, category.parent)
         parent.sub_categories = [cat for cat in parent.sub_categories if cat != category.name]
         parent.store(database)
@@ -122,7 +119,6 @@ def delete_category(_id: str) -> bool:
 
 def _move_posts_from_categories_to_reserve(_categories: list[str]) -> bool:
     """edit every post's category in the given categories and put them in a 'fake' category named Reserve"""
-    print("salut")
     for category in _categories:
         mango = {'selector': {'type': 'Post', 'category_id': category}}
         for post in list(database.find(mango)):
