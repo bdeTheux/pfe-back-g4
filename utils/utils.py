@@ -31,7 +31,6 @@ else:
 
 def _get_user_from_token(token):
     data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-    # TODO -> signature has expired quand on lance la même requête 2h later ?
     current_user = service.get_user_by_id(data['public_id'])
     return current_user
 
@@ -71,7 +70,7 @@ def token_required(f):
             return abort(401, 'Token invalide')
         if not current_user:
             abort(401, 'Token invalide')
-        if current_user.is_banned:
+        if current_user['is_banned']:
             abort(401, 'Vous êtes banni!')
         return f(current_user, *args, **kwargs)
 
@@ -93,7 +92,7 @@ def admin_token_required(f):
             abort(401, 'Token invalide')
         if not current_user.is_admin:
             return abort(401, 'Accès administrateur uniquement')
-        if current_user.is_banned:
+        if current_user['is_banned']:
             abort(401, 'Vous êtes banni!')
         return f(current_user, *args, **kwargs)
 
@@ -128,13 +127,27 @@ def check_password(current, given):
         return abort(401, 'Mot de passe incorrect.')
 
 
-def upload_files(files):
+def upload_files(files) -> (list[str], str):
     images = []
-    print(files)
+    video = None
     for file_to_upload in files:
         try:
             if file_to_upload:
-                images.append(cloudinary.uploader.upload(file_to_upload, folder=FOLDER).get('url'))
-        except Exception:
-            pass
-    return images
+                if "video" in file_to_upload.content_type and not video:  # One video only, no matter what
+                    # videos are set at 25% of quality to be lighter only. Test should be made with the max
+                    video = cloudinary.uploader.upload(file_to_upload, folder=FOLDER, resource_type="video",
+                                                       quality="25").get('url')
+                elif "image" in file_to_upload.content_type:
+                    images.append(cloudinary.uploader.upload(file_to_upload, folder=FOLDER).get('url'))
+        except Exception as e:
+            print("error", e)  # Just ignoring problems since there is a wide range of them and little time
+        pass
+
+    return images, video
+
+
+def remove_file(_file_id: str):
+    # TODO images are found but not videos, same path and everything...?
+    if _file_id == "accessories-bag":  # Generic image
+        AttributeError("Vous ne pouvez pas supprimer l'image par défaut")
+    return cloudinary.uploader.destroy(f'{FOLDER}/{_file_id}')

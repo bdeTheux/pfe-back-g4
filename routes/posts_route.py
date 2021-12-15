@@ -3,7 +3,7 @@ from flask import jsonify, abort, request, Blueprint
 import services.posts_service as service
 from models.Post import Post, PostStates
 from services.categories_service import get_category_by_id
-from utils.utils import admin_token_required, token_required, token_welcome, upload_files
+from utils.utils import admin_token_required, token_required, token_welcome, upload_files, remove_file
 
 posts_route = Blueprint('posts-route', __name__)
 
@@ -100,7 +100,7 @@ def add_one(_current_user):
         abort(400, "Le champ 'category_id' doit être présent et non vide")
 
     files = request.files.getlist("files")
-    images = upload_files(files)
+    images, video = upload_files(files)
 
     post = Post(post_nature=post_nature,
                 title=title,
@@ -109,7 +109,8 @@ def add_one(_current_user):
                 places=places,
                 seller_id=seller_id,
                 category_id=category_id,
-                images=images
+                images=images,
+                video=video
                 )
 
     res = service.create_post(post)
@@ -134,7 +135,7 @@ def edit_one(_current_user, _id):
 
     data = request.json
     post = service.get_post_by_id(_id)
-    if post['seller_id'] != _current_user['_id']:
+    if post['seller_id'] != _current_user['_id'] and not _current_user['is_admin']:
         abort(401,
               "Vous ne pouvez pas modifier cette annonce.")
 
@@ -189,3 +190,20 @@ def sell_one(_current_user, _id):
         return abort(401,
                      "Vous ne pouvez pas clôturer une annonce refusée.")
     return jsonify(service.sell_one(_id))
+
+
+@posts_route.route('/<string:_id>/file/<string:_id_file>', methods=['DELETE'])
+@token_required
+def delete_one_file(_current_user, _id, _id_file):
+    post = service.get_post_by_id(_id)
+    if not post:
+        return abort(404, "L'annonce n'existe pas")
+    if post['seller_id'] != _current_user['_id'] and not _current_user['is_admin']:
+        return abort(401,
+                     "Vous ne pouvez pas supprimer d'image pour cette annonce")
+    try:
+        service.delete_file(post, _id_file)
+    except AttributeError as e:
+        abort(404, e)
+
+    return jsonify(remove_file(_id_file))
