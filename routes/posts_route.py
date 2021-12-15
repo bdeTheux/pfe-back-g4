@@ -148,7 +148,8 @@ def edit_one(_current_user, _id):
         price = data.get('price', post['price'])
     places = data.get('places', post['places'])
     category_id = data.get('category_id', post['category_id'])
-
+    images = data.get('images', post['images'])
+    video = data.get('video', post['video'])
     if get_category_by_id(category_id):
         post = Post(_id=_id,
                     post_nature=post_nature,
@@ -157,6 +158,8 @@ def edit_one(_current_user, _id):
                     price=price,
                     places=places,
                     category_id=category_id,
+                    images=images,
+                    video=video
                     )
 
     return jsonify(service.edit_post(post, _id))
