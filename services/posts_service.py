@@ -2,6 +2,7 @@ import uuid
 
 from db import database
 from models.Post import Post, PostStates
+from models.User import User
 
 database = database.get_database()
 
@@ -173,3 +174,15 @@ def delete_file(_post: Post, _file_id: str) -> bool:
 
     _post.store(database)
     return True
+
+
+def get_favourites(_current_user: User) -> list[dict[str]]:
+    favourites = _current_user['favorites']
+    favs = []
+    for fav in favourites:
+        post = get_post_by_id(fav)
+        if post and post.state == PostStates.APPROVED.value:
+            favs.append(get_post_by_id(fav))
+        else:
+            _current_user['favorites'].remove(fav)
+    return favs
