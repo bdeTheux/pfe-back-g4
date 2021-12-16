@@ -72,8 +72,10 @@ def change_favorite(_id_user, _id_post):
     user = get_user_by_id(_id_user)
     if _id_post in user['favorites']:
         user['favorites'].remove(_id_post)
+        print("ici")
     else:
         user['favorites'].append(_id_post)
+        print("là")
     user.store(database)
     return user.get_data()
 

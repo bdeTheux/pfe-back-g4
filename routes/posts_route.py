@@ -28,6 +28,21 @@ def get_all():
     return jsonify(service.get_posts(order))
 
 
+@posts_route.route('/closedpostsamount', methods=['GET'])
+def get_closed_posts_amount():
+    return jsonify(service.get_closed_posts_amount())
+
+
+@posts_route.route('/withoutfavourites', methods=['GET'])
+@token_welcome
+def get_without_favourites(_current_user):
+    if _current_user:
+        return jsonify(
+            [post for post in service.get_posts_as_dicts() if post['_id'] not in _current_user["favorites"]])
+    else:
+        return jsonify([post for post in service.get_posts()])
+
+
 @posts_route.route('/closed', methods=['GET'])
 @admin_token_required
 def get_closed(_current_user):
