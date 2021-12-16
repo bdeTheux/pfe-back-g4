@@ -80,7 +80,7 @@ def init_database(db):
 
     # POSTS
     giving = "À donner"
-    selling = "En vente"
+    selling = "À vendre"
 
     pending = 'En attente d\'approbation'
     approved = 'Approuvé'
