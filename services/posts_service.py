@@ -197,3 +197,12 @@ def get_favourites(_current_user: User) -> list[dict[str]]:
         else:
             _current_user['favorites'].remove(fav)
     return favs
+
+
+def get_closed_posts_amount():
+    mango = {
+        'selector': {'type': 'Post',
+                     'state': PostStates.CLOSED.value},
+        'fields': ['_id']
+    }
+    return len(list(database.find(mango)))

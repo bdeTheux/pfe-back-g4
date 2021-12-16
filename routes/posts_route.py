@@ -28,6 +28,11 @@ def get_all():
     return jsonify(service.get_posts(order))
 
 
+@posts_route.route('/closedpostsamount', methods=['GET'])
+def get_closed_posts_amount():
+    return jsonify(service.get_closed_posts_amount())
+
+
 @posts_route.route('/withoutfavourites', methods=['GET'])
 @token_welcome
 def get_without_favourites(_current_user):
