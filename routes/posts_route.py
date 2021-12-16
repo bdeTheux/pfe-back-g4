@@ -2,7 +2,9 @@ from flask import jsonify, abort, request, Blueprint
 
 import services.posts_service as service
 from models.Post import Post, PostStates
+from services.addresses_service import get_address_by_id
 from services.categories_service import get_category_by_id
+from services.users_service import get_user_by_id
 from utils.utils import admin_token_required, token_required, token_welcome, upload_files, remove_file
 
 posts_route = Blueprint('posts-route', __name__)
@@ -88,6 +90,26 @@ def get_with_id(_current_user, _id):
 @token_required
 def get_favourites(_current_user):
     return jsonify(service.get_favourites(_current_user))
+
+
+@posts_route.route('/<string:_id>/fulldetails', methods=['GET'])
+@token_required
+def get_full_details(_current_user, _id):
+    post = service.get_post_by_id(_id)
+    seller = get_user_by_id(post['seller_id'])
+    addresses = [get_address_by_id(add).get_data() for add in post['places']]
+    full_details = dict(post=post.get_data(), seller=seller.get_data(), addresses=addresses)
+    if post:
+        if post.state != PostStates.APPROVED.value:
+            if _current_user:
+                if _current_user['is_admin'] or (post['seller_id'] == _current_user['_id']):
+                    return jsonify(full_details)
+            else:
+                return abort(401, "Vous n'avez pas accès à cette annonce.")
+        else:
+            return jsonify(full_details)
+
+    return abort(404, "Cette annonce n'existe pas/plus.")
 
 
 @posts_route.route('/', methods=['POST'])
