@@ -28,3 +28,6 @@ class Post(Document):
                 "description": self.description, "price": self.price, "places": self.places,
                 "seller_id": self.seller_id, "category_id": self.category_id, "images": self.images,
                 "video": self.video}
+
+    def get_id(self):
+        return self._id

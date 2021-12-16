@@ -24,6 +24,17 @@ def get_posts(order=None) -> list[Post]:
     return _order_posts(list(database.find(mango)), order)
 
 
+def get_posts_as_dicts(order=None) -> list[Post]:
+    mango = {
+        'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
+        'fields': ['_id', 'category_id', 'description', 'images', 'places', 'post_nature', 'price',
+                   'seller_id', 'state', 'title', 'video']
+    }
+    print(list(database.find(mango)))
+
+    return _order_posts(list(database.find(mango)), order)
+
+
 def get_posts_by_campus(campus: str, order=None) -> list[Post]:
     mango = {
         'selector': {'type': 'Post', 'state': PostStates.APPROVED.value},
