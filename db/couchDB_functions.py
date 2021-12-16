@@ -92,7 +92,7 @@ def init_database(db):
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=pending,
                                 title='Lacet bleu',
                                 description='Un seul lacet, 28cm',
-                                places=['Woluwe', 'Ixelles'],
+                                places=['Ixelles'],
                                 seller_id=kevin, price=0,
                                 category_id='Vêtements et accessoires',
                                 images=generic_image, video=None)
@@ -103,7 +103,10 @@ def init_database(db):
                                 places=['Woluwe', 'Ixelles'],
                                 seller_id=kevin, price=25,
                                 category_id='Famille',
-                                images=generic_image, video=None)
+                                images=[
+                                    "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599632/"
+                                    "PFE/download_dwxxae.jpg"],
+                                video=None)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Converses blanches',
@@ -111,14 +114,76 @@ def init_database(db):
                                 places=['Woluwe'],
                                 seller_id=narjis, price=35.5,
                                 category_id='Vêtements et chaussures femmes',
-                                images=generic_image, video=None)
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599679/"
+                                        "PFE/converse-chuck-taylor-all-star-hi-white-50_qsrroe.jpg"], video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
+                                title='Chapeau violet',
+                                description='Parfait pour faire sensation en soirées!',
+                                places=['Woluwe'],
+                                seller_id=narjis, price=6,
+                                category_id='Vêtements et chaussures femmes',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599727/"
+                                        "PFE/s-l1600_h8nwjl.jpg"], video=None)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Éperons portés par Billy the kid',
                                 description="Tout est dans le titre, c'est pas un fake!",
                                 places=['Woluwe', 'Louvain-la-Neuve'],
-                                seller_id=nina, price=120000.3,
+                                seller_id=nina, price=49.9,
                                 category_id='Fournitures pour animaux',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599770/"
+                                        "PFE/gettyimages-182833070-612x612_e1xd8x.jpg"], video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=pending,
+                                title='Parure égyptienne',
+                                description="Magnifique parure ramenée de mes pérégrinations au bord du Nil",
+                                places=['Ixelles'],
+                                seller_id=nina, price=42.5,
+                                category_id='Bijoux et accessoires',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599853/"
+                                        "PFE/bijou-collier-parure-egyptienne_webqbr.jpg"], video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=pending,
+                                title='Chemises hawaïennes',
+                                description="Motifs classiques de fleurs",
+                                places=['Louvain-la-Neuve', 'Ixelles'],
+                                seller_id=boris, price=0,
+                                category_id='Vêtements et chaussures hommes',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599910/"
+                                        "PFE/images_aqf8na.jpg",
+                                        "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599908/"
+                                        "PFE/images_yqe3l0.jpg",
+                                        "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599906/"
+                                        "PFE/download_wjccvj.jpg"], video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
+                                title='Étagère en bois',
+                                description="Étonnant mais pas déplaisant!",
+                                places=['Woluwe', 'Louvain-la-Neuve', 'Ixelles'],
+                                seller_id=boris, price=8,
+                                category_id='Meubles',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599982/PFE/"
+                                        "DOAHETA28_mxwf3f.jpg"], video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
+                                title='Montre Costa-la-Rigo-Gonzales©',
+                                description="LA montre édition spéciale, seulement 3 exemplaires dans le monde,"
+                                            " extra rare! Donne l'heure juste 2 fois par jour",
+                                places=['Louvain-la-Neuve'],
+                                seller_id=samy, price=250,
+                                category_id='Bijoux et accessoires',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600184/PFE/"
+                                        "iced-out-hip-hop-mens-fashions-brand-luxury-full-diamond-date-quartz"
+                                        "-bling-watch_eau2wk.jpg"], video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=pending,
+                                title="Cours de design et style",
+                                description="De quoi briller en société estudiantine. J'échange volontier"
+                                            " contre des recettes sympathiques",
+                                places=['Louvain-la-Neuve'],
+                                seller_id=samy, price=0,
+                                category_id='Outils',
                                 images=generic_image, video=None)
 
     # Accepted
@@ -128,32 +193,57 @@ def init_database(db):
                                 places=['Ixelles'],
                                 seller_id=narjis, price=20,
                                 category_id='Vêtements et chaussures femmes',
-                                images=generic_image, video=None)
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600272/PFE/"
+                                        "3106_mzk9sc.jpg"], video=None)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
                                 title='Recette de cocktail',
-                                description='Une base gingembre, évidemment! De quoi rester en bonne santé',
+                                description="Une base gingembre, évidemment! De quoi rester en bonne santé"
+                                            " toute l'année",
                                 places=['Woluwe'],
                                 seller_id=boris, price=1.5,
-                                category_id='Vêtements et chaussures femmes',
-                                images=generic_image, video=None)
+                                category_id='Santé et beauté',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600376/PFE/"
+                                        "images_bvuxln.jpg"], video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
+                                title='Vieux vélo',
+                                description="De maque Bonpneu, roule très bien, dernier entretien en septembre",
+                                places=['Louvain-la-Neuve'],
+                                seller_id=samy, price=80,
+                                category_id='Famille',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600414/PFE/"
+                                        "Highlights-1-Bianchi-Folgore_vflltd.jpg"], video=None)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=approved,
-                                title='Talent',
-                                description="Non, peut-être?",
-                                places=['Louvain-la-Neuve'],
-                                seller_id=samy, price=0,
-                                category_id='Vêtements et chaussures femmes',
-                                images=generic_image, video=None)
+                                title='Vieille tondeuse manuelle',
+                                description="Pratique pour récupérer les pièces et en faire quelque chose de nouveau!",
+                                places=['Ixelles'],
+                                seller_id=kevin, price=0,
+                                category_id='Maison et Jardin',
+                                images=[
+                                    "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599520/PFE/"
+                                    "thumb_9343_image_big_cyiltz.jpg"],
+                                video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
+                                title='Sac Dolce & Gusto®',
+                                description="Sac original, modèle porté par de grandes stars. Je n'en fait plus rien",
+                                places=['Woluwe'],
+                                seller_id=nina, price=25,
+                                category_id='Sacs et bagages',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600533/PFE/"
+                                        "flower-hand-clutch-bags-250x250_orbbwp.jpg"], video=None)
 
     # Closed
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
-                                title='Vieux paquet de chips',
-                                description='Il en reste 3, paprika, à peine humides',
+                                title='Paquets de chips',
+                                description="Je m'en sépare car je vais faire une overdose de gras",
                                 places=['Ixelles'],
                                 seller_id=kevin, price=0,
-                                category_id='Santé et beauté',
-                                images=generic_image, video=None)
+                                category_id='Famille',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600581/PFE/"
+                                        "GJ-150850-Assort-Bags-Of-Chips-Grab-Bag_fn19id.jpg"], video=None)
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=closed,
                                 title='Mazda rouge',
@@ -161,8 +251,18 @@ def init_database(db):
                                 places=['Ixelles'],
                                 seller_id=nina, price=14999.9,
                                 category_id='Electroménager',
+                                images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600684/PFE/"
+                                        "download_vkvyvw.jpg"], video=None)
+
+    db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
+                                title='Clef hexagonale 12 pouces',
+                                description='neuve',
+                                places=['Louvain-la-Neuve'],
+                                seller_id=samy, price=0,
+                                category_id='Outils',
                                 images=generic_image, video=None)
 
+    # Reserve
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
                                 title='Papier peint',
                                 description='Rouge et vert',
