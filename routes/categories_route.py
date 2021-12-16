@@ -68,7 +68,7 @@ def delete_one(_current_user, _id):
     try:
         res = service.delete_category(_id)
     except AttributeError as e:
-        abort(404, e)
+        abort(400, e)
     return jsonify(res)
 
 
