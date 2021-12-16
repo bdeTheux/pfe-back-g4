@@ -58,16 +58,16 @@ https://flask.palletsprojects.com/en/2.0.x/installation/
 
 ### Categories :
 
-| **Uri**                            | **Méthode** | **Auth?** | **Admin ?** | **Action**                                                                                                              |
-| ---------------------------------- | --- | --- | --- | ------------------------------------------------------------------------------------------------------------------------|
-| **/categories**                    | GET | Non | Non | READ ALL : récupère toutes les catégories de la db                                                                      |
-| **/categories/tree**               | GET | Non | Non | READ ALL : récupère toutes les catégories de la db et les affiches en arborescence, les parents contenant les sous-catégories |
-| **/categories/{id}**               | GET | Non | Non | READ ONE : récupère une catégorie de la db                                                                              |
-| **/categories/{id}/subcategories** | GET | Non | Non | READ ONE : récupère toutes les sous-catégories de la catégorie et les renvoie dans une liste simple                     |
-| **/categories/{id}/parents**       | GET | Non | Non | READ ONE : récupère tous les parents de la catégorie et les renvoie dans une liste simple                              |
-| **/categories**                    | POST | Oui | Oui | CREATE ONE : ajoute une nouvelle catégorie à la db                                                                      |
-| **/categories/{id}**               | PUT | Oui | Oui | UPDATE ONE : modifie la catégorie ayant l&#39;id passé en paramètre                                                     |
-| **/categories/{id}**               | DELETE | Oui | Oui | DELETE ONE : supprime une catégorie ayant l&#39;id passé en paramètre                                                   |
+| **Uri**                            | **Méthode** | **Auth?** | **Admin ?** | **Action**                                                                                     |
+| ---------------------------------- | --- | --- | --- | ---------------------------------------------------------------------------------------------------------------------|
+| **/categories**                    | GET | Non | Non | READ ALL : récupère toutes les catégories                                                                            |
+| **/categories/tree**               | GET | Non | Non | READ ALL : récupère toutes les catégories et les affiches en arborescence, les parents contenant les sous-catégories |
+| **/categories/{id}**               | GET | Non | Non | READ ONE : récupère une catégorie                                                                                    |
+| **/categories/{id}/subcategories** | GET | Non | Non | READ ONE : récupère toutes les sous-catégories de la catégorie et les renvoie dans une liste simple                  |
+| **/categories/{id}/parents**       | GET | Non | Non | READ ONE : récupère tous les parents de la catégorie et les renvoie dans une liste simple                            |
+| **/categories**                    | POST | Oui | Oui | CREATE ONE : ajoute une nouvelle catégorie                                                                          |
+| **/categories/{id}**               | PUT | Oui | Oui | UPDATE ONE : modifie la catégorie ayant l&#39;id passé en paramètre                                                  |
+| **/categories/{id}**               | DELETE | Oui | Oui | DELETE ONE : supprime une catégorie ayant l&#39;id passé en paramètre                                             |
 
 ### Posts :
 
@@ -82,6 +82,11 @@ https://flask.palletsprojects.com/en/2.0.x/installation/
 | **/posts/myposts**               | GET    | Oui | Non               | READ ALL : récupère toutes les annonces de l'utilisateur courant'                                  |
 | **/posts/{id}**                  | GET    | Non | Non               | READ ONE : récupère une annonce de la db                                                           |
 | **/posts/favourites**            | GET    | Oui | Non               | READ ALL SELECTED : récupère toutes les annonces de la liste des favoris et supprime les invalides |
+| **/posts/closedpostsamount**     | GET    | Oui | Non               | COMPUTE SOME : renvoie la quantité d'annonces déjà vendues                                         |
+| **/posts/withoutfavourites**     | GET    | Oui | Non               | READ ALL SELECTED : récupère toutes les annonces sauf celles dans les favoris de l'utilisateur     |
+| **/posts/{id}/fulldetails**      | GET    | Oui | Non               | READ ALL SELECTED : récupère toutes les annonces et leurs détails(adresse, vendeur)                |
+| **/posts/{id}/stateChange**      | POST   | Oui | Oui               | UPDATE ONE : modifie l'état d'une annonce passée en paramètre                                      |
+| **/posts/{id}/sell**             | POST   | Oui | Non               | UPDATE ONE : modifie l'état d'une annonce passée en paramètre à "clôturé"                          |
 | **/posts**                       | POST   | Oui | Non               | CREATE ONE : rajoute une nouvelle annonce dans la db                                               |
 | **/posts/{id}**                  | PUT    | Oui | Oui si pas seller | UPDATE ONE : modifie l'annoce ayant l&#39;id passé en paramètre                                    |
 | **/posts/{id}**                  | DELETE | Oui | Oui si pas seller | DELETE ONE : supprime une annonce ayant l&#39;id passé en paramètre                                |
