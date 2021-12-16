@@ -93,23 +93,31 @@ def get_favourites(_current_user):
 
 
 @posts_route.route('/<string:_id>/fulldetails', methods=['GET'])
-@token_required
+@token_welcome
 def get_full_details(_current_user, _id):
     post = service.get_post_by_id(_id)
     seller = get_user_by_id(post['seller_id'])
     addresses = [get_address_by_id(add).get_data() for add in post['places']]
-    full_details = dict(post=post.get_data(), seller=seller.get_data(), addresses=addresses)
-    if post:
+
+    full_details_logged_in = dict(post=post.get_data(), seller=seller.get_data(), addresses=addresses)
+    if not post:
+        return abort(404, "Cette annonce n'existe pas/plus.")
+
+    else:
         if post.state != PostStates.APPROVED.value:
             if _current_user:
                 if _current_user['is_admin'] or (post['seller_id'] == _current_user['_id']):
-                    return jsonify(full_details)
+                    return jsonify(full_details_logged_in)
             else:
                 return abort(401, "Vous n'avez pas accès à cette annonce.")
-        else:
-            return jsonify(full_details)
 
-    return abort(404, "Cette annonce n'existe pas/plus.")
+        else:
+            if _current_user:
+                return jsonify(full_details_logged_in)
+            else:
+                del post["seller_id"]
+                full_details_logged_off = dict(post=post.get_data(), addresses=addresses)
+                return jsonify(full_details_logged_off)
 
 
 @posts_route.route('/', methods=['POST'])
