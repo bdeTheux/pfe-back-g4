@@ -135,7 +135,9 @@ def init_database():
                                 places=['Ixelles'],
                                 seller_id=kevin, price=0,
                                 category_id='Vêtements et accessoires',
-                                images=generic_image, video=None)
+                                images=generic_image,
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Furet mâle',
@@ -146,7 +148,8 @@ def init_database():
                                 images=[
                                     "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599632/"
                                     "PFE/download_dwxxae.jpg"],
-                                video=None)
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Converses blanches',
@@ -155,7 +158,9 @@ def init_database():
                                 seller_id=narjis, price=35.5,
                                 category_id='Vêtements et chaussures femmes',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599679/"
-                                        "PFE/converse-chuck-taylor-all-star-hi-white-50_qsrroe.jpg"], video=None)
+                                        "PFE/converse-chuck-taylor-all-star-hi-white-50_qsrroe.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Chapeau violet',
@@ -164,7 +169,9 @@ def init_database():
                                 seller_id=narjis, price=6,
                                 category_id='Vêtements et chaussures femmes',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599727/"
-                                        "PFE/s-l1600_h8nwjl.jpg"], video=None)
+                                        "PFE/s-l1600_h8nwjl.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Éperons portés par Billy the kid',
@@ -173,7 +180,9 @@ def init_database():
                                 seller_id=nina, price=49.9,
                                 category_id='Fournitures pour animaux',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599770/"
-                                        "PFE/gettyimages-182833070-612x612_e1xd8x.jpg"], video=None)
+                                        "PFE/gettyimages-182833070-612x612_e1xd8x.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Parure égyptienne',
@@ -182,7 +191,9 @@ def init_database():
                                 seller_id=nina, price=42.5,
                                 category_id='Bijoux et accessoires',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599853/"
-                                        "PFE/bijou-collier-parure-egyptienne_webqbr.jpg"], video=None)
+                                        "PFE/bijou-collier-parure-egyptienne_webqbr.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=pending,
                                 title='Chemises hawaïennes',
@@ -195,7 +206,9 @@ def init_database():
                                         "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599908/"
                                         "PFE/images_yqe3l0.jpg",
                                         "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599906/"
-                                        "PFE/download_wjccvj.jpg"], video=None)
+                                        "PFE/download_wjccvj.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Étagère en bois',
@@ -204,7 +217,9 @@ def init_database():
                                 seller_id=boris, price=8,
                                 category_id='Meubles',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599982/PFE/"
-                                        "DOAHETA28_mxwf3f.jpg"], video=None)
+                                        "DOAHETA28_mxwf3f.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=pending,
                                 title='Montre Costa-la-Rigo-Gonzales©',
@@ -215,7 +230,9 @@ def init_database():
                                 category_id='Bijoux et accessoires',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600184/PFE/"
                                         "iced-out-hip-hop-mens-fashions-brand-luxury-full-diamond-date-quartz"
-                                        "-bling-watch_eau2wk.jpg"], video=None)
+                                        "-bling-watch_eau2wk.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=pending,
                                 title="Cours de design et style",
@@ -224,7 +241,9 @@ def init_database():
                                 places=['Louvain-la-Neuve'],
                                 seller_id=samy, price=0,
                                 category_id='Outils',
-                                images=generic_image, video=None)
+                                images=generic_image,
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     # Accepted
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
@@ -234,7 +253,9 @@ def init_database():
                                 seller_id=narjis, price=20,
                                 category_id='Vêtements et chaussures femmes',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600272/PFE/"
-                                        "3106_mzk9sc.jpg"], video=None)
+                                        "3106_mzk9sc.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
                                 title='Recette de cocktail',
@@ -244,7 +265,9 @@ def init_database():
                                 seller_id=boris, price=1.5,
                                 category_id='Santé et beauté',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600376/PFE/"
-                                        "images_bvuxln.jpg"], video=None)
+                                        "images_bvuxln.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
                                 title='Vieux vélo',
@@ -253,7 +276,9 @@ def init_database():
                                 seller_id=samy, price=80,
                                 category_id='Famille',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600414/PFE/"
-                                        "Highlights-1-Bianchi-Folgore_vflltd.jpg"], video=None)
+                                        "Highlights-1-Bianchi-Folgore_vflltd.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=approved,
                                 title='Vieille tondeuse manuelle',
@@ -264,7 +289,8 @@ def init_database():
                                 images=[
                                     "https://res.cloudinary.com/dbdblxnfi/image/upload/v1639599520/PFE/"
                                     "thumb_9343_image_big_cyiltz.jpg"],
-                                video=None)
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=approved,
                                 title='Sac Dolce & Gusto®',
@@ -273,7 +299,9 @@ def init_database():
                                 seller_id=nina, price=25,
                                 category_id='Sacs et bagages',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600533/PFE/"
-                                        "flower-hand-clutch-bags-250x250_orbbwp.jpg"], video=None)
+                                        "flower-hand-clutch-bags-250x250_orbbwp.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     # Closed
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
@@ -283,7 +311,9 @@ def init_database():
                                 seller_id=kevin, price=0,
                                 category_id='Famille',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600581/PFE/"
-                                        "GJ-150850-Assort-Bags-Of-Chips-Grab-Bag_fn19id.jpg"], video=None)
+                                        "GJ-150850-Assort-Bags-Of-Chips-Grab-Bag_fn19id.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=selling, state=closed,
                                 title='Mazda rouge',
@@ -292,7 +322,9 @@ def init_database():
                                 seller_id=nina, price=14999.9,
                                 category_id='Electroménager',
                                 images=["https://res.cloudinary.com/dbdblxnfi/image/upload/v1639600684/PFE/"
-                                        "download_vkvyvw.jpg"], video=None)
+                                        "download_vkvyvw.jpg"],
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
                                 title='Clef hexagonale 12 pouces',
@@ -300,7 +332,9 @@ def init_database():
                                 places=['Louvain-la-Neuve'],
                                 seller_id=samy, price=0,
                                 category_id='Outils',
-                                images=generic_image, video=None)
+                                images=generic_image,
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     # Reserve
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
@@ -309,7 +343,9 @@ def init_database():
                                 places=['Ixelles'],
                                 seller_id=boris, price=0,
                                 category_id='Reserve',
-                                images=generic_image, video=None)
+                                images=generic_image,
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385031/'
+                                      'samples/sea-turtle.mp4')
 
     db[uuid.uuid4().hex] = dict(type='Post', post_nature=giving, state=closed,
                                 title='Bonnet vert',
@@ -317,7 +353,9 @@ def init_database():
                                 places=['Louvain-la-Neuve'],
                                 seller_id=nina, price=0,
                                 category_id='Reserve',
-                                images=generic_image, video=None)
+                                images=generic_image,
+                                video='https://res.cloudinary.com/dbdblxnfi/video/upload/v1639385033/'
+                                      'samples/elephants.mp4')
 
     db['Woluwe'] = dict(type="Address", campus='Woluwe',
                         lat="50.849857061691836", long="4.453360810918974")
